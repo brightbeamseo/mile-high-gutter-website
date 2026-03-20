@@ -1,0 +1,34 @@
+﻿Website Framework
+
+
+Images are in the folder with other companies parts of their website that we like. They are all labeled with the following. Then, I have each of those pieces listed below to make the entire website. 
+
+
+Let’s use this order unless we have a good reason not to. I also have the grid style for each website area. 
+
+
+I do not need these to have headers that match. These are just titles I am using to name the areas on the site. Actual verbiage can be changed and is not necessarily what we want to use at all.
+
+
+Ignore the text styles. Still keep the same style we come up with. Should be primary and secondary text types. 
+
+
+Sections:
+
+
+Offer Above Nav
+Nav Bar
+Hero - Sign Up Form Right ½ - 50 50 
+Badges (Brands we work with) - Moving bottom of screen when loading (desktop)
+Gallery - Our Projects - 3 images showing on slider, medium size
+Why Choose Us Simple header and text with button - full width
+Our Services (4 boxes fourths)
+Video Section (Video Section 2 Image without the badges) 50/50
+Unique Points 3 x 2 (3 columns, 2 rows) - From Unique Points 1 image
+Stats Bar thin - 1 row 4 columns
+Contact Us Banner - ⅔ - ⅓ 
+Google Reviews - full width - header - first bar with total reviews number and more reviews button, 4 reviews - keep the google logos for the look and authenticity
+Service Area (header with 9 cities listed) - Google Map Embed
+Our Team - 3 columns
+Footer
+Footer Support (below the footer something to spice it up, reviews number - privacy and those pages)

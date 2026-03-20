@@ -1,0 +1,412 @@
+(function () {
+  'use strict';
+
+  var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Footer year
+  var yearEl = document.getElementById('year');
+  if (yearEl) {
+    yearEl.textContent = new Date().getFullYear();
+  }
+
+  // Smooth anchor scroll with sticky-header offset
+  function getHeaderOffset() {
+    var header = document.querySelector('.header');
+    return header ? header.offsetHeight : 0;
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+    anchor.addEventListener('click', function (event) {
+      var targetId = anchor.getAttribute('href');
+      if (!targetId || targetId === '#') {
+        return;
+      }
+
+      var targetEl = document.querySelector(targetId);
+      if (!targetEl) {
+        return;
+      }
+
+      event.preventDefault();
+      var offset = getHeaderOffset() + 8;
+      var targetY = targetEl.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({
+        top: Math.max(0, targetY),
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      });
+    });
+  });
+
+  // Section/card entry animations
+  var revealTargets = Array.prototype.slice.call(
+    document.querySelectorAll('main > section, footer > section, .stats-thin, .service-card, .result-item, .testimonial, .team-card, .faq-item')
+  );
+
+  if (revealTargets.length) {
+    revealTargets.forEach(function (el, index) {
+      el.classList.add('reveal-on-scroll');
+      el.style.transitionDelay = Math.min((index % 8) * 60, 300) + 'ms';
+    });
+
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+      revealTargets.forEach(function (el) {
+        el.classList.add('is-visible');
+        el.style.transitionDelay = '0ms';
+      });
+    } else {
+      var observer = new IntersectionObserver(function (entries, obs) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+      revealTargets.forEach(function (el) {
+        observer.observe(el);
+      });
+    }
+  }
+
+  // Mobile nav toggle
+  var navToggle = document.querySelector('.nav-toggle');
+  var nav = document.querySelector('.nav');
+  var mobileBreakpoint = window.matchMedia('(max-width: 1120px)');
+
+  if (navToggle && nav) {
+    navToggle.setAttribute('aria-expanded', 'false');
+
+    function closeMobileNav() {
+      nav.classList.remove('is-open');
+      navToggle.setAttribute('aria-label', 'Open menu');
+      navToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    navToggle.addEventListener('click', function () {
+      nav.classList.toggle('is-open');
+      var isOpen = nav.classList.contains('is-open');
+      navToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+      navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    // Close nav when a link is clicked (for anchor links)
+    nav.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        closeMobileNav();
+      });
+    });
+
+    // Close mobile nav when switching to desktop layout
+    function handleViewportChange() {
+      if (!mobileBreakpoint.matches) {
+        closeMobileNav();
+      }
+    }
+
+    if (mobileBreakpoint.addEventListener) {
+      mobileBreakpoint.addEventListener('change', handleViewportChange);
+    } else if (mobileBreakpoint.addListener) {
+      mobileBreakpoint.addListener(handleViewportChange);
+    }
+
+    // Escape key closes the open mobile nav
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && nav.classList.contains('is-open')) {
+        closeMobileNav();
+      }
+    });
+  }
+
+  // Projects carousel controls
+  var projectsCarousel = document.getElementById('projects-carousel');
+  var prevBtn = document.getElementById('projects-prev');
+  var nextBtn = document.getElementById('projects-next');
+
+  if (projectsCarousel && prevBtn && nextBtn) {
+    var slides = Array.prototype.slice.call(projectsCarousel.querySelectorAll('.project-slide'));
+    var activeIndex = 0;
+    var dragStartX = null;
+    var dragDeltaX = 0;
+    var didDrag = false;
+    var suppressNextClick = false;
+
+    function applySliderState() {
+      slides.forEach(function (slide) {
+        slide.classList.remove('project-prev', 'project-active', 'project-next');
+      });
+
+      var prevIndex = (activeIndex - 1 + slides.length) % slides.length;
+      var nextIndex = (activeIndex + 1) % slides.length;
+
+      slides[prevIndex].classList.add('project-prev');
+      slides[activeIndex].classList.add('project-active');
+      slides[nextIndex].classList.add('project-next');
+    }
+
+    prevBtn.addEventListener('click', function () {
+      activeIndex = (activeIndex - 1 + slides.length) % slides.length;
+      applySliderState();
+    });
+
+    nextBtn.addEventListener('click', function () {
+      activeIndex = (activeIndex + 1) % slides.length;
+      applySliderState();
+    });
+
+    projectsCarousel.addEventListener('click', function (event) {
+      if (suppressNextClick) {
+        suppressNextClick = false;
+        return;
+      }
+
+      var clickedSlide = event.target.closest('.project-slide');
+      if (clickedSlide && clickedSlide.classList.contains('project-prev')) {
+        activeIndex = (activeIndex - 1 + slides.length) % slides.length;
+        applySliderState();
+        return;
+      }
+
+      if (clickedSlide && clickedSlide.classList.contains('project-next')) {
+        activeIndex = (activeIndex + 1) % slides.length;
+        applySliderState();
+        return;
+      }
+
+      // Fallback: click left/right side of carousel to move
+      var rect = projectsCarousel.getBoundingClientRect();
+      var clickX = event.clientX - rect.left;
+      var centerX = rect.width / 2;
+      var deadZone = rect.width * 0.18;
+
+      if (clickX < centerX - deadZone) {
+        activeIndex = (activeIndex - 1 + slides.length) % slides.length;
+        applySliderState();
+      } else if (clickX > centerX + deadZone) {
+        activeIndex = (activeIndex + 1) % slides.length;
+        applySliderState();
+      }
+    });
+
+    function handleDragStart(clientX) {
+      dragStartX = clientX;
+      dragDeltaX = 0;
+      didDrag = false;
+    }
+
+    function handleDragMove(clientX) {
+      if (dragStartX === null) {
+        return;
+      }
+      dragDeltaX = clientX - dragStartX;
+      if (Math.abs(dragDeltaX) > 30) {
+        didDrag = true;
+      }
+    }
+
+    function handleDragEnd() {
+      if (dragStartX === null) {
+        return;
+      }
+
+      var swipeThreshold = 45;
+      if (dragDeltaX <= -swipeThreshold) {
+        activeIndex = (activeIndex + 1) % slides.length;
+        applySliderState();
+        suppressNextClick = true;
+      } else if (dragDeltaX >= swipeThreshold) {
+        activeIndex = (activeIndex - 1 + slides.length) % slides.length;
+        applySliderState();
+        suppressNextClick = true;
+      }
+
+      dragStartX = null;
+      dragDeltaX = 0;
+      setTimeout(function () {
+        didDrag = false;
+      }, 0);
+    }
+
+    projectsCarousel.querySelectorAll('img').forEach(function (img) {
+      img.addEventListener('dragstart', function (event) {
+        event.preventDefault();
+      });
+    });
+
+    projectsCarousel.addEventListener('pointerdown', function (event) {
+      handleDragStart(event.clientX);
+      if (projectsCarousel.setPointerCapture) {
+        projectsCarousel.setPointerCapture(event.pointerId);
+      }
+    });
+
+    projectsCarousel.addEventListener('pointermove', function (event) {
+      handleDragMove(event.clientX);
+    });
+
+    projectsCarousel.addEventListener('pointerup', function () {
+      handleDragEnd();
+    });
+
+    projectsCarousel.addEventListener('pointercancel', function () {
+      handleDragEnd();
+    });
+
+    applySliderState();
+  }
+
+  // FAQ accordion — JS max-height animation (reliable every toggle; native <details> fights CSS height)
+  var faqRoot = document.querySelector('[data-faq-accordion]');
+  if (faqRoot) {
+    var faqItems = Array.prototype.slice.call(faqRoot.querySelectorAll('.faq-item'));
+
+    function faqOuter(item) {
+      return item.querySelector('.faq-answer-outer');
+    }
+    function faqInner(item) {
+      return item.querySelector('.faq-answer');
+    }
+    function faqBtn(item) {
+      return item.querySelector('.faq-summary');
+    }
+
+    function faqOpen(item) {
+      var outer = faqOuter(item);
+      var inner = faqInner(item);
+      var btn = faqBtn(item);
+      item.classList.add('is-open');
+      btn.setAttribute('aria-expanded', 'true');
+      outer.setAttribute('aria-hidden', 'false');
+
+      if (prefersReducedMotion) {
+        outer.style.maxHeight = 'none';
+        return;
+      }
+
+      outer.style.maxHeight = '0px';
+      void outer.offsetHeight;
+      outer.style.maxHeight = inner.scrollHeight + 'px';
+
+      outer.addEventListener(
+        'transitionend',
+        function faqOpenEnd(e) {
+          if (e.propertyName !== 'max-height') return;
+          if (!item.classList.contains('is-open')) return;
+          outer.style.maxHeight = 'none';
+          outer.removeEventListener('transitionend', faqOpenEnd);
+        },
+        { once: true }
+      );
+    }
+
+    function faqClose(item) {
+      var outer = faqOuter(item);
+      var inner = faqInner(item);
+      var btn = faqBtn(item);
+
+      if (!item.classList.contains('is-open')) {
+        outer.style.maxHeight = '0px';
+        return;
+      }
+
+      if (prefersReducedMotion) {
+        item.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        outer.setAttribute('aria-hidden', 'true');
+        outer.style.maxHeight = '0px';
+        return;
+      }
+
+      var h = inner.scrollHeight;
+      outer.style.maxHeight = h + 'px';
+      void outer.offsetHeight;
+      item.classList.remove('is-open');
+      btn.setAttribute('aria-expanded', 'false');
+      outer.setAttribute('aria-hidden', 'true');
+      requestAnimationFrame(function () {
+        outer.style.maxHeight = '0px';
+      });
+    }
+
+    faqItems.forEach(function (item) {
+      faqOuter(item).style.maxHeight = '0px';
+    });
+
+    faqItems.forEach(function (item) {
+      faqBtn(item).addEventListener('click', function () {
+        if (item.classList.contains('is-open')) {
+          faqClose(item);
+          return;
+        }
+        faqItems.forEach(function (other) {
+          if (other !== item && other.classList.contains('is-open')) {
+            faqClose(other);
+          }
+        });
+        faqOpen(item);
+      });
+    });
+
+    var faqResizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(faqResizeTimer);
+      faqResizeTimer = setTimeout(function () {
+        faqItems.forEach(function (item) {
+          if (!item.classList.contains('is-open')) return;
+          var outer = faqOuter(item);
+          var inner = faqInner(item);
+          if (outer.style.maxHeight === 'none') {
+            outer.style.maxHeight = inner.scrollHeight + 'px';
+            void outer.offsetHeight;
+            outer.style.maxHeight = 'none';
+          }
+        });
+      }, 150);
+    });
+  }
+
+  // Hero typed service text
+  var typedEl = document.getElementById('hero-typed-text');
+  if (typedEl && !prefersReducedMotion) {
+    var phrases = [
+      'Gutter Installation',
+      'Gutter Repair',
+      'Gutter Cleaning',
+      'Gutter Guards',
+      'Heated Gutters',
+      'Soffit & Fascia'
+    ];
+    var phraseIndex = 0;
+    var charIndex = 0;
+    var isDeleting = false;
+
+    function runTypeCycle() {
+      var currentPhrase = phrases[phraseIndex];
+
+      if (!isDeleting) {
+        charIndex += 1;
+        typedEl.textContent = currentPhrase.slice(0, charIndex);
+        if (charIndex === currentPhrase.length) {
+          isDeleting = true;
+          setTimeout(runTypeCycle, 900);
+          return;
+        }
+      } else {
+        charIndex -= 1;
+        typedEl.textContent = currentPhrase.slice(0, Math.max(0, charIndex));
+        if (charIndex === 0) {
+          isDeleting = false;
+          phraseIndex = (phraseIndex + 1) % phrases.length;
+          setTimeout(runTypeCycle, 220);
+          return;
+        }
+      }
+
+      setTimeout(runTypeCycle, isDeleting ? 40 : 85);
+    }
+
+    runTypeCycle();
+  } else if (typedEl) {
+    typedEl.textContent = 'Gutter Installation';
+  }
+})();
