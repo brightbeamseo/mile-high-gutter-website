@@ -6,7 +6,8 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "python3 scripts/build-html.py",
+    "sync-api": "mkdir -p astro-site/api && cp api/lead.js astro-site/api/lead.js",
+    "build": "npm run sync-api && python3 scripts/build-html.py",
     "watch": "python3 scripts/watch-html.py"
   }
 }
