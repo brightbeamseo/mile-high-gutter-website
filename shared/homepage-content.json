@@ -1,0 +1,544 @@
+{
+  "page": "home",
+  "layoutBackgrounds": {
+    "note": "Paths here match styles.css (.hero-bg, .unique-points, .services) — update both when you change files.",
+    "hero": {
+      "imageSrc": "Media (MHG)/Images (Mile High)/mile-high-gutters-arvada-co-completed-gutter-installation-and-repair-on-finished-home-with-clean-lines-and-overcast-sky.webp",
+      "location": "Arvada, CO"
+    },
+    "uniquePoints": {
+      "imageSrc": "Media (MHG)/Images (Mile High)/mile-high-gutters-lakewood-new-home-gutters.webp",
+      "location": "Lakewood, CO"
+    },
+    "services": {
+      "imageSrc": "Media (MHG)/Images (Mile High)/mile-high-gutters-thornton-co-drone-overhead-view-complex-roof-gutter-installation-system.webp",
+      "location": "Thornton, CO"
+    }
+  },
+  "meta": {
+    "title": "Mile High Gutter Denver | Gutters Denver | Fast, Hassle-Free Estimates",
+    "description": "Mile High Gutter Denver is a family-owned company with 40+ years of experience. We provide seamless gutter installation, repair, maintenance, and guards for residential and commercial properties across the Denver metro. Free estimates available."
+  },
+  "business": {
+    "companyName": "Mile High Gutter Denver",
+    "companyNameShort": "Mile High Gutter",
+    "phoneDisplay": "(303) 762-9841",
+    "phoneTel": "+13037629841",
+    "email": "office@milehighgutter.com",
+    "websiteUrl": "https://www.milehighgutter.com/",
+    "addressShort": "3300 S Federal Blvd, Englewood, CO 80110",
+    "addressMetro": "3300 S Federal Blvd, Englewood, CO 80110",
+    "copyrightSiteUrl": "https://www.milehighgutter.com/",
+    "descriptionShort": "Mile High Gutter Denver is a family-owned company with 40+ years of experience. We provide seamless gutter installation, repair, maintenance, and guards for residential and commercial properties across the Denver metro. Free estimates available.",
+    "descriptionLong": "For 40 years, Mile High Gutter Denver has served Denver, Colorado and surrounding areas with expert residential and commercial seamless gutter installation, repairs, maintenance, and gutter guards. As a family-owned business, we pride ourselves on quality work and value. Free estimates available—serving Denver, Aurora, Lakewood, Arvada, Westminster, Thornton, Centennial, Littleton, Broomfield, and beyond.",
+    "hoursText": "24/7",
+    "dateOpened": "May 11, 1985",
+    "logoHorizontalBlack": "Media (MHG)/Logo Suite (MHG)/Mile High (Denver Colorado)/Horizontal/(Horizontal — Black Font Transparent) Mile-High-Gutter.png",
+    "logoHorizontalBlackLocation": "Brand asset — Denver, Colorado (company identity)",
+    "logoHorizontalWhite": "Media (MHG)/Logo Suite (MHG)/Mile High (Denver Colorado)/Horizontal/(Horizontal — White Font Transparent) Mile-High-Gutter.png",
+    "logoHorizontalWhiteLocation": "Brand asset — Denver, Colorado (company identity)"
+  },
+  "businessCategories": [
+    "Drainage service",
+    "Gutter service",
+    "Roofing contractor",
+    "Gutter cleaning service"
+  ],
+  "keywords": [
+    "gutter repair",
+    "gutter installation",
+    "gutter replacement",
+    "seamless gutter",
+    "gutter cleaning",
+    "gutter guards",
+    "gutter inspection"
+  ],
+  "businessListings": {
+    "googleMaps": "https://maps.app.goo.gl/bbaPvDTVzQnZ1FEy9",
+    "bingPlaces": "https://www.bing.com/maps/search?style=r&q=Mile+High+Gutter+LLC%2C+3300+S+Federal+Blvd%2C+Englewood%2C+CO+80110%2C+United+States&ss=id.local_ypid%3A%22YN3F6C0898A0D904F8%22&st=Mile+High+Gutter+LLC&sfa=3300+S+Federal+Blvd%2C+Englewood%2C+CO+80110%2C+United+States&cp=39.656628%7E-105.024681&lvl=16",
+    "facebook": "https://www.facebook.com/milehighgutter/",
+    "instagram": "https://www.instagram.com/milehighgutterllc/",
+    "twitter": "https://x.com/milehighgutter1",
+    "linkedin": "https://www.linkedin.com/in/mile-high-gutter-620475222",
+    "yelp": "https://www.yelp.com/biz/mile-high-gutter-englewood-2"
+  },
+  "header": {
+    "offerBar": {
+      "textBeforeDiscount": "Enjoy ",
+      "discountLabel": "10% Off",
+      "textAfterDiscount": " All Gutter Services This Spring — ",
+      "ctaText": "Get a Quote Now!",
+      "ctaHref": "#contact"
+    },
+    "navItems": [
+      {
+        "label": "Services",
+        "dropdown": [
+          { "label": "Gutter Repair", "href": "/gutter-repair.html" },
+          { "label": "Gutter Installation", "href": "/gutter-installation.html" },
+          { "label": "Gutter Cleaning", "href": "/gutter-cleaning.html" },
+          { "label": "Gutter Guards", "href": "/gutter-guards.html" },
+          { "label": "Heated Gutters", "href": "/heated-gutters.html" },
+          { "label": "Soffit & Fascia", "href": "/soffit-fascia.html" }
+        ]
+      },
+      { "label": "Projects", "href": "/projects.html" },
+      { "label": "Reviews", "href": "/reviews.html" },
+      {
+        "label": "About Us",
+        "dropdown": [
+          { "label": "Our Team", "href": "/our-team.html" },
+          { "label": "Service Area", "href": "/service-area.html" },
+          { "label": "Contact Us", "href": "/contact.html" }
+        ]
+      }
+    ],
+    "callCtaTemplate": "Call: {{phoneDisplay}}",
+    "logoAriaLabelTemplate": "{{companyName}} home"
+  },
+  "hero": {
+    "eyebrow": "Start Your Free Estimate",
+    "headline": "Best Gutter Company in Denver!",
+    "lead": "Fast scheduling, quality workmanship, and clean job sites. We help homeowners and businesses protect what matters with dependable gutter systems.",
+    "callCtaTemplate": "Call: {{phoneDisplay}}",
+    "formAriaLabel": "Quick estimate — full form below",
+    "formKicker": "Fast Response • No Obligation",
+    "formHeadline": "Request an Estimate",
+    "formSub": "Tell us a few details and we will reach out shortly with next steps.",
+    "formFields": {
+      "nameLabel": "Name",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "cityLabel": "City",
+      "projectDetailsLabel": "Project Details",
+      "requiredIndicator": "*"
+    },
+    "formSubmitCta": "SUBMIT",
+    "formSubmitHref": "#contact",
+    "typedPhrases": [
+      "Gutter Installation",
+      "Gutter Repair",
+      "Gutter Cleaning",
+      "Gutter Guards",
+      "Heated Gutters",
+      "Soffit & Fascia"
+    ],
+    "typedFallbackPhrase": "Gutter Installation"
+  },
+  "brandsMarquee": {
+    "ariaLabel": "Brands we work with",
+    "brands": [
+      "CertainTeed",
+      "LeafBlaster Pro",
+      "Amerimax",
+      "Alu-Rex",
+      "Gutterglove",
+      "Raindrop"
+    ]
+  },
+  "projects": {
+    "sectionAriaLabel": "Our projects",
+    "headline": "Our Projects",
+    "slides": [
+      {
+        "imageSrc": "Media (MHG)/Images (Mile High)/mile-high-gutters-cherry-hills-village-luxury-home-gutters.webp",
+        "imageAlt": "Luxury home gutters in Cherry Hills Village",
+        "location": "Cherry Hills Village, CO"
+      },
+      {
+        "imageSrc": "Media (MHG)/Images (Mile High)/mile-high-gutters-broomfield-suburban-home-gutters.webp",
+        "imageAlt": "Suburban home gutters in Broomfield",
+        "location": "Broomfield, CO"
+      },
+      {
+        "imageSrc": "Media (MHG)/Images (Mile High)/mile-high-gutters-centennial-co-finished-residential-gutter-installation-modern-home-clear-weather.webp",
+        "imageAlt": "Finished residential gutter installation in Centennial",
+        "location": "Centennial, CO"
+      },
+      {
+        "imageSrc": "Media (MHG)/Images (Mile High)/mile-high-gutters-centennial-residential-gutter-system.webp",
+        "imageAlt": "Residential gutter system in Centennial",
+        "location": "Centennial, CO"
+      },
+      {
+        "imageSrc": "Media (MHG)/Images (Mile High)/mile-high-gutters-commerce-city-co-modern-dark-exterior-home-with-seamless-black-gutters-and-clean-roofline-on-a-clear-day.webp",
+        "imageAlt": "Modern dark exterior home with seamless gutters in Commerce City",
+        "location": "Commerce City, CO"
+      },
+      {
+        "imageSrc": "Media (MHG)/Images (Mile High)/mile-high-gutters-denver-lohi-townhome-gutter-installation.webp",
+        "imageAlt": "Townhome gutter installation in Denver LoHi",
+        "location": "Denver (LoHi), CO"
+      }
+    ],
+    "controlsAriaLabel": "Project slider controls",
+    "prevAriaLabel": "Scroll projects left",
+    "nextAriaLabel": "Scroll projects right",
+    "prevLabel": "←",
+    "nextLabel": "→"
+  },
+  "whyChoose": {
+    "imageSrc": "Media (MHG)/Images (Mile High)/mile-high-gutters-lakewood-co-close-up-of-metal-gutter-guard-installed-along-asphalt-shingles-under-bright-daylight.webp",
+    "imageAlt": "Close-up of metal gutter guard installed along asphalt shingles in Lakewood",
+    "location": "Lakewood, CO",
+    "stamp": {
+      "homesCountTemplate": "Over {{count}}",
+      "homesCountKey": "whyChooseHomesCount",
+      "line2": "Denver, Colorado",
+      "line3": "Gutters Serviced Successfully."
+    },
+    "eyebrow": "Why Choose Us?",
+    "headline": "Dependable Gutter Service in Denver",
+    "lead": "From small repairs to full gutter system upgrades, our team delivers dependable workmanship, clear communication, and fast scheduling across the Denver metro area.",
+    "bullets": [
+      {
+        "title": "Local Specialists:",
+        "text": "We understand Denver weather and what it takes for long-term gutter performance."
+      },
+      {
+        "title": "Full-Service Crew:",
+        "text": "Installation, repairs, cleaning, and guards with one trusted team."
+      },
+      {
+        "title": "Reliable Process:",
+        "text": "On-time service, clear estimates, and clean job sites every time."
+      }
+    ],
+    "note": "Choose Mile High Gutter for dependable service, clean installs, and results built to last in Colorado conditions.",
+    "ctas": {
+      "callTemplate": "Call: {{phoneDisplay}}",
+      "estimate": "Request Free Estimate",
+      "estimateHref": "#contact"
+    }
+  },
+  "services": {
+    "headline": "Our Services",
+    "items": [
+      {
+        "number": "01",
+        "title": "Gutter Installation",
+        "description": "Seamless systems built for Colorado weather. Custom-fit gutters direct water away from foundations, siding, and landscaping—season after season."
+      },
+      {
+        "number": "02",
+        "title": "Gutter Repair",
+        "description": "Leak fixes, pitch correction, and downspout improvements. We diagnose the cause, restore proper flow, and handle Denver storms and freezing weather."
+      },
+      {
+        "number": "03",
+        "title": "Gutter Cleaning",
+        "description": "Routine debris removal to maintain flow and prevent overflow damage. We remove blockages and keep water running freely to protect your home long-term."
+      },
+      {
+        "number": "04",
+        "title": "Gutter Guards",
+        "description": "Reduce clogs and protect long-term performance. Gutter guards keep leaves and debris out while water flows freely year after year."
+      },
+      {
+        "number": "05",
+        "title": "Heated Gutters",
+        "description": "Prevent ice dams and winter backups with heated gutter solutions. We set up the right system for your roofline so meltwater drains properly and protects your home."
+      },
+      {
+        "number": "06",
+        "title": "Soffit & Fascia",
+        "description": "Restore and protect the areas that shield your home from water intrusion. We repair and replace damaged soffit and fascia to keep ventilation working and the exterior strong."
+      }
+    ]
+  },
+  "about": {
+    "eyebrow": "ABOUT US",
+    "headline": "Dependable Gutter Work in Denver",
+    "lead": "We help homeowners and businesses protect what matters with dependable gutter installation, repair, cleaning, and guards—built for Denver weather.",
+    "bullets": [
+      "Licensed & insured crews",
+      "Clear communication and fast scheduling",
+      "Clean job sites and quality workmanship"
+    ],
+    "video": {
+      "posterSrc": "Media (MHG)/Images (Mile High)/mile-high-gutters-cherry-hills-village-luxury-home-gutters.webp",
+      "posterLocation": "Cherry Hills Village, CO",
+      "sourceSrc": "assets/video-placeholder.mp4",
+      "sourceType": "video/mp4"
+    },
+    "badgesAriaLabel": "Highlights",
+    "badges": ["Badge 1", "Badge 2", "Badge 3"],
+    "ctas": {
+      "callTemplate": "Call: {{phoneDisplay}}",
+      "estimate": "Request Free Estimate",
+      "estimateHref": "#contact"
+    }
+  },
+  "uniquePoints": {
+    "eyebrow": "What Makes Us Different?",
+    "headline": "A Better Gutter Experience",
+    "items": [
+      {
+        "iconId": "clock",
+        "title": "Fast Scheduling",
+        "description": "Quick response times and clear next steps."
+      },
+      {
+        "iconId": "clipboard",
+        "title": "Clear Pricing",
+        "description": "No surprises, just straightforward estimates."
+      },
+      {
+        "iconId": "shield-check",
+        "title": "Licensed & Insured",
+        "description": "Work completed with full protection in place."
+      },
+      {
+        "iconId": "package",
+        "title": "Quality Materials",
+        "description": "Products selected for durability and performance."
+      },
+      {
+        "iconId": "sparkle",
+        "title": "Clean Worksites",
+        "description": "Respectful crews and thorough cleanup."
+      },
+      {
+        "iconId": "message",
+        "title": "Strong Communication",
+        "description": "We keep you informed from start to finish."
+      }
+    ]
+  },
+  "statsBar": {
+    "ariaLabel": "Company stats",
+    "items": [
+      { "valueKey": "statsYearsExperience", "label": "Years Experience" },
+      { "valueKey": "statsJobsCompleted", "label": "Satisfied Customers" },
+      { "valueKey": "statsAvgRating", "label": "Average Rating" },
+      { "valueKey": "statsResponseTime", "label": "Typical Response" }
+    ]
+  },
+  "statsValues": {
+    "statsYearsExperience": "40+",
+    "statsJobsCompleted": "32,500+",
+    "statsAvgRating": "4.8/5",
+    "statsResponseTime": "5 Min",
+    "whyChooseHomesCount": "32,500+"
+  },
+  "contactBanner": {
+    "headline": "Start Your Free Estimate",
+    "paragraph1": "Call us or submit your quote form and our team will reach out quickly to schedule your no-obligation appointment.",
+    "paragraph2": "Call Now.",
+    "phoneIconSrc": "Media (MHG)/Icons (MHG)/Phone White PNG.png",
+    "phoneIconLocation": "UI asset (not a job site)"
+  },
+  "reviews": {
+    "headline": "What Our Customers Say",
+    "summary": {
+      "brandLabel": "Google Reviews",
+      "googleIconSrc": "Media (MHG)/Reviews (MHG)/Google Icon PNG.png",
+      "googleIconLocation": "Brand asset (Google)",
+      "ratingValueKey": "reviewsRating",
+      "starsImageSrc": "Media (MHG)/Reviews (MHG)/5 Star Google Rating PNG copy.png",
+      "starsImageLocation": "Brand asset (rating graphic)",
+      "starsImageAlt": "5 star rating",
+      "reviewCountKey": "reviewsCount",
+      "reviewCountPrefix": "(",
+      "reviewCountSuffix": ")",
+      "ctaText": "See More Reviews",
+      "ctaHref": "#"
+    },
+    "reviewValues": {
+      "reviewsRating": "4.8",
+      "reviewsCount": "171"
+    },
+    "postedOnLabel": "Posted On Google",
+    "testimonials": [
+      {
+        "author": "Alex Witkowicz",
+        "timeAgo": "1 month ago",
+        "avatarSrc": "Media (MHG)/Reviews (MHG)/Alex Witkowicz.png",
+        "avatarLocation": "Customer headshot (filename has no city; review: Denver metro)",
+        "quote": "Great experience overall. The front desk called me back quickly after my initial inquiry, and the estimator came out the next day. The install team showed up right on time and the work quality is very high."
+      },
+      {
+        "author": "Maximilian Feeney",
+        "timeAgo": "1 month ago",
+        "avatarSrc": "Media (MHG)/Reviews (MHG)/Maximilian Feeney.png",
+        "avatarLocation": "Customer headshot (filename has no city; review: Denver metro)",
+        "quote": "We had our gutters replaced by Mile High Gutters and couldn't be happier. The team was professional, quick, and did excellent work. Everything looks great and functions perfectly."
+      },
+      {
+        "author": "Michael Tinker",
+        "timeAgo": "2 months ago",
+        "avatarSrc": "Media (MHG)/Reviews (MHG)/Michael Tinker.png",
+        "avatarLocation": "Customer headshot (filename has no city; review: Denver metro)",
+        "quote": "My house had a tricky drainage situation and Mile High made it look beautiful. They even came back the next day to make sure it was perfect. I sincerely recommend Mile High Gutters."
+      },
+      {
+        "author": "Michael McCausey",
+        "timeAgo": "3 months ago",
+        "avatarSrc": "Media (MHG)/Reviews (MHG)/Michael McCausey.png",
+        "avatarLocation": "Customer headshot (filename has no city; review: Denver metro)",
+        "quote": "Ken answered all my questions and gave me a quote I was happy with. The install team did excellent work and the whole process was a pleasure. I highly recommend Mile High Gutter."
+      }
+    ]
+  },
+  "serviceArea": {
+    "eyebrow": "Service Area",
+    "headline": "Serving the Greater Denver Metro",
+    "intro": "Our crews travel across the entire Denver metro region to deliver fast, reliable gutter service wherever you need us, including Adams, Arapahoe, Boulder, Broomfield, Clear Creek, Denver, Douglas, Gilpin, Jefferson, and Weld counties.",
+    "mapEmbedUrlKey": "mapEmbedUrl",
+    "mapIframeTitleTemplate": "{{companyName}} service area map",
+    "citiesLabel": "Cities We Serve",
+    "citiesNavAriaLabel": "Cities we serve",
+    "cities": [
+      { "name": "Denver", "href": "#contact" },
+      { "name": "Aurora", "href": "#contact" },
+      { "name": "Lakewood", "href": "#contact" },
+      { "name": "Arvada", "href": "#contact" },
+      { "name": "Littleton", "href": "#contact" },
+      { "name": "Westminster", "href": "#contact" },
+      { "name": "Centennial", "href": "#contact" },
+      { "name": "Thornton", "href": "#contact" },
+      { "name": "Parker", "href": "#contact" }
+    ]
+  },
+  "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d393176.63622688083!2d-105.63456111093751!3d39.6566351!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x876b8636aaaaaaab%3A0x82de48ab5054a084!2sMile%20High%20Gutter%20LLC!5e0!3m2!1sen!2sus!4v1774033385651!5m2!1sen!2sus",
+  "team": {
+    "headline": "Our Team",
+    "members": [
+      {
+        "imageSrc": "Media (MHG)/Images (Mile High)/mile-high-gutters-denver-lohi-townhome-gutter-installation.webp",
+        "imageAlt": "Mile High Gutter crew on a Denver townhome gutter project",
+        "location": "Denver (LoHi), CO",
+        "name": "Project Lead",
+        "bio": "Handles planning, timeline, and execution."
+      },
+      {
+        "imageSrc": "Media (MHG)/Images (Mile High)/mile-high-gutters-highlands-ranch-co-gutter-repair-project-complete-home-exterior-clean-install.webp",
+        "imageAlt": "Gutter repair and clean exterior finish in Highlands Ranch",
+        "location": "Highlands Ranch, CO",
+        "name": "Field Supervisor",
+        "bio": "Oversees installation quality and safety."
+      },
+      {
+        "imageSrc": "Media (MHG)/Images (Mile High)/mile-high-gutters-parker-co-modern-luxury-home-outdoor-kitchen-patio-with-extended-roof-and-hidden-drainage-on-sunny-day.webp",
+        "imageAlt": "Modern luxury home with integrated gutters and drainage in Parker",
+        "location": "Parker, CO",
+        "name": "Client Coordinator",
+        "bio": "Your primary contact for updates and support."
+      }
+    ]
+  },
+  "faq": {
+    "headline": "Frequently Asked Questions",
+    "headingId": "faq-heading",
+    "items": [
+      {
+        "question": "How do I get a free estimate?",
+        "answerHtml": "<p>Use the <a href=\"#contact\">estimate form</a> at the bottom of the page, or call us directly. We will follow up to learn about your project and schedule a convenient time.</p>"
+      },
+      {
+        "question": "What areas do you serve?",
+        "answerHtml": "<p>We work across the greater Denver metro and surrounding communities. See our <a href=\"#service-area\">service area</a> for more detail.</p>"
+      },
+      {
+        "question": "Do you install gutter guards and offer seasonal cleaning?",
+        "answerHtml": "<p>Yes. We install gutter guards to reduce clogs and perform gutter cleaning to keep systems flowing. We can recommend the right option for your roofline and trees.</p>"
+      },
+      {
+        "question": "Are you licensed and insured?",
+        "answerHtml": "<p>Our crews operate with proper licensing and insurance so your property and our team are protected on every job.</p>"
+      },
+      {
+        "question": "How long does a typical gutter installation take?",
+        "answerHtml": "<p>Most residential installs are completed in a day or less depending on home size, accessibility, and scope. We will give you a realistic timeline with your estimate.</p>"
+      }
+    ]
+  },
+  "footerEstimate": {
+    "headline": "Get Your Free Estimate",
+    "intro": "Tell us about your project and we will respond quickly.",
+    "formFields": {
+      "nameLabel": "Name",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "cityLabel": "City",
+      "projectDetailsLabel": "Project Details",
+      "submitButton": "Request Free Estimate"
+    },
+    "formAction": "#",
+    "formMethod": "post"
+  },
+  "footerBrand": {
+    "tagline": "Serving homeowners and businesses across the Denver metro with dependable gutter installation, repair, cleaning, and guards.",
+    "socialAriaLabel": "Social media and listings",
+    "socialLinks": [
+      {
+        "platform": "Facebook",
+        "href": "https://www.facebook.com/milehighgutter/",
+        "ariaLabel": "Mile High Gutter Denver on Facebook"
+      },
+      {
+        "platform": "Instagram",
+        "href": "https://www.instagram.com/milehighgutterllc/",
+        "ariaLabel": "Mile High Gutter Denver on Instagram"
+      },
+      {
+        "platform": "Google Business Profile",
+        "href": "https://maps.app.goo.gl/bbaPvDTVzQnZ1FEy9",
+        "ariaLabel": "Mile High Gutter Denver on Google Maps"
+      },
+      {
+        "platform": "Twitter",
+        "href": "https://x.com/milehighgutter1",
+        "ariaLabel": "Mile High Gutter Denver on X"
+      },
+      {
+        "platform": "LinkedIn",
+        "href": "https://www.linkedin.com/in/mile-high-gutter-620475222",
+        "ariaLabel": "Mile High Gutter Denver on LinkedIn"
+      },
+      {
+        "platform": "Yelp",
+        "href": "https://www.yelp.com/biz/mile-high-gutter-englewood-2",
+        "ariaLabel": "Mile High Gutter Denver on Yelp"
+      }
+    ]
+  },
+  "footerColumns": [
+    {
+      "heading": "Services",
+      "ariaLabel": "Footer services",
+      "links": [
+        { "label": "Gutter Installation", "href": "#services" },
+        { "label": "Gutter Repair", "href": "#services" },
+        { "label": "Gutter Cleaning", "href": "#services" },
+        { "label": "Gutter Guards", "href": "#services" },
+        { "label": "Soffit & Fascia", "href": "#services" }
+      ]
+    },
+    {
+      "heading": "Company",
+      "ariaLabel": "Footer company links",
+      "links": [
+        { "label": "Our Projects", "href": "#projects" },
+        { "label": "Google Reviews", "href": "#reviews" },
+        { "label": "Service Area", "href": "#service-area" },
+        { "label": "FAQ", "href": "#faq" },
+        { "label": "Contact Us", "href": "#contact" }
+      ]
+    },
+    {
+      "heading": "Contact Info",
+      "hoursHeading": "Hours",
+      "hoursText": "24/7"
+    }
+  ],
+  "footerSupport": {
+    "ariaLabel": "Footer support links",
+    "copyrightTemplate": "© {{year}} — {{companyName}}",
+    "links": [
+      { "label": "Privacy Policy", "href": "#" },
+      { "label": "Terms of Use", "href": "#" },
+      { "label": "Brightbeam SEO", "href": "https://brightbeamseo.com/", "target": "_blank", "rel": "noopener noreferrer" }
+    ]
+  }
+}

@@ -6,35 +6,41 @@
 
 ---
 
-# Homepage modular build
+# Homepage build (JSON-driven content)
 
 ## Project layout
 
 | Path | Purpose |
 |------|---------|
-| **`src/index.html`** | Main assembly file for the homepage—readable **top to bottom** (includes only). |
-| **`src/sections/`** | One **`.html` file per homepage section** (hero, services, FAQ, footer, etc.). |
-| **`src/partials/head.html`** | `<head>` content: meta, fonts, **`styles.css`**. |
-| **`shared/site.json`** | Shared business data: phone, email, address, review stats, logo paths, map URL, etc. |
-| **`scripts/build-html.py`** | Merges includes + `{{placeholders}}` → **`index.html`** at project root. |
-| **`index.html`** (root) | **Deployable** file—what you upload or open in the browser. |
+| **`shared/homepage-content.json`** | **Source of truth for homepage copy**—headlines, CTAs, nav, services, FAQs, reviews, cities, stats, contact/footer text, media paths, etc. **`business`** holds NAP, site URL, short/long descriptions, hours, founding date, and logo paths. **`businessCategories`**, **`keywords`**, and **`businessListings`** (Google/Bing/social URLs) are for SEO and consistency—keep in sync with live profiles. Each **photo** includes a **`location`** (or `posterLocation`, `avatarLocation`, etc.) derived from the filename / context. **`layoutBackgrounds`** documents hero, unique-points, and services section CSS background images (keep in sync with `styles.css`). **Project carousel:** the text next to 📍 is **`projects.slides[].location`** (rendered as `.project-location-label`, also on `data-location`). |
+| **`scripts/homepage_render.py`** | Builds each section’s HTML (structure, classes, SVG icons). Edit here only when changing layout/components—not wording. |
+| **`src/index.html`** | Assembly file: `<!-- @homepage:section-name -->` markers + order of sections. |
+| **`src/partials/head.html`** | `<head>`: uses `{{title}}` and `{{metaDescription}}` filled from JSON at build time. |
+| **`scripts/build-html.py`** | Loads JSON → injects rendered sections → fills `{{placeholders}}` → writes root **`index.html`**. |
+| **`index.html`** (root) | **Deploy** this file. |
+| **`shared/site.json`** | **Legacy / unused by build.** All data now lives in `homepage-content.json`; you can delete `site.json` if you no longer need it. |
 
-## How to edit
+## How to edit homepage content
 
-1. Change **section markup** in `src/sections/<section>.html` (or add a new section file and a matching `<!-- @include ... -->` line in `src/index.html`).
-2. Change **site-wide text** (phone, email, stats, logos) in **`shared/site.json`**, then use **`{{key}}`** in HTML where the key matches JSON (e.g. `{{phoneDisplay}}`).
-3. Change **head/meta/styles** in **`src/partials/head.html`**.
-4. Rebuild (below) so the root **`index.html`** stays in sync.
+1. Edit **`shared/homepage-content.json`** for almost all text, lists, links, and image paths.
+2. Run **`python3 scripts/build-html.py`** (or **`npm run build`**).
+3. To change **section order** or **drop a section**, edit **`src/index.html`** (add/remove/reorder `<!-- @homepage:… -->` lines).
+4. To change **HTML structure** (new wrapper, extra class), edit **`scripts/homepage_render.py`** for that section’s `render_*` function.
 
-**Include syntax** (paths are always relative to **`src/`**):
+**Main nav (`header.navItems`):** Each item is either `{ "label", "href" }` (single link) or `{ "label", "dropdown": [ { "label", "href" }, ... ] }` (parent opens a menu; parent is a **button**, not a page). **Dropdown parents** are “Services” and “About Us”; **all other** entries use **root-relative** URLs (e.g. `/gutter-repair.html`) for dedicated pages—create those files or adjust `href`s when routing changes. Desktop: hover/focus opens dropdowns. Mobile (≤1120px): hamburger menu, then tap parent to expand. Styles: `.nav-dropdown` in **`styles.css`**; mobile submenu toggles in **`script.js`**.
 
-```html
-<!-- @include sections/hero.html -->
-```
+**Section markers** (see `homepage_render.py` `RENDERERS`):
+
+`header`, `hero`, `projects`, `why-choose`, `services`, `about`, `unique-points`, `stats`, `contact-banner`, `reviews`, `service-area`, `team`, `faq`, `footer`, `typed-config`
+
+## Hero typing animation
+
+- Phrases come from **`hero.typedPhrases`** in JSON.
+- Build outputs `<script type="application/json" id="homepage-typed-phrases">…</script>`; **`script.js`** reads that at runtime.
 
 ## How to rebuild
 
-After any change under `src/` or `shared/site.json`:
+After any change to `shared/homepage-content.json`, `src/`, or `scripts/homepage_render.py`:
 
 ```bash
 python3 scripts/build-html.py
@@ -46,10 +52,20 @@ Or:
 npm run build
 ```
 
-Optional: auto-rebuild while editing:
+Optional auto-rebuild:
 
 ```bash
 npm run watch
 ```
 
 **Preview/deploy the generated `index.html` at the project root** (not `src/index.html` alone).
+
+## Includes (head only)
+
+Only **`src/partials/head.html`** is still pulled in via:
+
+```html
+<!-- @include partials/head.html -->
+```
+
+Paths are relative to **`src/`**.

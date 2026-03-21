@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """
-Assembles src/index.html + shared/site.json + src/partials + src/sections
+Assembles src/index.html + shared/homepage-content.json + src/partials
 into the root index.html.
+
+Homepage body sections are rendered from shared/homepage-content.json
+(see scripts/homepage_render.py). Head partial still uses {{placeholders}}
+filled from the same JSON via a flat context.
 
 Usage: python3 scripts/build-html.py
 """
@@ -15,22 +19,22 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "src"
 TEMPLATE = SRC / "index.html"
-SITE_PATH = ROOT / "shared" / "site.json"
+HOME_PATH = ROOT / "shared" / "homepage-content.json"
 OUT = ROOT / "index.html"
 
 INCLUDE_RE = re.compile(r"<!--\s*@include\s+([^\s]+)\s*-->")
 VAR_RE = re.compile(r"\{\{(\w+)\}\}")
 
 
-def load_site() -> dict:
-    return json.loads(SITE_PATH.read_text(encoding="utf-8"))
+def load_homepage() -> dict:
+    return json.loads(HOME_PATH.read_text(encoding="utf-8"))
 
 
-def apply_vars(text: str, site: dict) -> str:
+def apply_vars(text: str, flat: dict) -> str:
     def repl(m: re.Match[str]) -> str:
         key = m.group(1)
-        if key in site:
-            return str(site[key])
+        if key in flat:
+            return str(flat[key])
         print(f"[build-html] Unknown placeholder: {{{{{key}}}}}", file=sys.stderr)
         return m.group(0)
 
@@ -58,10 +62,17 @@ def process_includes(text: str, stack: list[Path] | None = None) -> str:
 
 
 def main() -> None:
-    site = load_site()
+    # Import after path setup so scripts/ is on path when run as script
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from homepage_render import build_flat_context, inject_homepage_sections
+
+    home = load_homepage()
+    flat = build_flat_context(home)
+
     html = TEMPLATE.read_text(encoding="utf-8")
     html = process_includes(html)
-    html = apply_vars(html, site)
+    html = inject_homepage_sections(html, home)
+    html = apply_vars(html, flat)
     OUT.write_text(html, encoding="utf-8")
     print(f"Wrote {OUT.relative_to(ROOT)}")
 

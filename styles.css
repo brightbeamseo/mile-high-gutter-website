@@ -239,6 +239,90 @@ a:hover {
   min-width: auto;
 }
 
+/* Nav dropdowns (Services, About Us — parent is a button, not a page link) */
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--color-text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color var(--transition), opacity var(--transition);
+}
+
+.nav-dropdown-toggle:hover {
+  color: var(--color-accent);
+}
+
+.nav-dropdown-chevron {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+  opacity: 0.75;
+  margin-top: 2px;
+}
+
+.nav-dropdown-menu {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-sm) 0;
+  min-width: 15rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  position: absolute;
+  /* Flush under the toggle — any gap breaks :hover before you reach the menu */
+  top: 100%;
+  left: 0;
+  z-index: 200;
+  display: none;
+}
+
+.nav-dropdown-menu a {
+  display: block;
+  padding: 0.5rem var(--space-lg);
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.nav-dropdown-menu a:hover {
+  color: var(--color-accent);
+  background: rgba(82, 123, 189, 0.08);
+}
+
+@media (min-width: 1121px) {
+  /* Invisible “bridge” so moving from the button to the menu doesn’t leave :hover */
+  .nav-dropdown::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 0.65rem;
+    z-index: 199;
+  }
+
+  .nav-dropdown:hover .nav-dropdown-menu,
+  .nav-dropdown:focus-within .nav-dropdown-menu {
+    display: block;
+  }
+}
+
 @media (max-width: 1200px) {
   .nav {
     gap: var(--space-lg);
@@ -293,6 +377,8 @@ a:hover {
     left: 0;
     right: 0;
     flex-direction: column;
+    align-items: stretch;
+    text-align: left;
     padding: var(--space-xl);
     background: var(--color-bg);
     border-bottom: 1px solid var(--color-border);
@@ -303,13 +389,69 @@ a:hover {
     gap: var(--space-md);
   }
 
+  .nav.is-open > a:not(.btn) {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 0;
+    box-sizing: border-box;
+  }
+
   .nav.is-open a {
     font-size: 1rem;
   }
 
+  /* Compact pill — full-width bar felt awkward on tablet / wide phones */
   .nav.is-open a.btn {
+    width: auto;
+    max-width: 100%;
+    align-self: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    padding: 0.5rem 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .nav.is-open a.btn.btn-lg {
+    padding: 0.5rem 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .nav.is-open .nav-dropdown {
     width: 100%;
-    justify-content: center;
+    align-self: stretch;
+    text-align: left;
+  }
+
+  .nav.is-open .nav-dropdown-toggle {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 0.35rem;
+    padding: 0.5rem 0;
+  }
+
+  .nav.is-open .nav-dropdown-menu {
+    position: static;
+    min-width: 0;
+    width: 100%;
+    margin: var(--space-xs) 0 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    display: none;
+    text-align: left;
+  }
+
+  .nav.is-open .nav-dropdown.is-open .nav-dropdown-menu {
+    display: block;
+  }
+
+  .nav.is-open .nav-dropdown-menu a {
+    display: block;
+    padding: 0.5rem 0 0.5rem var(--space-lg);
+    text-align: left;
   }
 }
 
@@ -434,7 +576,7 @@ a.btn-primary[href^="tel:"]:hover {
   inset: 0;
   background-image:
     linear-gradient(135deg, rgba(56, 69, 85, 0.88) 0%, rgba(56, 69, 85, 0.84) 50%, rgba(56, 69, 85, 0.88) 100%),
-    url("../Pinnacle%20Roofing%20(PR)/Images/Edited%20Images/IMAGE%203.png");
+    url("Media%20(MHG)/Images%20(Mile%20High)/mile-high-gutters-arvada-co-completed-gutter-installation-and-repair-on-finished-home-with-clean-lines-and-overcast-sky.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1004,7 +1146,14 @@ a.btn-primary[href^="tel:"]:hover {
 
 /* Services */
 .services {
-  background: linear-gradient(135deg, #143980 0%, #1a4a9e 100%);
+  /* Thornton drone photo: very subtle under the brand blue (see layoutBackgrounds.services in homepage-content.json) */
+  background-color: #143980;
+  background-image:
+    linear-gradient(135deg, rgba(20, 57, 128, 0.94) 0%, rgba(26, 74, 158, 0.94) 100%),
+    url("Media%20(MHG)/Images%20(Mile%20High)/mile-high-gutters-thornton-co-drone-overhead-view-complex-roof-gutter-installation-system.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   padding-bottom: calc(var(--space-5xl) + var(--space-xl));
 }
 
@@ -1487,6 +1636,7 @@ a.btn-primary[href^="tel:"]:hover {
 
 .footer-social {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.55rem;
   margin-top: var(--space-sm);
@@ -1613,6 +1763,8 @@ a.btn-primary[href^="tel:"]:hover {
     left: 0;
     right: 0;
     flex-direction: column;
+    align-items: stretch;
+    text-align: left;
     padding: var(--space-xl);
     background: var(--color-bg);
     border-bottom: 1px solid var(--color-border);
@@ -1627,9 +1779,36 @@ a.btn-primary[href^="tel:"]:hover {
     font-size: 1rem;
   }
 
-  .nav.is-open a.btn {
+  .nav.is-open > a:not(.btn) {
+    display: block;
     width: 100%;
-    justify-content: center;
+    text-align: left;
+    padding: 0.5rem 0;
+    box-sizing: border-box;
+  }
+
+  .nav.is-open a.btn {
+    width: auto;
+    max-width: 100%;
+    align-self: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    padding: 0.5rem 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .nav.is-open a.btn.btn-lg {
+    padding: 0.5rem 1rem;
+    font-size: 0.9375rem;
+  }
+
+  .nav.is-open .nav-dropdown-toggle {
+    justify-content: flex-start;
+    gap: 0.35rem;
+  }
+
+  .nav.is-open .nav-dropdown-menu a {
+    text-align: left;
   }
 
   .hero-actions {
@@ -2193,7 +2372,7 @@ a.btn-primary[href^="tel:"]:hover {
 .unique-points {
   position: relative;
   background: var(--color-surface);
-  background-image: url("../Pinnacle%20Roofing%20(PR)/Images/Edited%20Images/image%2014.png");
+  background-image: url("Media%20(MHG)/Images%20(Mile%20High)/mile-high-gutters-lakewood-new-home-gutters.webp");
   background-size: cover;
   background-position: center;
 }
@@ -2261,7 +2440,20 @@ a.btn-primary[href^="tel:"]:hover {
 .stats-thin {
   background: var(--color-dark);
   color: #fff;
-  padding: var(--space-lg) 0;
+  position: relative;
+  z-index: 2;
+  /* Strip uses flex so content can sit vertically centered with even top/bottom padding */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg) var(--space-xl);
+  /* Cover 1px hairline vs section above (subpixel seams) — margin shifts strip, not padding */
+  margin-top: -1px;
+  box-shadow: 0 -1px 0 0 var(--color-dark);
+}
+
+.stats-thin .container.stats-thin-grid {
+  width: 100%;
 }
 
 .stats-thin-grid {
@@ -2269,20 +2461,28 @@ a.btn-primary[href^="tel:"]:hover {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-lg);
   text-align: center;
+  /* Default stretch keeps cells equal height; content is centered inside each cell */
+  align-items: stretch;
 }
 
 .stats-thin-grid > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
   transition: opacity var(--transition-slow), transform var(--transition-slow);
 }
 
 .stats-thin-grid strong {
-  display: block;
   font-size: 1.4rem;
+  line-height: 1.2;
 }
 
 .stats-thin-grid span {
   font-size: 0.9rem;
   opacity: 0.9;
+  line-height: 1.35;
 }
 
 .contact-banner-split {

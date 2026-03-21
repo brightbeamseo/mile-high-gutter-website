@@ -38,8 +38,9 @@
   });
 
   // Section/card entry animations
+  /* Exclude .stats-thin and .unique-points: transform-based reveal causes 1px white hairlines between full-bleed sections */
   var revealTargets = Array.prototype.slice.call(
-    document.querySelectorAll('main > section, footer > section, .stats-thin, .service-card, .result-item, .testimonial, .team-card, .faq-item')
+    document.querySelectorAll('main > section:not(.stats-thin, .unique-points), footer > section, .service-card, .result-item, .testimonial, .team-card, .faq-item')
   );
 
   if (revealTargets.length) {
@@ -81,6 +82,13 @@
       nav.classList.remove('is-open');
       navToggle.setAttribute('aria-label', 'Open menu');
       navToggle.setAttribute('aria-expanded', 'false');
+      nav.querySelectorAll('[data-nav-dropdown]').forEach(function (dd) {
+        dd.classList.remove('is-open');
+        var t = dd.querySelector('.nav-dropdown-toggle');
+        if (t) {
+          t.setAttribute('aria-expanded', 'false');
+        }
+      });
     }
 
     navToggle.addEventListener('click', function () {
@@ -88,6 +96,28 @@
       var isOpen = nav.classList.contains('is-open');
       navToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
       navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    // Mobile: tap Services / About to expand submenus (desktop uses hover)
+    nav.querySelectorAll('[data-nav-dropdown]').forEach(function (dropdown) {
+      var toggle = dropdown.querySelector('.nav-dropdown-toggle');
+      if (!toggle) return;
+      toggle.addEventListener('click', function (e) {
+        if (!mobileBreakpoint.matches) {
+          return;
+        }
+        e.stopPropagation();
+        var opening = !dropdown.classList.contains('is-open');
+        nav.querySelectorAll('[data-nav-dropdown]').forEach(function (other) {
+          if (other !== dropdown) {
+            other.classList.remove('is-open');
+            var ot = other.querySelector('.nav-dropdown-toggle');
+            if (ot) ot.setAttribute('aria-expanded', 'false');
+          }
+        });
+        dropdown.classList.toggle('is-open', opening);
+        toggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
+      });
     });
 
     // Close nav when a link is clicked (for anchor links)
@@ -365,17 +395,26 @@
     });
   }
 
-  // Hero typed service text
+  // Hero typed service text (phrases from shared/homepage-content.json via #homepage-typed-phrases)
   var typedEl = document.getElementById('hero-typed-text');
+  var phrases = [
+    'Gutter Installation',
+    'Gutter Repair',
+    'Gutter Cleaning',
+    'Gutter Guards',
+    'Heated Gutters',
+    'Soffit & Fascia'
+  ];
+  var typedCfg = document.getElementById('homepage-typed-phrases');
+  if (typedCfg && typedCfg.textContent) {
+    try {
+      var parsedPhrases = JSON.parse(typedCfg.textContent);
+      if (Array.isArray(parsedPhrases) && parsedPhrases.length) {
+        phrases = parsedPhrases;
+      }
+    } catch (e) { /* keep default phrases */ }
+  }
   if (typedEl && !prefersReducedMotion) {
-    var phrases = [
-      'Gutter Installation',
-      'Gutter Repair',
-      'Gutter Cleaning',
-      'Gutter Guards',
-      'Heated Gutters',
-      'Soffit & Fascia'
-    ];
     var phraseIndex = 0;
     var charIndex = 0;
     var isDeleting = false;
@@ -407,6 +446,6 @@
 
     runTypeCycle();
   } else if (typedEl) {
-    typedEl.textContent = 'Gutter Installation';
+    typedEl.textContent = phrases[0] || 'Gutter Installation';
   }
 })();
