@@ -11,18 +11,14 @@ import {
   mediaUrl,
   statLookup,
 } from '../lib/sanity-strings.js'
+import { assertSanityHomepage } from '../lib/assert-sanity-homepage.js'
 
 const [settings, homePage] = await Promise.all([
   sanity.fetch(`*[_type == "siteSettings"][0]`),
   sanity.fetch(`*[_type == "homePage"][0]`),
 ])
 
-if (!settings || !homePage) {
-  throw new Error('Sanity: siteSettings and homePage documents are required for the homepage.')
-}
-if (!settings.forms?.submitPath) {
-  throw new Error('Sanity: siteSettings.forms.submitPath is required (lead form endpoint).')
-}
+assertSanityHomepage(settings, homePage)
 
 const business = settings.business
 const meta = settings.meta
@@ -85,8 +81,8 @@ const logoAriaLabel = applyTemplate(asStr(header?.logoAriaLabelTemplate), {
   companyName,
 })
 
-const telLink = tel ? `tel:${tel}` : '#'
-const mailtoLink = email ? `mailto:${email}` : '#'
+const telLink = `tel:${tel}`
+const mailtoLink = `mailto:${email}`
 
 const homesCountDisplay = applyTemplate(asStr(whyStamp?.homesCountTemplate), {
   count: statLookup(statsValues, whyStamp?.homesCountKey),
@@ -108,17 +104,11 @@ const heroBgSrc = asStr(layoutBg?.hero?.imageSrc)
 const servicesBgSrc = asStr(layoutBg?.services?.imageSrc)
 const uniquePointsBgSrc = asStr(layoutBg?.uniquePoints?.imageSrc)
 
-const heroBgStyle = heroBgSrc
-  ? `background-image: linear-gradient(135deg, rgba(56, 69, 85, 0.88) 0%, rgba(56, 69, 85, 0.84) 50%, rgba(56, 69, 85, 0.88) 100%), url("${mediaUrl(heroBgSrc)}"); background-size: cover; background-position: center; background-repeat: no-repeat;`
-  : undefined
+const heroBgStyle = `background-image: linear-gradient(135deg, rgba(56, 69, 85, 0.88) 0%, rgba(56, 69, 85, 0.84) 50%, rgba(56, 69, 85, 0.88) 100%), url("${mediaUrl(heroBgSrc)}"); background-size: cover; background-position: center; background-repeat: no-repeat;`
 
-const servicesBgStyle = servicesBgSrc
-  ? `background-color: #143980; background-image: linear-gradient(135deg, rgba(20, 57, 128, 0.94) 0%, rgba(26, 74, 158, 0.94) 100%), url("${mediaUrl(servicesBgSrc)}"); background-size: cover; background-position: center; background-repeat: no-repeat;`
-  : undefined
+const servicesBgStyle = `background-color: #143980; background-image: linear-gradient(135deg, rgba(20, 57, 128, 0.94) 0%, rgba(26, 74, 158, 0.94) 100%), url("${mediaUrl(servicesBgSrc)}"); background-size: cover; background-position: center; background-repeat: no-repeat;`
 
-const uniquePointsBgStyle = uniquePointsBgSrc
-  ? `background: var(--color-surface); background-image: url("${mediaUrl(uniquePointsBgSrc)}"); background-size: cover; background-position: center;`
-  : undefined
+const uniquePointsBgStyle = `background: var(--color-surface); background-image: url("${mediaUrl(uniquePointsBgSrc)}"); background-size: cover; background-position: center;`
 
 const typedPhrases = asStrArray(hero?.typedPhrases)
 
@@ -132,7 +122,7 @@ const copyrightInnerHtml = copyrightTemplate
   title={pageTitle}
   description={pageDescription}
   theme={settings.theme}
-  forms={{ submitPath: asStr(settings.forms.submitPath) }}
+  forms={{ submitPath: asStr(settings.forms?.submitPath) }}
 >
   <header class="header">
     <div class="offer-bar">
@@ -295,7 +285,7 @@ const copyrightInnerHtml = copyrightTemplate
       <div class="projects-carousel" id="projects-carousel">
         {projects?.slides?.map((slide) => {
           const loc = asStr(slide.location)
-          const label = `Gutter project photo — ${loc}`
+          const label = `${asStr(slide.imageAlt)} — ${loc}`
           return (
             <article class="project-slide" data-location={loc} aria-label={label}>
               <img src={mediaUrl(asStr(slide.imageSrc))} alt={asStr(slide.imageAlt)} />
@@ -458,7 +448,7 @@ const copyrightInnerHtml = copyrightTemplate
             <p class="reviews-summary-brand">
               <img
                 src={mediaUrl(asStr(reviewsSummary?.googleIconSrc))}
-                alt="Google"
+                alt={asStr(reviewsSummary?.brandLabel)}
                 class="google-logo"
               />
               <span>{asStr(reviewsSummary?.brandLabel)}</span>
@@ -494,7 +484,11 @@ const copyrightInnerHtml = copyrightTemplate
               />
               <p>&quot;{asStr(t.quote)}&quot;</p>
               <div class="review-posted-on">
-                <img src={mediaUrl(asStr(reviewsSummary?.googleIconSrc))} alt="Google" class="google-logo" />
+                <img
+                  src={mediaUrl(asStr(reviewsSummary?.googleIconSrc))}
+                  alt={asStr(reviewsSummary?.brandLabel)}
+                  class="google-logo"
+                />
                 <span>{asStr(reviews?.postedOnLabel)}</span>
               </div>
             </blockquote>

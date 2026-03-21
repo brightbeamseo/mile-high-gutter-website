@@ -3,6 +3,11 @@ import '../../../styles.css'
 import { buildThemeCss } from '../lib/theme-css.js'
 
 const { title, description, theme, forms } = Astro.props
+
+if (!forms || typeof forms.submitPath !== 'string' || !forms.submitPath.trim()) {
+  throw new Error('BaseLayout: forms.submitPath is required (set from Sanity siteSettings.forms).')
+}
+
 const themeCss = buildThemeCss(theme)
 
 const formsJson = JSON.stringify(forms).replace(/</g, '\\u003c')

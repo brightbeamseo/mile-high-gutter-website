@@ -1,5 +1,6 @@
 /**
- * Helpers for Sanity payloads (strings, string-array items as { value }, templates).
+ * Helpers for Sanity payloads (strings, optional legacy `{ value }` on array items, templates).
+ * Homepage required fields are validated in assert-sanity-homepage.js before render.
  */
 
 export function asStr(x) {
