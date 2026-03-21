@@ -449,12 +449,12 @@
     typedEl.textContent = phrases[0] || 'Gutter Installation';
   }
 
-  // Lead forms → POST /api/lead (reCAPTCHA v3 + Zapier on server)
+  // Lead forms → POST /api/lead (Zapier on server)
   var formsCfgEl = document.getElementById('site-forms-config');
   var leadForms = Array.prototype.slice.call(document.querySelectorAll('form[data-lead-form]'));
 
   function readFormsConfig() {
-    var defaults = { submitPath: '/api/lead', recaptchaSiteKey: '' };
+    var defaults = { submitPath: '/api/lead' };
     if (!formsCfgEl || !formsCfgEl.textContent) {
       return defaults;
     }
@@ -462,8 +462,7 @@
       var parsed = JSON.parse(formsCfgEl.textContent);
       if (parsed && typeof parsed === 'object') {
         return {
-          submitPath: typeof parsed.submitPath === 'string' && parsed.submitPath ? parsed.submitPath : defaults.submitPath,
-          recaptchaSiteKey: typeof parsed.recaptchaSiteKey === 'string' ? parsed.recaptchaSiteKey.trim() : ''
+          submitPath: typeof parsed.submitPath === 'string' && parsed.submitPath ? parsed.submitPath : defaults.submitPath
         };
       }
     } catch (e) {
@@ -479,23 +478,6 @@
     el.classList.remove('is-error', 'is-success');
     if (kind === 'error') el.classList.add('is-error');
     if (kind === 'success') el.classList.add('is-success');
-  }
-
-  function getRecaptchaToken(siteKey) {
-    return new Promise(function (resolve, reject) {
-      if (!siteKey || !window.grecaptcha || !window.grecaptcha.execute) {
-        resolve('');
-        return;
-      }
-      window.grecaptcha.ready(function () {
-        window.grecaptcha
-          .execute(siteKey, { action: 'lead_form' })
-          .then(resolve)
-          .catch(function () {
-            resolve('');
-          });
-      });
-    });
   }
 
   if (leadForms.length) {
@@ -527,15 +509,20 @@
           pageUrl: typeof window.location.href === 'string' ? window.location.href : ''
         };
 
-        var runSend = function (token) {
-          if (token) payload.recaptchaToken = token;
+        var runSend = function () {
           fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
             body: JSON.stringify(payload)
           })
             .then(function (res) {
-              return res.json().then(function (data) {
+              return res.text().then(function (text) {
+                var data = {};
+                try {
+                  data = text ? JSON.parse(text) : {};
+                } catch (e) {
+                  data = { error: 'bad_response', parseError: true };
+                }
                 return { ok: res.ok, status: res.status, data: data || {} };
               });
             })
@@ -547,14 +534,23 @@
                 return;
               }
               var err = (result.data && result.data.error) || 'submit_failed';
+              var zst = result.data && result.data.zapierStatus;
               var msg =
-                err === 'recaptcha_low_score' || err === 'recaptcha_failed'
-                  ? 'Could not verify the request. Please try again in a moment.'
-                  : err === 'server_misconfigured'
-                    ? 'This form is not configured yet. Please call us instead.'
-                    : err === 'missing_fields'
-                      ? 'Please fill in all required fields.'
-                      : 'Something went wrong. Please try again or call us.';
+                err === 'server_misconfigured'
+                  ? 'This form is not configured yet. Please call us instead.'
+                  : err === 'missing_fields'
+                    ? 'Please fill in all required fields.'
+                    : err === 'invalid_email'
+                      ? 'Please enter a valid email address.'
+                      : err === 'upstream_unreachable'
+                        ? 'Could not reach the form service. Please try again or call us.'
+                        : err === 'upstream_error'
+                          ? 'The form service rejected the submission (code ' +
+                            (zst || result.status || '?') +
+                            '). Check the Zapier webhook URL in Vercel, or call us.'
+                          : err === 'bad_response' || result.status === 404
+                            ? 'Form endpoint not found (404). Redeploy the site or check Vercel Root Directory / api folder.'
+                            : 'Something went wrong. Please try again or call us.';
               setStatus(form, msg, 'error');
             })
             .catch(function () {
@@ -563,11 +559,7 @@
             });
         };
 
-        if (cfg.recaptchaSiteKey) {
-          getRecaptchaToken(cfg.recaptchaSiteKey).then(runSend);
-        } else {
-          runSend('');
-        }
+        runSend();
       });
     });
   }

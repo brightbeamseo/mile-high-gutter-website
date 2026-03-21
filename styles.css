@@ -1570,7 +1570,7 @@ a.btn-primary[href^="tel:"]:hover {
   color: #fff;
 }
 
-/* Lead forms (hero + footer) — Zapier + reCAPTCHA v3 via /api/lead */
+/* Lead forms (hero + footer) — Zapier via /api/lead */
 .lead-form-honeypot-wrap {
   position: absolute;
   width: 1px;

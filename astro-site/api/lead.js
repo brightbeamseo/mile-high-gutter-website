@@ -1,11 +1,10 @@
 /**
  * CANONICAL lead API — Vercel `/api/lead`. After edits, run `npm run sync-api` (copies to `astro-site/api/`).
  *
- * Vercel Serverless (Node): verify reCAPTCHA v3, forward to Zapier.
- * Env: ZAPIER_WEBHOOK_URL, RECAPTCHA_SECRET_KEY, optional RECAPTCHA_MIN_SCORE
+ * Forwards JSON to Zapier. reCAPTCHA disabled — add back later if needed.
+ *
+ * Env: ZAPIER_WEBHOOK_URL (required, https)
  */
-
-const RECAPTCHA_VERIFY = 'https://www.google.com/recaptcha/api/siteverify';
 
 function jsonResponse(data, status, extraHeaders = {}) {
   return Response.json(data, {
@@ -39,7 +38,7 @@ export default {
       });
     }
 
-    const webhook = process.env.ZAPIER_WEBHOOK_URL;
+    const webhook = (process.env.ZAPIER_WEBHOOK_URL || '').trim();
     if (!webhook || !/^https:\/\//i.test(webhook)) {
       return jsonResponse({ ok: false, error: 'server_misconfigured' }, 503);
     }
@@ -67,38 +66,12 @@ export default {
     const message = String(body.message || '').trim().slice(0, 5000);
     const formSource = String(body.formSource || 'unknown').trim().slice(0, 80);
     const pageUrl = String(body.pageUrl || '').trim().slice(0, 2000);
-    const recaptchaToken =
-      typeof body.recaptchaToken === 'string' ? body.recaptchaToken.trim() : '';
 
     if (!name || !email || !phone) {
       return jsonResponse({ ok: false, error: 'missing_fields' }, 400);
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return jsonResponse({ ok: false, error: 'invalid_email' }, 400);
-    }
-
-    const secret = process.env.RECAPTCHA_SECRET_KEY;
-    const minScore = Math.min(
-      1,
-      Math.max(0, parseFloat(process.env.RECAPTCHA_MIN_SCORE || '0.35') || 0.35)
-    );
-
-    if (secret) {
-      if (!recaptchaToken) {
-        return jsonResponse({ ok: false, error: 'recaptcha_required' }, 400);
-      }
-      const verifyRes = await fetch(RECAPTCHA_VERIFY, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ secret, response: recaptchaToken }),
-      });
-      const verifyData = await verifyRes.json().catch(() => ({}));
-      if (!verifyData.success) {
-        return jsonResponse({ ok: false, error: 'recaptcha_failed' }, 400);
-      }
-      if (typeof verifyData.score === 'number' && verifyData.score < minScore) {
-        return jsonResponse({ ok: false, error: 'recaptcha_low_score' }, 400);
-      }
     }
 
     const payload = {
@@ -116,7 +89,12 @@ export default {
     try {
       zRes = await fetch(webhook, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        redirect: 'follow',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'User-Agent': 'MHG-Lead-Form/1.0 (Vercel)',
+        },
         body: JSON.stringify(payload),
       });
     } catch {
@@ -124,7 +102,14 @@ export default {
     }
 
     if (!zRes.ok) {
-      return jsonResponse({ ok: false, error: 'upstream_error' }, 502);
+      return jsonResponse(
+        {
+          ok: false,
+          error: 'upstream_error',
+          zapierStatus: zRes.status,
+        },
+        502
+      );
     }
 
     return jsonResponse({ ok: true }, 200);

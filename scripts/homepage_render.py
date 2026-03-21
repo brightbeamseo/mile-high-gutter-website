@@ -86,26 +86,15 @@ def generate_theme_css(home: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def forms_head_fragments(home: dict[str, Any]) -> tuple[str, str]:
-    """
-    JSON for #site-forms-config (safe inside <script type="application/json">)
-    and optional reCAPTCHA v3 loader tag.
-    """
+def forms_head_fragments(home: dict[str, Any]) -> str:
+    """JSON for #site-forms-config (submitPath → POST target for lead forms)."""
     forms = home.get("forms") or {}
     submit_path = (forms.get("submitPath") or "/api/lead").strip() or "/api/lead"
     if not submit_path.startswith("/"):
         submit_path = "/" + submit_path.lstrip("/")
-    site_key = (forms.get("recaptchaSiteKey") or "").strip()
-    cfg = {"submitPath": submit_path, "recaptchaSiteKey": site_key}
+    cfg = {"submitPath": submit_path}
     raw_json = json.dumps(cfg, separators=(",", ":"))
-    safe_json = raw_json.replace("<", "\\u003c")
-    recaptcha_tag = ""
-    if site_key and re.match(r"^[0-9A-Za-z_-]+$", site_key):
-        recaptcha_tag = (
-            f'<script src="https://www.google.com/recaptcha/api.js?render={site_key}" '
-            "async defer></script>"
-        )
-    return safe_json, recaptcha_tag
+    return raw_json.replace("<", "\\u003c")
 
 
 def build_flat_context(home: dict[str, Any]) -> dict[str, str]:
@@ -121,9 +110,7 @@ def build_flat_context(home: dict[str, Any]) -> dict[str, str]:
     ctx.update(home["reviews"]["reviewValues"])
     ctx["mapEmbedUrl"] = home["mapEmbedUrl"]
     ctx["themeCss"] = generate_theme_css(home)
-    forms_json, recaptcha_tag = forms_head_fragments(home)
-    ctx["formsConfigJson"] = forms_json
-    ctx["recaptchaScriptTag"] = recaptcha_tag
+    ctx["formsConfigJson"] = forms_head_fragments(home)
     return ctx
 
 

@@ -57,10 +57,7 @@ const mailtoLink = email ? `mailto:${email}` : '#'
   title={pageTitle}
   description={pageDescription}
   theme={settings?.theme}
-  forms={{
-    submitPath: '/api/lead',
-    recaptchaSiteKey: import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '',
-  }}
+  forms={{ submitPath: '/api/lead' }}
 >
 <header class="header">
     <div class="offer-bar">

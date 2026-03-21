@@ -5,13 +5,8 @@ import { buildThemeCss } from '../lib/theme-css.js'
 const { title, description, theme, forms } = Astro.props
 const themeCss = buildThemeCss(theme)
 
-const formsForHead = forms ?? {
-  submitPath: '/api/lead',
-  recaptchaSiteKey: import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '',
-}
+const formsForHead = forms ?? { submitPath: '/api/lead' }
 const formsJson = JSON.stringify(formsForHead).replace(/</g, '\\u003c')
-const recaptchaKey = String(formsForHead.recaptchaSiteKey || '').trim()
-const recaptchaOk = /^[0-9A-Za-z_-]+$/.test(recaptchaKey)
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -31,9 +26,6 @@ const recaptchaOk = /^[0-9A-Za-z_-]+$/.test(recaptchaKey)
       rel="stylesheet"
     />
     <script type="application/json" id="site-forms-config" set:html={formsJson} />
-    {recaptchaOk && (
-      <script async defer src={`https://www.google.com/recaptcha/api.js?render=${recaptchaKey}`}></script>
-    )}
   </head>
   <body>
     <slot />

@@ -42,9 +42,8 @@
     }
   },
   "forms": {
-    "note": "recaptchaSiteKey is public (embedded in HTML). Put Zapier webhook URL + reCAPTCHA secret only in Vercel env: ZAPIER_WEBHOOK_URL, RECAPTCHA_SECRET_KEY. Optional: RECAPTCHA_MIN_SCORE (default 0.35).",
-    "submitPath": "/api/lead",
-    "recaptchaSiteKey": "6Lf7u5IsAAAAAGoHaaja39LEVhv1usE2vxT3pF4c"
+    "note": "Zapier only: set ZAPIER_WEBHOOK_URL in Vercel (https). reCAPTCHA removed for now.",
+    "submitPath": "/api/lead"
   },
   "business": {
     "companyName": "Mile High Gutter Denver",
