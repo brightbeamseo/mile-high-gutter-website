@@ -60,6 +60,12 @@ npm run watch
 
 **Preview/deploy the generated `index.html` at the project root** (not `src/index.html` alone).
 
+## Vercel
+
+- **`vercel.json`** sets **`outputDirectory` to `.`** because the live site files (`index.html`, `styles.css`, `script.js`, `Media (MHG)/`, etc.) sit at the **repo root**, not in a `public/` folder. That fixes: *No Output Directory named "public" found*.
+- **Build command** is **`npm run build`** (runs `python3 scripts/build-html.py`). Vercel’s build image must have **Python 3** available; if the build fails, either add a Python runtime in Project Settings or build locally, commit `index.html`, and use an empty / no-op build on Vercel.
+- In the Vercel dashboard, you can leave **Output Directory** as overridden by `vercel.json`, or set it to **`.`** manually (same result).
+
 ## Includes (head only)
 
 Only **`src/partials/head.html`** is still pulled in via:
