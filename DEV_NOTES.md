@@ -72,6 +72,7 @@ npm run watch
 - If **`RECAPTCHA_SECRET_KEY`** is unset, the API skips verification (handy for local testing); use both keys in production.
 - Zapier receives JSON: `formSource`, `name`, `email`, `phone`, `location`, `message`, `submittedAt`, `pageUrl`.
 - **Astro** (`astro-site/`): set **`PUBLIC_RECAPTCHA_SITE_KEY`** in `.env` or Vercel for the same site key; **`api/lead`** still lives at the **repo root** when the whole project is deployed to Vercel.
+- **404 `NOT_FOUND` on `/api/lead`:** (1) Vercel **Root Directory** must be the **repository root** (the folder that contains **`api/lead.js`** and **`vercel.json`**), not `astro-site/`. (2) **`api/lead.js`** must be **committed and pushed** to GitHub. (3) After deploy, opening `/api/lead` in the browser sends **GET** → you should see **`405`** + JSON (`method_not_allowed`), not **404**. **404** means the function was not deployed.
 
 ## Includes (head only)
 

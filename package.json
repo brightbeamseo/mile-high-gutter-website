@@ -1,6 +1,10 @@
 {
   "name": "mile-high-gutter-denver-site",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "python3 scripts/build-html.py",
     "watch": "python3 scripts/watch-html.py"
