@@ -576,7 +576,7 @@ a.btn-primary[href^="tel:"]:hover {
   inset: 0;
   background-image:
     linear-gradient(135deg, rgba(56, 69, 85, 0.88) 0%, rgba(56, 69, 85, 0.84) 50%, rgba(56, 69, 85, 0.88) 100%),
-    url("Media%20(MHG)/Images%20(Mile%20High)/mile-high-gutters-arvada-co-completed-gutter-installation-and-repair-on-finished-home-with-clean-lines-and-overcast-sky.webp");
+    url("/Media%20(MHG)/Images%20(Mile%20High)/mile-high-gutters-arvada-co-completed-gutter-installation-and-repair-on-finished-home-with-clean-lines-and-overcast-sky.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1150,7 +1150,7 @@ a.btn-primary[href^="tel:"]:hover {
   background-color: #143980;
   background-image:
     linear-gradient(135deg, rgba(20, 57, 128, 0.94) 0%, rgba(26, 74, 158, 0.94) 100%),
-    url("Media%20(MHG)/Images%20(Mile%20High)/mile-high-gutters-thornton-co-drone-overhead-view-complex-roof-gutter-installation-system.webp");
+    url("/Media%20(MHG)/Images%20(Mile%20High)/mile-high-gutters-thornton-co-drone-overhead-view-complex-roof-gutter-installation-system.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1568,6 +1568,44 @@ a.btn-primary[href^="tel:"]:hover {
   background: #102f6d;
   border-color: #102f6d;
   color: #fff;
+}
+
+/* Lead forms (hero + footer) — Zapier + reCAPTCHA v3 via /api/lead */
+.lead-form-honeypot-wrap {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.lead-form-status {
+  min-height: 1.35em;
+  margin: var(--space-sm) 0 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.lead-form-status:empty {
+  margin: 0;
+  min-height: 0;
+}
+
+.lead-form-status.is-error {
+  color: #b42318;
+}
+
+.lead-form-status.is-success {
+  color: #027a48;
+}
+
+form[data-lead-form] button[type="submit"].is-busy {
+  opacity: 0.72;
+  pointer-events: none;
 }
 
 /* Footer */
@@ -2372,7 +2410,7 @@ a.btn-primary[href^="tel:"]:hover {
 .unique-points {
   position: relative;
   background: var(--color-surface);
-  background-image: url("Media%20(MHG)/Images%20(Mile%20High)/mile-high-gutters-lakewood-new-home-gutters.webp");
+  background-image: url("/Media%20(MHG)/Images%20(Mile%20High)/mile-high-gutters-lakewood-new-home-gutters.webp");
   background-size: cover;
   background-position: center;
 }

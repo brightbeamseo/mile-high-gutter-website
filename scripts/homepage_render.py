@@ -10,6 +10,103 @@ import re
 from html import escape as esc
 from typing import Any
 
+# JSON theme.colors keys → CSS custom properties (see styles.css :root)
+_THEME_COLOR_VARS: dict[str, str] = {
+    "background": "--color-bg",
+    "backgroundAlt": "--color-bg-alt",
+    "surface": "--color-surface",
+    "text": "--color-text",
+    "textMuted": "--color-text-muted",
+    "accent": "--color-accent",
+    "accentHover": "--color-accent-hover",
+    "primary": "--color-dark",
+    "border": "--color-border",
+}
+_THEME_FONT_VARS: dict[str, str] = {
+    "heading": "--font-heading",
+    "body": "--font-body",
+}
+_THEME_SHADOW_VARS: dict[str, str] = {
+    "default": "--shadow",
+    "large": "--shadow-lg",
+}
+
+_DEFAULT_THEME: dict[str, dict[str, str]] = {
+    "colors": {
+        "background": "#fafbfc",
+        "backgroundAlt": "#f2f4f8",
+        "surface": "#ffffff",
+        "text": "#384555",
+        "textMuted": "#5c6b7a",
+        "accent": "#527BBD",
+        "accentHover": "#4369a8",
+        "primary": "#143980",
+        "border": "#e2e6ee",
+    },
+    "fonts": {
+        "heading": '"Poppins", system-ui, sans-serif',
+        "body": '"Merriweather", Georgia, serif',
+    },
+    "shadows": {
+        "default": "0 4px 24px rgba(20, 57, 128, 0.06)",
+        "large": "0 16px 48px rgba(20, 57, 128, 0.1)",
+    },
+}
+
+
+def _sanitize_css_token(value: str) -> str:
+    """Strip characters that could break </style> or inject markup."""
+    return str(value).replace("<", "").replace(">", "").strip()
+
+
+def generate_theme_css(home: dict[str, Any]) -> str:
+    """
+    Build a :root { ... } block from home['theme'] merged with defaults.
+    Injected after styles.css so these override file defaults.
+    """
+    raw = home.get("theme") or {}
+    colors = {**_DEFAULT_THEME["colors"], **(raw.get("colors") or {})}
+    fonts = {**_DEFAULT_THEME["fonts"], **(raw.get("fonts") or {})}
+    shadows = {**_DEFAULT_THEME["shadows"], **(raw.get("shadows") or {})}
+
+    lines: list[str] = [":root {"]
+    for json_key, css_var in _THEME_COLOR_VARS.items():
+        if json_key in colors and colors[json_key]:
+            val = _sanitize_css_token(colors[json_key])
+            lines.append(f"  {css_var}: {val};")
+    for json_key, css_var in _THEME_FONT_VARS.items():
+        if json_key in fonts and fonts[json_key]:
+            val = _sanitize_css_token(fonts[json_key])
+            lines.append(f"  {css_var}: {val};")
+    for json_key, css_var in _THEME_SHADOW_VARS.items():
+        if json_key in shadows and shadows[json_key]:
+            val = _sanitize_css_token(shadows[json_key])
+            lines.append(f"  {css_var}: {val};")
+    lines.append("}")
+    return "\n".join(lines)
+
+
+def forms_head_fragments(home: dict[str, Any]) -> tuple[str, str]:
+    """
+    JSON for #site-forms-config (safe inside <script type="application/json">)
+    and optional reCAPTCHA v3 loader tag.
+    """
+    forms = home.get("forms") or {}
+    submit_path = (forms.get("submitPath") or "/api/lead").strip() or "/api/lead"
+    if not submit_path.startswith("/"):
+        submit_path = "/" + submit_path.lstrip("/")
+    site_key = (forms.get("recaptchaSiteKey") or "").strip()
+    cfg = {"submitPath": submit_path, "recaptchaSiteKey": site_key}
+    raw_json = json.dumps(cfg, separators=(",", ":"))
+    safe_json = raw_json.replace("<", "\\u003c")
+    recaptcha_tag = ""
+    if site_key and re.match(r"^[0-9A-Za-z_-]+$", site_key):
+        recaptcha_tag = (
+            f'<script src="https://www.google.com/recaptcha/api.js?render={site_key}" '
+            "async defer></script>"
+        )
+    return safe_json, recaptcha_tag
+
 
 def build_flat_context(home: dict[str, Any]) -> dict[str, str]:
     """Flatten business + meta + stats + review counts + map URL for {{placeholder}} substitution."""
@@ -23,6 +120,10 @@ def build_flat_context(home: dict[str, Any]) -> dict[str, str]:
     ctx.update(home["statsValues"])
     ctx.update(home["reviews"]["reviewValues"])
     ctx["mapEmbedUrl"] = home["mapEmbedUrl"]
+    ctx["themeCss"] = generate_theme_css(home)
+    forms_json, recaptcha_tag = forms_head_fragments(home)
+    ctx["formsConfigJson"] = forms_json
+    ctx["recaptchaScriptTag"] = recaptcha_tag
     return ctx
 
 
@@ -169,7 +270,7 @@ def render_hero(home: dict[str, Any], ctx: dict[str, str]) -> str:
             <a href="tel:{esc(ctx["phoneTel"], quote=True)}" class="btn btn-primary btn-lg cta1-primary-call">{esc(call)}</a>
           </div>
         </div>
-        <div class="hero-form" role="group" aria-label="{esc(hero["formAriaLabel"], quote=True)}">
+        <form class="hero-form" data-lead-form="hero" action="#" method="post" aria-label="{esc(hero["formAriaLabel"], quote=True)}">
           <div class="hero-form-heading">
             <div class="hero-form-kicker">{esc(hero["formKicker"])}</div>
             <h2>{esc(hero["formHeadline"])}</h2>
@@ -178,27 +279,32 @@ def render_hero(home: dict[str, Any], ctx: dict[str, str]) -> str:
           <div class="hero-form-grid">
             <div class="hero-form-field">
               <label for="hero-name">{esc(ff["nameLabel"])} <span class="required-mark" aria-hidden="true">{esc(ff["requiredIndicator"])}</span></label>
-              <input id="hero-name" name="name" type="text" required>
+              <input id="hero-name" name="name" type="text" required autocomplete="name">
             </div>
             <div class="hero-form-field">
               <label for="hero-email">{esc(ff["emailLabel"])} <span class="required-mark" aria-hidden="true">{esc(ff["requiredIndicator"])}</span></label>
-              <input id="hero-email" name="email" type="email" required>
+              <input id="hero-email" name="email" type="email" required autocomplete="email">
             </div>
             <div class="hero-form-field">
               <label for="hero-phone">{esc(ff["phoneLabel"])} <span class="required-mark" aria-hidden="true">{esc(ff["requiredIndicator"])}</span></label>
-              <input id="hero-phone" name="phone" type="tel" required>
+              <input id="hero-phone" name="phone" type="tel" required autocomplete="tel">
             </div>
             <div class="hero-form-field">
               <label for="hero-location">{esc(ff["cityLabel"])}</label>
-              <input id="hero-location" name="location" type="text">
+              <input id="hero-location" name="location" type="text" autocomplete="address-level2">
             </div>
             <div class="hero-form-field hero-form-field-full">
               <label for="hero-message">{esc(ff["projectDetailsLabel"])}</label>
               <textarea id="hero-message" name="message" rows="3"></textarea>
             </div>
           </div>
-          <a href="{esc(hero["formSubmitHref"], quote=True)}" class="btn btn-primary btn-lg">{esc(hero["formSubmitCta"])}</a>
-        </div>
+          <div class="lead-form-honeypot-wrap" aria-hidden="true">
+            <label for="hero-website">Leave blank</label>
+            <input type="text" id="hero-website" name="website" tabindex="-1" autocomplete="off">
+          </div>
+          <p class="lead-form-status" data-lead-form-status role="status" aria-live="polite"></p>
+          <button type="submit" class="btn btn-primary btn-lg">{esc(hero["formSubmitCta"])}</button>
+        </form>
       </div>
       <section class="brands-marquee" aria-label="{esc(bm["ariaLabel"], quote=True)}">
         <div class="brands-track">
@@ -610,29 +716,34 @@ def render_footer(home: dict[str, Any], ctx: dict[str, str]) -> str:
               <p class="contact-address">{esc(ctx["addressShort"])}</p>
             </div>
           </div>
-          <form class="contact-form" action="{esc(fe["formAction"], quote=True)}" method="{esc(fe["formMethod"], quote=True)}">
+          <form class="contact-form" data-lead-form="footer" action="{esc(fe["formAction"], quote=True)}" method="{esc(fe["formMethod"], quote=True)}">
             <div class="contact-form-grid">
               <div class="contact-form-field">
                 <label for="contact-name">{esc(ff["nameLabel"])} <span class="required-mark" aria-hidden="true">*</span></label>
-                <input type="text" id="contact-name" name="name" required>
+                <input type="text" id="contact-name" name="name" required autocomplete="name">
               </div>
               <div class="contact-form-field">
                 <label for="contact-email">{esc(ff["emailLabel"])} <span class="required-mark" aria-hidden="true">*</span></label>
-                <input type="email" id="contact-email" name="email" required>
+                <input type="email" id="contact-email" name="email" required autocomplete="email">
               </div>
               <div class="contact-form-field">
                 <label for="contact-phone">{esc(ff["phoneLabel"])} <span class="required-mark" aria-hidden="true">*</span></label>
-                <input type="tel" id="contact-phone" name="phone" required>
+                <input type="tel" id="contact-phone" name="phone" required autocomplete="tel">
               </div>
               <div class="contact-form-field">
                 <label for="contact-location">{esc(ff["cityLabel"])}</label>
-                <input type="text" id="contact-location" name="location">
+                <input type="text" id="contact-location" name="location" autocomplete="address-level2">
               </div>
               <div class="contact-form-field contact-form-field-full">
                 <label for="contact-message">{esc(ff["projectDetailsLabel"])}</label>
                 <textarea id="contact-message" name="message" rows="4"></textarea>
               </div>
             </div>
+            <div class="lead-form-honeypot-wrap" aria-hidden="true">
+              <label for="contact-website">Leave blank</label>
+              <input type="text" id="contact-website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+            <p class="lead-form-status" data-lead-form-status role="status" aria-live="polite"></p>
             <button type="submit" class="btn btn-primary btn-lg">{esc(ff["submitButton"])}</button>
           </form>
         </div>

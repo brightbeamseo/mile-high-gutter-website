@@ -19,6 +19,33 @@
     "title": "Mile High Gutter Denver | Gutters Denver | Fast, Hassle-Free Estimates",
     "description": "Mile High Gutter Denver is a family-owned company with 40+ years of experience. We provide seamless gutter installation, repair, maintenance, and guards for residential and commercial properties across the Denver metro. Free estimates available."
   },
+  "theme": {
+    "note": "Overrides :root CSS variables after styles.css loads—swap this block per white-label site. Maps to vars in styles.css (:root). Logos: use business.logoHorizontalBlack / business.logoHorizontalWhite.",
+    "colors": {
+      "background": "#fafbfc",
+      "backgroundAlt": "#f2f4f8",
+      "surface": "#ffffff",
+      "text": "#384555",
+      "textMuted": "#5c6b7a",
+      "accent": "#527BBD",
+      "accentHover": "#4369a8",
+      "primary": "#143980",
+      "border": "#e2e6ee"
+    },
+    "fonts": {
+      "heading": "\"Poppins\", system-ui, sans-serif",
+      "body": "\"Merriweather\", Georgia, serif"
+    },
+    "shadows": {
+      "default": "0 4px 24px rgba(20, 57, 128, 0.06)",
+      "large": "0 16px 48px rgba(20, 57, 128, 0.1)"
+    }
+  },
+  "forms": {
+    "note": "recaptchaSiteKey is public (embedded in HTML). Put Zapier webhook URL + reCAPTCHA secret only in Vercel env: ZAPIER_WEBHOOK_URL, RECAPTCHA_SECRET_KEY. Optional: RECAPTCHA_MIN_SCORE (default 0.35).",
+    "submitPath": "/api/lead",
+    "recaptchaSiteKey": "6Lf7u5IsAAAAAGoHaaja39LEVhv1usE2vxT3pF4c"
+  },
   "business": {
     "companyName": "Mile High Gutter Denver",
     "companyNameShort": "Mile High Gutter",

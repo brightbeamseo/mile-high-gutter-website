@@ -12,13 +12,14 @@
 
 | Path | Purpose |
 |------|---------|
-| **`shared/homepage-content.json`** | **Source of truth for homepage copy**—headlines, CTAs, nav, services, FAQs, reviews, cities, stats, contact/footer text, media paths, etc. **`business`** holds NAP, site URL, short/long descriptions, hours, founding date, and logo paths. **`businessCategories`**, **`keywords`**, and **`businessListings`** (Google/Bing/social URLs) are for SEO and consistency—keep in sync with live profiles. Each **photo** includes a **`location`** (or `posterLocation`, `avatarLocation`, etc.) derived from the filename / context. **`layoutBackgrounds`** documents hero, unique-points, and services section CSS background images (keep in sync with `styles.css`). **Project carousel:** the text next to 📍 is **`projects.slides[].location`** (rendered as `.project-location-label`, also on `data-location`). |
+| **`shared/homepage-content.json`** | **Source of truth for homepage copy**—headlines, CTAs, nav, services, FAQs, reviews, cities, stats, contact/footer text, media paths, etc. **`business`** holds NAP, site URL, short/long descriptions, hours, founding date, and **logo paths** (`logoHorizontalBlack`, `logoHorizontalWhite`). **`theme`** holds **white-label branding**: `colors` (maps to `:root` vars like `--color-bg`, `--color-accent`; JSON key **`primary`** → `--color-dark`), `fonts` (`heading`, `body`), `shadows` (`default`, `large`). Build injects `<style id="site-theme-vars">` after `styles.css` (see `scripts/homepage_render.py` → `themeCss`). **`forms`**: `recaptchaSiteKey` (reCAPTCHA **v3 site** key, public), `submitPath` (default `/api/lead`); webhook + **secret** key only in Vercel env (see **Lead forms** below). **`businessCategories`**, **`keywords`**, and **`businessListings`** (Google/Bing/social URLs) are for SEO and consistency—keep in sync with live profiles. Each **photo** includes a **`location`** (or `posterLocation`, `avatarLocation`, etc.) derived from the filename / context. **`layoutBackgrounds`** documents hero, unique-points, and services section CSS background images (keep in sync with `styles.css`). **Project carousel:** the text next to 📍 is **`projects.slides[].location`** (rendered as `.project-location-label`, also on `data-location`). |
 | **`scripts/homepage_render.py`** | Builds each section’s HTML (structure, classes, SVG icons). Edit here only when changing layout/components—not wording. |
 | **`src/index.html`** | Assembly file: `<!-- @homepage:section-name -->` markers + order of sections. |
-| **`src/partials/head.html`** | `<head>`: uses `{{title}}` and `{{metaDescription}}` filled from JSON at build time. |
+| **`src/partials/head.html`** | `<head>`: uses `{{title}}`, `{{metaDescription}}`, and `{{themeCss}}` filled from JSON at build time. |
 | **`scripts/build-html.py`** | Loads JSON → injects rendered sections → fills `{{placeholders}}` → writes root **`index.html`**. |
 | **`index.html`** (root) | **Deploy** this file. |
 | **`shared/site.json`** | **Legacy / unused by build.** All data now lives in `homepage-content.json`; you can delete `site.json` if you no longer need it. |
+| **`Sanity (MHG)/schemaTypes/`** | **Sanity Studio** — schemas derived from **`shared/homepage-content.json`** (see **`SCHEMAS.md`**). Documents: **`siteSettings`** (global business keys), **`homePage`** (page sections). Merge both to recreate the full JSON shape. |
 
 ## How to edit homepage content
 
@@ -65,6 +66,12 @@ npm run watch
 - **`vercel.json`** sets **`outputDirectory` to `.`** because the live site files (`index.html`, `styles.css`, `script.js`, `Media (MHG)/`, etc.) sit at the **repo root**, not in a `public/` folder. That fixes: *No Output Directory named "public" found*.
 - **Build command** is **`npm run build`** (runs `python3 scripts/build-html.py`). Vercel’s build image must have **Python 3** available; if the build fails, either add a Python runtime in Project Settings or build locally, commit `index.html`, and use an empty / no-op build on Vercel.
 - In the Vercel dashboard, you can leave **Output Directory** as overridden by `vercel.json`, or set it to **`.`** manually (same result).
+- **Lead forms (hero + footer):** `script.js` POSTs JSON to **`/api/lead`** (see **`api/lead.js`**). Configure in Vercel **Environment Variables** (see **`.env.example`**):
+  - **`ZAPIER_WEBHOOK_URL`** — Zapier *Catch Hook* “Custom” webhook URL (keep this secret; do **not** put it in `homepage-content.json`).
+  - **`RECAPTCHA_SECRET_KEY`** — Google reCAPTCHA **v3** *secret* key. The **site** key goes in **`shared/homepage-content.json`** → **`forms.recaptchaSiteKey`** (public, embedded in HTML). Optional **`RECAPTCHA_MIN_SCORE`** (default `0.35`).
+- If **`RECAPTCHA_SECRET_KEY`** is unset, the API skips verification (handy for local testing); use both keys in production.
+- Zapier receives JSON: `formSource`, `name`, `email`, `phone`, `location`, `message`, `submittedAt`, `pageUrl`.
+- **Astro** (`astro-site/`): set **`PUBLIC_RECAPTCHA_SITE_KEY`** in `.env` or Vercel for the same site key; **`api/lead`** still lives at the **repo root** when the whole project is deployed to Vercel.
 
 ## Includes (head only)
 

@@ -1,0 +1,44 @@
+---
+import '../../../styles.css'
+import { buildThemeCss } from '../lib/theme-css.js'
+
+const { title, description, theme, forms } = Astro.props
+const themeCss = buildThemeCss(theme)
+
+const formsForHead = forms ?? {
+  submitPath: '/api/lead',
+  recaptchaSiteKey: import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '',
+}
+const formsJson = JSON.stringify(formsForHead).replace(/</g, '\\u003c')
+const recaptchaKey = String(formsForHead.recaptchaSiteKey || '').trim()
+const recaptchaOk = /^[0-9A-Za-z_-]+$/.test(recaptchaKey)
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/json" id="site-forms-config" set:html={formsJson} />
+    {recaptchaOk && (
+      <script async defer src={`https://www.google.com/recaptcha/api.js?render=${recaptchaKey}`}></script>
+    )}
+  </head>
+  <body>
+    <slot />
+    <!-- After bundled styles.css so :root theme tokens override file defaults -->
+    <style id="site-theme-vars" set:html={themeCss}></style>
+    <script src="/script.js" defer></script>
+  </body>
+</html>
