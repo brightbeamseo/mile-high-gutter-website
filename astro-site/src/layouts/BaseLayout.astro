@@ -5,8 +5,7 @@ import { buildThemeCss } from '../lib/theme-css.js'
 const { title, description, theme, forms } = Astro.props
 const themeCss = buildThemeCss(theme)
 
-const formsForHead = forms ?? { submitPath: '/api/lead' }
-const formsJson = JSON.stringify(formsForHead).replace(/</g, '\\u003c')
+const formsJson = JSON.stringify(forms).replace(/</g, '\\u003c')
 ---
 <!DOCTYPE html>
 <html lang="en">

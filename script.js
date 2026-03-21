@@ -395,26 +395,23 @@
     });
   }
 
-  // Hero typed service text (phrases from shared/homepage-content.json via #homepage-typed-phrases)
+  // Hero typed service text: phrases from #homepage-typed-phrases (Sanity / static JSON when present)
   var typedEl = document.getElementById('hero-typed-text');
-  var phrases = [
-    'Gutter Installation',
-    'Gutter Repair',
-    'Gutter Cleaning',
-    'Gutter Guards',
-    'Heated Gutters',
-    'Soffit & Fascia'
-  ];
+  var phrases = [];
   var typedCfg = document.getElementById('homepage-typed-phrases');
+  var typedFallback =
+    typedCfg && typedCfg.getAttribute('data-fallback-phrase')
+      ? String(typedCfg.getAttribute('data-fallback-phrase')).trim()
+      : '';
   if (typedCfg && typedCfg.textContent) {
     try {
       var parsedPhrases = JSON.parse(typedCfg.textContent);
       if (Array.isArray(parsedPhrases) && parsedPhrases.length) {
         phrases = parsedPhrases;
       }
-    } catch (e) { /* keep default phrases */ }
+    } catch (e) { /* ignore invalid JSON */ }
   }
-  if (typedEl && !prefersReducedMotion) {
+  if (typedEl && !prefersReducedMotion && phrases.length) {
     var phraseIndex = 0;
     var charIndex = 0;
     var isDeleting = false;
@@ -446,7 +443,37 @@
 
     runTypeCycle();
   } else if (typedEl) {
-    typedEl.textContent = phrases[0] || 'Gutter Installation';
+    typedEl.textContent = phrases[0] || typedFallback || '';
+  }
+
+  /** Lead-form phone only (not sitewide NAP): US 10-digit / +1 → NNN-NNN-NNNN. */
+  function formatUsPhoneDashes(value) {
+    var d = String(value || '').replace(/\D/g, '');
+    if (d.length === 11 && d.charAt(0) === '1') {
+      d = d.slice(1);
+    }
+    if (d.length === 10) {
+      return d.slice(0, 3) + '-' + d.slice(3, 6) + '-' + d.slice(6);
+    }
+    return String(value || '').trim();
+  }
+
+  /** As user types / pastes: US digits only, max 10 → NNN-NNN-NNNN (partial while typing). */
+  function formatPhoneInputLive(el) {
+    var d = el.value.replace(/\D/g, '');
+    if (d.length >= 11 && d.charAt(0) === '1') {
+      d = d.slice(1);
+    }
+    d = d.slice(0, 10);
+    var out = '';
+    if (d.length <= 3) {
+      out = d;
+    } else if (d.length <= 6) {
+      out = d.slice(0, 3) + '-' + d.slice(3);
+    } else {
+      out = d.slice(0, 3) + '-' + d.slice(3, 6) + '-' + d.slice(6);
+    }
+    el.value = out;
   }
 
   // Lead forms → POST /api/lead (Zapier on server)
@@ -485,6 +512,18 @@
     var endpoint = cfg.submitPath.indexOf('/') === 0 ? cfg.submitPath : '/' + cfg.submitPath;
 
     leadForms.forEach(function (form) {
+      var phoneInput = form.querySelector('input[name="phone"]');
+      if (phoneInput) {
+        phoneInput.setAttribute('maxlength', '12');
+        phoneInput.setAttribute('autocomplete', 'tel');
+        phoneInput.addEventListener('input', function () {
+          formatPhoneInputLive(phoneInput);
+        });
+        phoneInput.addEventListener('blur', function () {
+          formatPhoneInputLive(phoneInput);
+        });
+      }
+
       form.addEventListener('submit', function (event) {
         event.preventDefault();
         if (!form.checkValidity()) {
@@ -502,7 +541,7 @@
           formSource: form.getAttribute('data-lead-form') || 'unknown',
           name: (fd.get('name') || '').toString().trim(),
           email: (fd.get('email') || '').toString().trim(),
-          phone: (fd.get('phone') || '').toString().trim(),
+          phone: formatUsPhoneDashes((fd.get('phone') || '').toString()),
           location: (fd.get('location') || '').toString().trim(),
           message: (fd.get('message') || '').toString().trim(),
           website: (fd.get('website') || '').toString().trim(),

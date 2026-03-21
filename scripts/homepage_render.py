@@ -274,7 +274,7 @@ def render_hero(home: dict[str, Any], ctx: dict[str, str]) -> str:
             </div>
             <div class="hero-form-field">
               <label for="hero-phone">{esc(ff["phoneLabel"])} <span class="required-mark" aria-hidden="true">{esc(ff["requiredIndicator"])}</span></label>
-              <input id="hero-phone" name="phone" type="tel" required autocomplete="tel">
+              <input id="hero-phone" name="phone" type="tel" required autocomplete="tel" maxlength="12" inputmode="numeric" pattern="[0-9]{{3}}-[0-9]{{3}}-[0-9]{{4}}" title="10-digit phone, e.g. 303-762-9841">
             </div>
             <div class="hero-form-field">
               <label for="hero-location">{esc(ff["cityLabel"])}</label>
@@ -715,7 +715,7 @@ def render_footer(home: dict[str, Any], ctx: dict[str, str]) -> str:
               </div>
               <div class="contact-form-field">
                 <label for="contact-phone">{esc(ff["phoneLabel"])} <span class="required-mark" aria-hidden="true">*</span></label>
-                <input type="tel" id="contact-phone" name="phone" required autocomplete="tel">
+                <input type="tel" id="contact-phone" name="phone" required autocomplete="tel" maxlength="12" inputmode="numeric" pattern="[0-9]{{3}}-[0-9]{{3}}-[0-9]{{4}}" title="10-digit phone, e.g. 303-762-9841">
               </div>
               <div class="contact-form-field">
                 <label for="contact-location">{esc(ff["cityLabel"])}</label>

@@ -145,6 +145,14 @@ export const businessListings = defineType({
   ],
 })
 
+/** Lead form POST path (e.g. /api/lead) — used by Astro head + script.js */
+export const siteForms = defineType({
+  name: 'siteForms',
+  title: 'Forms',
+  type: 'object',
+  fields: [defineField({ name: 'submitPath', type: 'string', title: 'Lead POST path' })],
+})
+
 export const offerBar = defineType({
   name: 'offerBar',
   title: 'Offer bar',
@@ -674,6 +682,7 @@ export const homepageObjectTypes = [
   theme,
   business,
   businessListings,
+  siteForms,
   offerBar,
   navLinkItem,
   navItem,

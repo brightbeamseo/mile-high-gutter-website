@@ -8,6 +8,12 @@
   "scripts": {
     "sync-api": "mkdir -p astro-site/api && cp api/lead.js astro-site/api/lead.js",
     "build": "npm run sync-api && python3 scripts/build-html.py",
-    "watch": "python3 scripts/watch-html.py"
+    "watch": "python3 scripts/watch-html.py",
+    "import:content": "node scripts/import-content.js"
+  },
+  "dependencies": {
+    "@sanity/client": "^7.20.0",
+    "dotenv": "^17.3.1",
+    "nanoid": "^5.1.5"
   }
 }

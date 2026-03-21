@@ -21,6 +21,12 @@ export const siteSettings = defineType({
       of: [{type: 'string'}],
     }),
     defineField({name: 'businessListings', type: 'businessListings'}),
+    defineField({
+      name: 'forms',
+      type: 'siteForms',
+      title: 'Forms',
+      description: 'Lead form endpoint path (e.g. /api/lead).',
+    }),
     defineField({name: 'meta', type: 'meta'}),
     defineField({
       name: 'theme',

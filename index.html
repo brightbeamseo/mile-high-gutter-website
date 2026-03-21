@@ -113,7 +113,7 @@
             </div>
             <div class="hero-form-field">
               <label for="hero-phone">Phone <span class="required-mark" aria-hidden="true">*</span></label>
-              <input id="hero-phone" name="phone" type="tel" required autocomplete="tel">
+              <input id="hero-phone" name="phone" type="tel" required autocomplete="tel" maxlength="12" inputmode="numeric" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" title="10-digit phone, e.g. 303-762-9841">
             </div>
             <div class="hero-form-field">
               <label for="hero-location">City</label>
@@ -603,7 +603,7 @@
               </div>
               <div class="contact-form-field">
                 <label for="contact-phone">Phone <span class="required-mark" aria-hidden="true">*</span></label>
-                <input type="tel" id="contact-phone" name="phone" required autocomplete="tel">
+                <input type="tel" id="contact-phone" name="phone" required autocomplete="tel" maxlength="12" inputmode="numeric" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" title="10-digit phone, e.g. 303-762-9841">
               </div>
               <div class="contact-form-field">
                 <label for="contact-location">City</label>

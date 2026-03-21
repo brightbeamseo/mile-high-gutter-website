@@ -6,6 +6,15 @@
  * Env: ZAPIER_WEBHOOK_URL (required, https)
  */
 
+/** Visitor-submitted phone from forms → NNN-NNN-NNNN when US 10 digits. */
+function formatUsPhoneDashes(value) {
+  const d = String(value || '').replace(/\D/g, '');
+  let n = d;
+  if (d.length === 11 && d.startsWith('1')) n = d.slice(1);
+  if (n.length === 10) return `${n.slice(0, 3)}-${n.slice(3, 6)}-${n.slice(6)}`;
+  return String(value || '').trim();
+}
+
 function jsonResponse(data, status, extraHeaders = {}) {
   return Response.json(data, {
     status,
@@ -61,7 +70,7 @@ export default {
 
     const name = String(body.name || '').trim().slice(0, 500);
     const email = String(body.email || '').trim().slice(0, 320);
-    const phone = String(body.phone || '').trim().slice(0, 80);
+    const phone = formatUsPhoneDashes(body.phone || '').slice(0, 80);
     const location = String(body.location || '').trim().slice(0, 200);
     const message = String(body.message || '').trim().slice(0, 5000);
     const formSource = String(body.formSource || 'unknown').trim().slice(0, 80);
