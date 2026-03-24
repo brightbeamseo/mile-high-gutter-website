@@ -1,4 +1,6 @@
 ---
+import Analytics from '@vercel/analytics/astro'
+import SpeedInsights from '@vercel/speed-insights/astro'
 import '../../../styles.css'
 import { buildThemeCss } from '../lib/theme-css.js'
 
@@ -37,6 +39,8 @@ const formsJson = JSON.stringify(forms).replace(/</g, '\\u003c')
     <slot />
     <!-- After bundled styles.css so :root theme tokens override file defaults -->
     <style id="site-theme-vars" set:html={themeCss}></style>
+    <Analytics />
+    <SpeedInsights />
     <script src="/script.js" defer></script>
   </body>
 </html>
