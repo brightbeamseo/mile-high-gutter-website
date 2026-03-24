@@ -143,6 +143,9 @@ const serviceHref = (svc) => {
             <span class="section-title" style="margin:0; font-size: 1.25rem;">{companyName}</span>
           )}
         </a>
+        <button class="nav-toggle" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
         <nav class="nav">
           {navItems.length > 0 ? (
             navItems.map((item, i) => {
@@ -371,7 +374,7 @@ const serviceHref = (svc) => {
               <span>{asStr(reviewsToRender?.summary?.brandLabel)}</span>
             </p>
           </div>
-          <a href={asStr(reviewsToRender?.summary?.ctaHref) || '#'} class="btn btn-primary reviews-summary-cta">
+          <a href={asStr(reviewsToRender?.summary?.ctaHref) || '/reviews/'} class="btn btn-primary reviews-summary-cta">
             {asStr(reviewsToRender?.summary?.ctaText) || 'See More Reviews'}
           </a>
         </div>
