@@ -27,12 +27,22 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const CONTENT_PATH = join(ROOT, 'shared', 'homepage-content.json');
 
+/** `businessCategories` / `keywords` use schema type `stringListItem` ({ value }) — not plain string[]. */
+function stringListFromJson(arr) {
+  if (!Array.isArray(arr)) return undefined;
+  return arr.map((item) =>
+    typeof item === 'string'
+      ? { _type: 'stringListItem', value: item }
+      : item,
+  );
+}
+
 /** Document fields for siteSettings (Sanity schema: siteSettings.ts) */
 function buildSiteSettingsData(json) {
   return {
     business: json.business,
-    businessCategories: json.businessCategories,
-    keywords: json.keywords,
+    businessCategories: stringListFromJson(json.businessCategories),
+    keywords: stringListFromJson(json.keywords),
     businessListings: json.businessListings,
     forms: json.forms
       ? { submitPath: json.forms.submitPath }

@@ -1,0 +1,291 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import FooterSocialIcon from '../../components/FooterSocialIcon.astro'
+import FooterContactInfo from '../../components/FooterContactInfo.astro'
+import FooterHoursRow from '../../components/FooterHoursRow.astro'
+import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../../lib/footer-contact-heading.js'
+import { sanity } from '../../lib/sanity.js'
+import { getSiteSettings, mergeHeaderFromSettings } from '../../lib/site-settings.js'
+import { asStr, applyTemplate, mediaUrl } from '../../lib/sanity-strings.js'
+
+let settings = {}
+let homePage = {}
+try {
+  ;[settings, homePage] = await Promise.all([getSiteSettings(), sanity.fetch(`*[_type == "homePage"][0]`)])
+} catch (err) {
+  console.warn('[service-area] Sanity fetch failed; using fallback placeholders.', err)
+}
+
+const business = settings?.business ?? {}
+const header = mergeHeaderFromSettings(settings, homePage?.header)
+const footerEstimate = settings?.footerEstimate ?? homePage?.footerEstimate ?? {}
+const footerBrand = settings?.footerBrand ?? homePage?.footerBrand ?? {}
+const footerColumns = settings?.footerColumns ?? homePage?.footerColumns ?? []
+const footerSupport = settings?.footerSupport ?? homePage?.footerSupport ?? {}
+
+const companyName = asStr(business.companyName) || 'Mile High Gutters'
+const phoneDisplay = asStr(business.phoneDisplay) || '(303) 000-0000'
+const phoneTel = asStr(business.phoneTel) || '3030000000'
+const email = asStr(business.email) || 'hello@example.com'
+const address = asStr(business.addressShort) || 'Denver, Colorado'
+const addressHref = googleBusinessProfileUrl(settings)
+const descriptionShort = asStr(business.descriptionShort)
+const logoWhite = asStr(business.logoHorizontalWhite)
+const logoBlack = asStr(business.logoHorizontalBlack)
+const copyrightHref = asStr(business.copyrightSiteUrl) || '#'
+
+const callLabelNav = applyTemplate(asStr(header.callCtaTemplate), { phoneDisplay }) || phoneDisplay
+const logoAriaLabel = applyTemplate(asStr(header.logoAriaLabelTemplate), { companyName }) || companyName
+const navItems = Array.isArray(header.navItems) ? header.navItems : []
+
+const serviceArea = homePage?.serviceArea ?? {}
+const pageTitle = 'Service Area | Mile High Gutters'
+const pageDescription = asStr(serviceArea?.intro) || 'Cities and counties we serve across the Denver metro.'
+const mapEmbedUrl =
+  asStr(settings?.mapEmbedUrl) ||
+  'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d393176.63622688083!2d-105.63456111093751!3d39.6566351!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x876b8636aaaaaaab%3A0x82de48ab5054a084!2sMile%20High%20Gutter%20LLC!5e0!3m2!1sen!2sus!4v1774033385651!5m2!1sen!2sus'
+const mapIframeTitle =
+  applyTemplate(asStr(serviceArea?.mapIframeTitleTemplate), { companyName }) || `${companyName} service area map`
+
+const counties = [
+  'Adams County',
+  'Arapahoe County',
+  'Boulder County',
+  'Broomfield County',
+  'Clear Creek County',
+  'Denver County',
+  'Douglas County',
+  'Gilpin County',
+  'Jefferson County',
+  'Weld County',
+]
+
+const cities = [
+  'Denver',
+  'Aurora',
+  'Lakewood',
+  'Arvada',
+  'Westminster',
+  'Thornton',
+  'Northglenn',
+  'Commerce City',
+  'Brighton',
+  'Broomfield',
+  'Golden',
+  'Wheat Ridge',
+  'Edgewater',
+  'Morrison',
+  'Littleton',
+  'Englewood',
+  'Sheridan',
+  'Centennial',
+  'Greenwood Village',
+  'Cherry Hills Village',
+  'Highlands Ranch',
+  'Lone Tree',
+  'Parker',
+  'Castle Rock',
+  'Boulder',
+  'Lafayette',
+  'Louisville',
+  'Erie',
+  'Longmont',
+  'Idaho Springs',
+  'Black Hawk',
+  'Central City',
+  'Greeley',
+  'Evans',
+  'Windsor',
+]
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  theme={settings?.theme}
+  forms={{ submitPath: asStr(settings?.forms?.submitPath) || '/api/lead' }}
+>
+  <header class="header">
+    <div class="offer-bar">
+      <div class="offer-bar-inner">
+        <p class="offer-message">
+          {asStr(header?.offerBar?.textBeforeDiscount)}
+          <strong>{asStr(header?.offerBar?.discountLabel)}</strong>
+          {asStr(header?.offerBar?.textAfterDiscount)}
+          <a href={asStr(header?.offerBar?.ctaHref) || '#contact'} class="offer-link">
+            <strong>{asStr(header?.offerBar?.ctaText) || 'Get a Quote Now!'}</strong>
+          </a>
+        </p>
+      </div>
+    </div>
+    <div class="header-nav">
+      <div class="header-inner">
+        <a href="/" class="logo" aria-label={logoAriaLabel}>
+          {logoBlack ? (
+            <img src={mediaUrl(logoBlack)} alt={companyName} class="logo-img" />
+          ) : (
+            <span class="section-title" style="margin:0; font-size: 1.25rem;">{companyName}</span>
+          )}
+        </a>
+        <nav class="nav">
+          {navItems.length > 0 ? (
+            navItems.map((item, i) => {
+              const label = asStr(item.label)
+              const href = asStr(item.href)
+              const dropdown = item.dropdown
+              if (Array.isArray(dropdown) && dropdown.length > 0) {
+                const ddId = `service-nav-dd-${i}`
+                return (
+                  <div class="nav-dropdown" data-nav-dropdown>
+                    <button
+                      type="button"
+                      class="nav-dropdown-toggle"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-controls={ddId}
+                      id={`${ddId}-btn`}
+                    >
+                      {label}
+                      <span class="nav-dropdown-chevron" aria-hidden="true"></span>
+                    </button>
+                    <ul class="nav-dropdown-menu" id={ddId} role="menu">
+                      {dropdown.map((link) => (
+                        <li role="none">
+                          <a href={asStr(link.href)} role="menuitem">
+                            {asStr(link.label)}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
+              }
+              return <a href={href || '#'}>{label}</a>
+            })
+          ) : (
+            <>
+              <a href="/">Home</a>
+              <a href="/products-services/">Products & Services</a>
+            </>
+          )}
+          <a href={`tel:${phoneTel}`} class="btn btn-primary btn-lg">{callLabelNav}</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section service-area service-area-page" id="service-area">
+      <div class="container">
+        <div class="why-eyebrow">{asStr(serviceArea?.eyebrow) || 'Service Area'}</div>
+        <h1 class="section-title">{asStr(serviceArea?.headline) || 'Areas We Serve'}</h1>
+        <p class="section-lead service-area-intro">
+          {asStr(serviceArea?.intro) || 'We serve homeowners and businesses throughout the Denver metro area.'}
+        </p>
+        <div class="cities-list">
+          <p class="cities-label">Counties We Serve</p>
+          <nav class="cities-nav" aria-label="Counties we serve">
+            {counties.map((county) => (
+              <span>{county}</span>
+            ))}
+          </nav>
+          <p class="cities-label" style="margin-top:1rem;">Cities We Serve</p>
+          <nav class="cities-nav" aria-label={asStr(serviceArea?.citiesNavAriaLabel) || 'Cities we serve'}>
+            {cities.map((city) => <span>{city}</span>)}
+          </nav>
+        </div>
+        <div class="map-wrap" style="margin-top:1.5rem;">
+          <iframe
+            src={mapEmbedUrl}
+            width="600"
+            height="420"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title={mapIframeTitle}
+          ></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <section id="contact" class="section contact footer-estimate">
+      <div class="container">
+        <div class="contact-wrapper">
+          <div class="contact-info">
+            <h2 class="section-title">{asStr(footerEstimate?.headline) || 'Need Gutter Help in Denver?'}</h2>
+            <p>{asStr(footerEstimate?.intro) || 'Contact us for fast service and straightforward estimates.'}</p>
+            <FooterContactInfo
+              variant="estimate"
+              phoneTel={phoneTel}
+              phoneDisplay={phoneDisplay}
+              email={email}
+              address={address}
+              addressHref={addressHref}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand-block footer-col">
+          {logoWhite ? <img src={mediaUrl(logoWhite)} alt={companyName} class="footer-logo" /> : null}
+          <p class="footer-address">{descriptionShort}</p>
+          <div class="footer-social" aria-label={asStr(footerBrand?.socialAriaLabel)}>
+            {footerBrand?.socialLinks?.map((s) => (
+              <a href={asStr(s.href)} aria-label={asStr(s.ariaLabel)}>
+                <FooterSocialIcon platform={asStr(s.platform)} />
+              </a>
+            ))}
+          </div>
+        </div>
+        {footerColumns?.map((col) => (
+          <div class="footer-col">
+            <p class="footer-heading">{asStr(col.heading)}</p>
+            {col.links?.length ? (
+              <nav class="footer-links" aria-label={asStr(col.ariaLabel)}>
+                {col.links.map((link) => (
+                  <a href={asStr(link.href)}>{asStr(link.label)}</a>
+                ))}
+              </nav>
+            ) : null}
+            {isContactFooterColumnHeading(col.heading) ? (
+              <FooterContactInfo
+                variant="footer-column"
+                phoneTel={phoneTel}
+                phoneDisplay={phoneDisplay}
+                email={email}
+                address={address}
+                addressHref={addressHref}
+              />
+            ) : null}
+            {col.hoursHeading ? <p class="footer-heading footer-hours-heading">{asStr(col.hoursHeading)}</p> : null}
+            {col.hoursText ? <FooterHoursRow hoursText={col.hoursText} /> : null}
+          </div>
+        ))}
+      </div>
+    </div>
+  </footer>
+
+  <div class="footer-support">
+    <div class="container footer-support-inner">
+      <p>
+        © <span id="year"></span> — <a href={copyrightHref}>{companyName}</a>
+      </p>
+      <nav aria-label={asStr(footerSupport?.ariaLabel)}>
+        {footerSupport?.links?.map((link) => (
+          <a
+            href={asStr(link.href)}
+            target={asStr(link.target) || undefined}
+            rel={asStr(link.rel) || undefined}
+          >
+            {asStr(link.label)}
+          </a>
+        ))}
+      </nav>
+    </div>
+  </div>
+</BaseLayout>

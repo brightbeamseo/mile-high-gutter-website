@@ -7,6 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "dev:noproxy": "NO_PROXY=.sanity.io,sanity.io,apicdn.sanity.io HTTPS_PROXY= HTTP_PROXY= ALL_PROXY= astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
@@ -14,6 +15,7 @@
     "sync:media": "rm -rf public/'Media (MHG)' && cp -R ../'Media (MHG)' public/"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.1",
     "@sanity/client": "^7.20.0",
     "astro": "^6.0.8"
   }

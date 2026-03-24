@@ -2,7 +2,11 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import UniquePointIcon from '../components/UniquePointIcon.astro'
 import FooterSocialIcon from '../components/FooterSocialIcon.astro'
+import FooterContactInfo from '../components/FooterContactInfo.astro'
+import FooterHoursRow from '../components/FooterHoursRow.astro'
+import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../lib/footer-contact-heading.js'
 import { sanity } from '../lib/sanity.js'
+import { getSiteSettings, mergeHeaderFromSettings } from '../lib/site-settings.js'
 import {
   asStr,
   asStrArray,
@@ -14,7 +18,7 @@ import {
 import { assertSanityHomepage } from '../lib/assert-sanity-homepage.js'
 
 const [settings, homePage] = await Promise.all([
-  sanity.fetch(`*[_type == "siteSettings"][0]`),
+  getSiteSettings(),
   sanity.fetch(`*[_type == "homePage"][0]`),
 ])
 
@@ -30,6 +34,7 @@ const phoneDisplay = asStr(business?.phoneDisplay)
 const tel = asStr(business?.phoneTel)
 const email = asStr(business?.email)
 const address = asStr(business?.addressShort)
+const addressHref = googleBusinessProfileUrl(settings)
 const descriptionShort = asStr(business?.descriptionShort)
 const copyrightHref = asStr(business?.copyrightSiteUrl)
 const logoBlack = asStr(business?.logoHorizontalBlack)
@@ -39,11 +44,10 @@ const pageTitle = asStr(meta?.title)
 const pageDescription = asStr(meta?.description)
 
 const hp = homePage
-const header = hp.header
+const header = mergeHeaderFromSettings(settings, hp.header)
 const offerBar = header?.offerBar
 const navItems = header?.navItems
 const hero = hp.hero
-const heroFormFields = hero?.formFields
 const brandsMarquee = hp.brandsMarquee
 const projects = hp.projects
 const whyChoose = hp.whyChoose
@@ -61,11 +65,12 @@ const reviewValues = reviews?.reviewValues
 const serviceArea = hp.serviceArea
 const team = hp.team
 const faq = hp.faq
-const footerEstimate = hp.footerEstimate
+const footerEstimate = settings?.footerEstimate ?? hp.footerEstimate
 const footerEstimateFields = footerEstimate?.formFields
-const footerBrand = hp.footerBrand
-const footerColumns = hp.footerColumns
-const footerSupport = hp.footerSupport
+const footerBrand = settings?.footerBrand ?? hp.footerBrand
+const footerColumns = settings?.footerColumns ?? hp.footerColumns
+const footerSupport = settings?.footerSupport ?? hp.footerSupport
+const formsCfg = settings?.forms ?? {}
 
 const reviewRating = statLookup(reviewValues, reviewsSummary?.ratingValueKey)
 const reviewCount = statLookup(reviewValues, reviewsSummary?.reviewCountKey)
@@ -82,7 +87,6 @@ const logoAriaLabel = applyTemplate(asStr(header?.logoAriaLabelTemplate), {
 })
 
 const telLink = `tel:${tel}`
-const mailtoLink = `mailto:${email}`
 
 const homesCountDisplay = applyTemplate(asStr(whyStamp?.homesCountTemplate), {
   count: statLookup(statsValues, whyStamp?.homesCountKey),
@@ -116,6 +120,38 @@ const copyrightTemplate = asStr(footerSupport?.copyrightTemplate)
 const copyrightInnerHtml = copyrightTemplate
   .replace(/\{\{\s*year\s*\}\}/gi, '<span id="year"></span>')
   .replace(/\{\{\s*companyName\s*\}\}/gi, escapeHtml(companyName))
+
+const universalFormFields = footerEstimateFields
+const universalFormAction = asStr(formsCfg?.submitPath) || asStr(footerEstimate?.formAction)
+const universalFormMethod = asStr(footerEstimate?.formMethod)
+const universalFormHeading = asStr(footerEstimate?.headline)
+const universalFormIntro = asStr(footerEstimate?.intro)
+const universalSubmitLabel = asStr(universalFormFields?.submitButton)
+const universalFormKicker = asStr(formsCfg?.formKicker) || 'Free Estimate'
+const universalFormAriaLabel = asStr(formsCfg?.formAriaLabel) || 'Lead form'
+const universalRequiredIndicator = asStr(formsCfg?.requiredIndicator) || '*'
+
+const serviceHref = (svc) => {
+  const explicit = asStr(svc?.href)
+  if (explicit) return explicit
+  const title = asStr(svc?.title).toLowerCase().trim()
+  if (!title) return '/products-services/'
+  const knownSlugs = {
+    'gutter installation': 'gutter-installation-denver-co',
+    'gutter repair': 'gutter-repair-denver-co',
+    'gutter cleaning': 'gutter-cleaning-denver-co',
+    'gutter guards': 'gutter-guards-denver-co',
+    'heated gutters': 'snow-ice-solutions-heat-tape-denver-co',
+    'soffit & fascia': 'soffit-fascia-repair-denver-co',
+    'soffit and fascia': 'soffit-fascia-repair-denver-co',
+  }
+  if (knownSlugs[title]) return `/products-services/${knownSlugs[title]}/`
+  const slug = title
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+  return `/products-services/${slug}-denver-co/`
+}
 ---
 
 <BaseLayout
@@ -205,34 +241,34 @@ const copyrightInnerHtml = copyrightTemplate
         <form
           class="hero-form"
           data-lead-form="hero"
-          action="#"
-          method="post"
-          aria-label={asStr(hero?.formAriaLabel)}
+          action={universalFormAction}
+          method={universalFormMethod}
+          aria-label={universalFormAriaLabel}
         >
           <div class="hero-form-heading">
-            <div class="hero-form-kicker">{asStr(hero?.formKicker)}</div>
-            <h2>{asStr(hero?.formHeadline)}</h2>
+            <div class="hero-form-kicker">{universalFormKicker}</div>
+            <h2>{universalFormHeading}</h2>
           </div>
-          <p class="hero-form-sub">{asStr(hero?.formSub)}</p>
+          <p class="hero-form-sub">{universalFormIntro}</p>
           <div class="hero-form-grid">
             <div class="hero-form-field">
               <label for="hero-name">
-                {asStr(heroFormFields?.nameLabel)}{' '}
-                <span class="required-mark" aria-hidden="true">{asStr(heroFormFields?.requiredIndicator)}</span>
+                {asStr(universalFormFields?.nameLabel)}{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
               </label>
               <input id="hero-name" name="name" type="text" required autocomplete="name" />
             </div>
             <div class="hero-form-field">
               <label for="hero-email">
-                {asStr(heroFormFields?.emailLabel)}{' '}
-                <span class="required-mark" aria-hidden="true">{asStr(heroFormFields?.requiredIndicator)}</span>
+                {asStr(universalFormFields?.emailLabel)}{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
               </label>
               <input id="hero-email" name="email" type="email" required autocomplete="email" />
             </div>
             <div class="hero-form-field">
               <label for="hero-phone">
-                {asStr(heroFormFields?.phoneLabel)}{' '}
-                <span class="required-mark" aria-hidden="true">{asStr(heroFormFields?.requiredIndicator)}</span>
+                {asStr(universalFormFields?.phoneLabel)}{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
               </label>
               <input
                 id="hero-phone"
@@ -247,11 +283,13 @@ const copyrightInnerHtml = copyrightTemplate
               />
             </div>
             <div class="hero-form-field">
-              <label for="hero-location">{asStr(heroFormFields?.cityLabel)}</label>
+              <label for="hero-location">{asStr(universalFormFields?.cityLabel)}</label>
               <input id="hero-location" name="location" type="text" autocomplete="address-level2" />
             </div>
             <div class="hero-form-field hero-form-field-full">
-              <label for="hero-message">{asStr(heroFormFields?.projectDetailsLabel)}</label>
+              <label for="hero-message">
+                {asStr(universalFormFields?.projectDetailsLabel)}
+              </label>
               <textarea id="hero-message" name="message" rows="3"></textarea>
             </div>
           </div>
@@ -260,7 +298,7 @@ const copyrightInnerHtml = copyrightTemplate
             <input type="text" id="hero-website" name="website" tabindex="-1" autocomplete="off" />
           </div>
           <p class="lead-form-status" data-lead-form-status role="status" aria-live="polite"></p>
-          <button type="submit" class="btn btn-primary btn-lg">{asStr(hero?.formSubmitCta)}</button>
+          <button type="submit" class="btn btn-primary btn-lg">{universalSubmitLabel}</button>
         </form>
       </div>
       <section class="brands-marquee" aria-label={asStr(brandsMarquee?.ariaLabel)}>
@@ -349,11 +387,11 @@ const copyrightInnerHtml = copyrightTemplate
         <div class="services-grid">
           {services?.items?.map((svc) => (
             <article class="service-card">
-              <div class="service-image-wrap">
+              <a href={serviceHref(svc)} class="service-image-wrap" style="display:block; color:inherit; text-decoration:none;">
                 <span class="service-number">{asStr(svc.number)}</span>
                 <h3 class="service-title">{asStr(svc.title)}</h3>
                 <p class="service-desc">{asStr(svc.description)}</p>
-              </div>
+              </a>
             </article>
           ))}
         </div>
@@ -463,7 +501,7 @@ const copyrightInnerHtml = copyrightTemplate
               <span>{reviewCountDisplay}</span>
             </p>
           </div>
-          <a href={asStr(reviewsSummary?.ctaHref)} class="btn btn-primary reviews-summary-cta">
+          <a href="/reviews/" class="btn btn-primary reviews-summary-cta">
             {asStr(reviewsSummary?.ctaText)}
           </a>
         </div>
@@ -590,37 +628,40 @@ const copyrightInnerHtml = copyrightTemplate
           <div class="contact-info">
             <h2 class="section-title" id="footer-estimate-heading">{asStr(footerEstimate?.headline)}</h2>
             <p>{asStr(footerEstimate?.intro)}</p>
-            <div class="contact-details">
-              <a href={telLink}>{phoneDisplay}</a>
-              <a href={mailtoLink}>{email}</a>
-              <p class="contact-address">{address}</p>
-            </div>
+            <FooterContactInfo
+              variant="estimate"
+              phoneTel={tel}
+              phoneDisplay={phoneDisplay}
+              email={email}
+              address={address}
+              addressHref={addressHref}
+            />
           </div>
           <form
             class="contact-form"
             data-lead-form="footer"
-            action={asStr(footerEstimate?.formAction)}
-            method={asStr(footerEstimate?.formMethod)}
+            action={universalFormAction}
+            method={universalFormMethod}
           >
             <div class="contact-form-grid">
               <div class="contact-form-field">
                 <label for="contact-name">
-                  {asStr(footerEstimateFields?.nameLabel)}{' '}
-                  <span class="required-mark" aria-hidden="true">*</span>
+                  {asStr(universalFormFields?.nameLabel)}{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
                 </label>
                 <input type="text" id="contact-name" name="name" required autocomplete="name" />
               </div>
               <div class="contact-form-field">
                 <label for="contact-email">
-                  {asStr(footerEstimateFields?.emailLabel)}{' '}
-                  <span class="required-mark" aria-hidden="true">*</span>
+                  {asStr(universalFormFields?.emailLabel)}{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
                 </label>
                 <input type="email" id="contact-email" name="email" required autocomplete="email" />
               </div>
               <div class="contact-form-field">
                 <label for="contact-phone">
-                  {asStr(footerEstimateFields?.phoneLabel)}{' '}
-                  <span class="required-mark" aria-hidden="true">*</span>
+                  {asStr(universalFormFields?.phoneLabel)}{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
                 </label>
                 <input
                   type="tel"
@@ -635,11 +676,11 @@ const copyrightInnerHtml = copyrightTemplate
                 />
               </div>
               <div class="contact-form-field">
-                <label for="contact-location">{asStr(footerEstimateFields?.cityLabel)}</label>
+                <label for="contact-location">{asStr(universalFormFields?.cityLabel)}</label>
                 <input type="text" id="contact-location" name="location" autocomplete="address-level2" />
               </div>
               <div class="contact-form-field contact-form-field-full">
-                <label for="contact-message">{asStr(footerEstimateFields?.projectDetailsLabel)}</label>
+                <label for="contact-message">{asStr(universalFormFields?.projectDetailsLabel)}</label>
                 <textarea id="contact-message" name="message" rows="4"></textarea>
               </div>
             </div>
@@ -648,7 +689,7 @@ const copyrightInnerHtml = copyrightTemplate
               <input type="text" id="contact-website" name="website" tabindex="-1" autocomplete="off" />
             </div>
             <p class="lead-form-status" data-lead-form-status role="status" aria-live="polite"></p>
-            <button type="submit" class="btn btn-primary btn-lg">{asStr(footerEstimateFields?.submitButton)}</button>
+            <button type="submit" class="btn btn-primary btn-lg">{universalSubmitLabel}</button>
           </form>
         </div>
       </div>
@@ -676,19 +717,20 @@ const copyrightInnerHtml = copyrightTemplate
                 ))}
               </nav>
             ) : null}
+            {isContactFooterColumnHeading(col.heading) ? (
+              <FooterContactInfo
+                variant="footer-column"
+                phoneTel={tel}
+                phoneDisplay={phoneDisplay}
+                email={email}
+                address={address}
+                addressHref={addressHref}
+              />
+            ) : null}
             {col.hoursHeading ? (
               <p class="footer-heading footer-hours-heading">{asStr(col.hoursHeading)}</p>
             ) : null}
-            {col.hoursText ? (
-              <p class="footer-hours footer-contact-item">
-                <span class="footer-item-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" class="footer-item-icon-svg">
-                    <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm1 10.4 3 1.8-1 1.7-4-2.4V7h2Z" fill="currentColor" />
-                  </svg>
-                </span>
-                <span>{asStr(col.hoursText)}</span>
-              </p>
-            ) : null}
+            {col.hoursText ? <FooterHoursRow hoursText={col.hoursText} /> : null}
           </div>
         ))}
       </div>

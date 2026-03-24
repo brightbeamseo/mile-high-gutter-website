@@ -1,0 +1,368 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import FooterSocialIcon from '../../components/FooterSocialIcon.astro'
+import FooterContactInfo from '../../components/FooterContactInfo.astro'
+import FooterHoursRow from '../../components/FooterHoursRow.astro'
+import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../../lib/footer-contact-heading.js'
+import { sanity } from '../../lib/sanity.js'
+import { getSiteSettings, mergeHeaderFromSettings } from '../../lib/site-settings.js'
+import { heroBackgroundFor } from '../../lib/hero-backgrounds.js'
+import { asStr, applyTemplate, mediaUrl } from '../../lib/sanity-strings.js'
+
+let settings = {}
+let homePage = {}
+let faqPage = {}
+try {
+  ;[settings, homePage, faqPage] = await Promise.all([
+    getSiteSettings(),
+    sanity.fetch(`*[_type == "homePage"][0]`),
+    sanity.fetch(`*[_type == "faqPage" && slug.current == "faqs"][0]`),
+  ])
+} catch (err) {
+  console.warn('[faqs] Sanity fetch failed; using fallback placeholders.', err)
+}
+
+const business = settings?.business ?? {}
+const header = mergeHeaderFromSettings(settings, homePage?.header)
+const footerEstimate = settings?.footerEstimate ?? homePage?.footerEstimate ?? {}
+const footerEstimateFields = footerEstimate?.formFields ?? {}
+const formsCfg = settings?.forms ?? {}
+const footerBrand = settings?.footerBrand ?? homePage?.footerBrand ?? {}
+const footerColumns = settings?.footerColumns ?? homePage?.footerColumns ?? []
+const footerSupport = settings?.footerSupport ?? homePage?.footerSupport ?? {}
+
+const companyName = asStr(business.companyName) || 'Mile High Gutters'
+const phoneDisplay = asStr(business.phoneDisplay) || '(303) 000-0000'
+const phoneTel = asStr(business.phoneTel) || '3030000000'
+const email = asStr(business.email) || 'hello@example.com'
+const address = asStr(business.addressShort) || 'Denver, Colorado'
+const addressHref = googleBusinessProfileUrl(settings)
+const descriptionShort = asStr(business.descriptionShort)
+const logoWhite = asStr(business.logoHorizontalWhite)
+const logoBlack = asStr(business.logoHorizontalBlack)
+const copyrightHref = asStr(business.copyrightSiteUrl) || '#'
+
+const pageTitle = 'Gutter FAQs Denver | Mile High Gutters'
+const pageDescription = 'Simple answers to common gutter pricing, repairs, and service questions.'
+
+const callLabelNav = applyTemplate(asStr(header.callCtaTemplate), { phoneDisplay }) || phoneDisplay
+const heroCallLabel = applyTemplate(asStr(homePage?.hero?.callCtaTemplate), { phoneDisplay }) || `Call: ${phoneDisplay}`
+const logoAriaLabel = applyTemplate(asStr(header.logoAriaLabelTemplate), { companyName }) || companyName
+const navItems = Array.isArray(header.navItems) ? header.navItems : []
+
+const universalFormFields = footerEstimateFields
+const universalFormAction = asStr(formsCfg?.submitPath) || asStr(footerEstimate?.formAction) || '#'
+const universalFormMethod = asStr(footerEstimate?.formMethod) || 'post'
+const universalFormKicker = asStr(formsCfg?.formKicker) || 'Free Estimate'
+const universalFormAriaLabel = asStr(formsCfg?.formAriaLabel) || 'FAQ lead form'
+const universalRequiredIndicator = asStr(formsCfg?.requiredIndicator) || '*'
+const universalFormHeading = asStr(footerEstimate?.headline) || 'Get Started Today'
+const universalFormIntro = asStr(footerEstimate?.intro) || 'Short placeholder form for layout testing.'
+const heroBgSrc = heroBackgroundFor('faqs')
+const heroBgStyle = heroBgSrc
+  ? `background-image: linear-gradient(135deg, rgba(56, 69, 85, 0.88) 0%, rgba(56, 69, 85, 0.84) 50%, rgba(56, 69, 85, 0.88) 100%), url("${mediaUrl(heroBgSrc)}"); background-size: cover; background-position: center; background-repeat: no-repeat;`
+  : undefined
+
+const heroEyebrow = asStr(faqPage?.eyebrow) || 'FAQ'
+const heroHeadline = asStr(faqPage?.headline) || 'Gutter FAQs'
+const heroLead = asStr(faqPage?.lead) || 'Simple answers to the most common gutter questions.'
+const faqData = faqPage?.faq ?? {}
+const faqHeading = asStr(faqData?.headline) || 'Frequently Asked Questions'
+const faqHeadingId = asStr(faqData?.headingId) || 'faq-page-heading'
+const faqItems = Array.isArray(faqData?.items)
+  ? faqData.items
+  : [
+      {
+        question: 'How often should gutters be cleaned?',
+        answerHtml:
+          '<p>Most homes should have gutters cleaned at least twice per year (spring and fall).</p>',
+      },
+    ]
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  theme={settings?.theme}
+  forms={{ submitPath: asStr(settings?.forms?.submitPath) || '/api/lead' }}
+>
+  <header class="header">
+    <div class="offer-bar">
+      <div class="offer-bar-inner">
+        <p class="offer-message">
+          {asStr(header?.offerBar?.textBeforeDiscount)}
+          <strong>{asStr(header?.offerBar?.discountLabel)}</strong>
+          {asStr(header?.offerBar?.textAfterDiscount)}
+          <a href={asStr(header?.offerBar?.ctaHref) || '#contact'} class="offer-link">
+            <strong>{asStr(header?.offerBar?.ctaText) || 'Get a Quote Now!'}</strong>
+          </a>
+        </p>
+      </div>
+    </div>
+    <div class="header-nav">
+      <div class="header-inner">
+        <a href="/" class="logo" aria-label={logoAriaLabel}>
+          {logoBlack ? (
+            <img src={mediaUrl(logoBlack)} alt={companyName} class="logo-img" />
+          ) : (
+            <span class="section-title" style="margin:0; font-size: 1.25rem;">{companyName}</span>
+          )}
+        </a>
+        <nav class="nav">
+          {navItems.length > 0 ? (
+            navItems.map((item, i) => {
+              const label = asStr(item.label)
+              const href = asStr(item.href)
+              const dropdown = item.dropdown
+              if (Array.isArray(dropdown) && dropdown.length > 0) {
+                const ddId = `faq-nav-dd-${i}`
+                return (
+                  <div class="nav-dropdown" data-nav-dropdown>
+                    <button
+                      type="button"
+                      class="nav-dropdown-toggle"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-controls={ddId}
+                      id={`${ddId}-btn`}
+                    >
+                      {label}
+                      <span class="nav-dropdown-chevron" aria-hidden="true"></span>
+                    </button>
+                    <ul class="nav-dropdown-menu" id={ddId} role="menu">
+                      {dropdown.map((link) => (
+                        <li role="none">
+                          <a href={asStr(link.href)} role="menuitem">
+                            {asStr(link.label)}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
+              }
+              return <a href={href || '#'}>{label}</a>
+            })
+          ) : (
+            <>
+              <a href="/">Home</a>
+              <a href="/products-services/">Products & Services</a>
+            </>
+          )}
+          <a href={`tel:${phoneTel}`} class="btn btn-primary btn-lg">{callLabelNav}</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero hero-split">
+      <div class="hero-bg" style={heroBgStyle}></div>
+      <div class="container hero-split-inner">
+        <div class="hero-copy">
+          <div class="hero-eyebrow">{heroEyebrow}</div>
+          <h1>{heroHeadline}</h1>
+          <p class="hero-lead">{heroLead}</p>
+          <div class="hero-actions">
+            <a href={`tel:${phoneTel}`} class="btn btn-primary btn-lg cta1-primary-call">{heroCallLabel}</a>
+          </div>
+        </div>
+        <form
+          class="hero-form"
+          data-lead-form="faq-hero"
+          action={universalFormAction}
+          method={universalFormMethod}
+          aria-label={universalFormAriaLabel}
+        >
+          <div class="hero-form-heading">
+            <div class="hero-form-kicker">{universalFormKicker}</div>
+            <h2>{universalFormHeading}</h2>
+          </div>
+          <p class="hero-form-sub">{universalFormIntro}</p>
+          <div class="hero-form-grid">
+            <div class="hero-form-field">
+              <label for="faq-name">
+                {asStr(universalFormFields?.nameLabel) || 'Name'}{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+              </label>
+              <input id="faq-name" name="name" type="text" required autocomplete="name" />
+            </div>
+            <div class="hero-form-field">
+              <label for="faq-email">
+                {asStr(universalFormFields?.emailLabel) || 'Email'}{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+              </label>
+              <input id="faq-email" name="email" type="email" required autocomplete="email" />
+            </div>
+            <div class="hero-form-field">
+              <label for="faq-phone">
+                {asStr(universalFormFields?.phoneLabel) || 'Phone'}{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+              </label>
+              <input id="faq-phone" name="phone" type="tel" required autocomplete="tel" />
+            </div>
+            <div class="hero-form-field">
+              <label for="faq-location">{asStr(universalFormFields?.cityLabel) || 'City'}</label>
+              <input id="faq-location" name="location" type="text" autocomplete="address-level2" />
+            </div>
+            <div class="hero-form-field hero-form-field-full">
+              <label for="faq-message">{asStr(universalFormFields?.projectDetailsLabel) || 'Project Details'}</label>
+              <textarea id="faq-message" name="message" rows="3"></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg">{asStr(universalFormFields?.submitButton) || 'Send'}</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="section faq-section" id="faq">
+      <div class="container">
+        <div class="faq-panel">
+          <h2 class="section-title section-title-secondary" id={faqHeadingId}>{faqHeading}</h2>
+          <div class="faq-list" data-faq-accordion>
+            {faqItems.map((item, idx) => {
+              const n = idx + 1
+              const btnId = `faq-page-btn-${n}`
+              const panelId = `faq-page-panel-${n}`
+              return (
+                <div class="faq-item">
+                  <button
+                    type="button"
+                    class="faq-summary"
+                    id={btnId}
+                    aria-expanded="false"
+                    aria-controls={panelId}
+                  >
+                    <span class="faq-question">{item.question}</span>
+                    <span class="faq-chevron" aria-hidden="true"></span>
+                  </button>
+                  <div
+                    class="faq-answer-outer"
+                    id={panelId}
+                    role="region"
+                    aria-labelledby={btnId}
+                    aria-hidden="true"
+                  >
+                    <div class="faq-answer" set:html={item.answerHtml} />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <section id="contact" class="section contact footer-estimate">
+      <div class="container">
+        <div class="contact-wrapper">
+          <div class="contact-info">
+            <h2 class="section-title">{asStr(footerEstimate?.headline) || 'Need Gutter Help in Denver?'}</h2>
+            <p>{asStr(footerEstimate?.intro) || 'Contact us for fast service and straightforward estimates.'}</p>
+            <FooterContactInfo
+              variant="estimate"
+              phoneTel={phoneTel}
+              phoneDisplay={phoneDisplay}
+              email={email}
+              address={address}
+              addressHref={addressHref}
+            />
+          </div>
+          <form
+            class="contact-form"
+            data-lead-form="faq-footer"
+            action={universalFormAction}
+            method={universalFormMethod}
+          >
+            <div class="contact-form-grid">
+              <div class="contact-form-field">
+                <label for="contact-name">
+                  {asStr(universalFormFields?.nameLabel) || 'Name'}{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input id="contact-name" name="name" type="text" required autocomplete="name" />
+              </div>
+              <div class="contact-form-field">
+                <label for="contact-email">
+                  {asStr(universalFormFields?.emailLabel) || 'Email'}{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input id="contact-email" name="email" type="email" required autocomplete="email" />
+              </div>
+              <div class="contact-form-field">
+                <label for="contact-phone">
+                  {asStr(universalFormFields?.phoneLabel) || 'Phone'}{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input id="contact-phone" name="phone" type="tel" required autocomplete="tel" />
+              </div>
+              <div class="contact-form-field">
+                <label for="contact-location">{asStr(universalFormFields?.cityLabel) || 'City'}</label>
+                <input id="contact-location" name="location" type="text" autocomplete="address-level2" />
+              </div>
+              <div class="contact-form-field contact-form-field-full">
+                <label for="contact-message">{asStr(universalFormFields?.projectDetailsLabel) || 'Project Details'}</label>
+                <textarea id="contact-message" name="message" rows="4"></textarea>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">{asStr(footerEstimateFields?.submitButton) || 'Request Quote'}</button>
+          </form>
+        </div>
+      </div>
+    </section>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand-block footer-col">
+          {logoWhite ? <img src={mediaUrl(logoWhite)} alt={companyName} class="footer-logo" /> : null}
+          <p class="footer-address">{descriptionShort}</p>
+          <div class="footer-social" aria-label={asStr(footerBrand?.socialAriaLabel)}>
+            {footerBrand?.socialLinks?.map((s) => (
+              <a href={asStr(s.href)} aria-label={asStr(s.ariaLabel)}>
+                <FooterSocialIcon platform={asStr(s.platform)} />
+              </a>
+            ))}
+          </div>
+        </div>
+        {footerColumns?.map((col) => (
+          <div class="footer-col">
+            <p class="footer-heading">{asStr(col.heading)}</p>
+            {col.links?.length ? (
+              <nav class="footer-links" aria-label={asStr(col.ariaLabel)}>
+                {col.links.map((link) => (
+                  <a href={asStr(link.href)}>{asStr(link.label)}</a>
+                ))}
+              </nav>
+            ) : null}
+            {isContactFooterColumnHeading(col.heading) ? (
+              <FooterContactInfo
+                variant="footer-column"
+                phoneTel={phoneTel}
+                phoneDisplay={phoneDisplay}
+                email={email}
+                address={address}
+                addressHref={addressHref}
+              />
+            ) : null}
+            {col.hoursHeading ? <p class="footer-heading footer-hours-heading">{asStr(col.hoursHeading)}</p> : null}
+            {col.hoursText ? <FooterHoursRow hoursText={col.hoursText} /> : null}
+          </div>
+        ))}
+      </div>
+    </div>
+  </footer>
+
+  <div class="footer-support">
+    <div class="container footer-support-inner">
+      <p>© <span id="year"></span> — <a href={copyrightHref}>{companyName}</a></p>
+      <nav aria-label={asStr(footerSupport?.ariaLabel)}>
+        {footerSupport?.links?.map((link) => (
+          <a href={asStr(link.href)} target={asStr(link.target) || undefined} rel={asStr(link.rel) || undefined}>
+            {asStr(link.label)}
+          </a>
+        ))}
+      </nav>
+    </div>
+  </div>
+</BaseLayout>

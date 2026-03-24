@@ -1,0 +1,128 @@
+---
+import BlogListLayout from '../../components/BlogListLayout.astro'
+import BlogPostGrid from '../../components/BlogPostGrid.astro'
+import { sanity } from '../../lib/sanity.js'
+import { getSiteSettings, mergeHeaderFromSettings } from '../../lib/site-settings.js'
+import { heroBackgroundFor } from '../../lib/hero-backgrounds.js'
+import { asStr, applyTemplate, mediaUrl } from '../../lib/sanity-strings.js'
+import {
+  BLOG_POSTS_PER_PAGE,
+  fetchAllBlogPosts,
+  getBlogPagination,
+  sliceBlogPage,
+} from '../../lib/blog-list.js'
+import { googleBusinessProfileUrl } from '../../lib/footer-contact-heading.js'
+
+let settings = {}
+let homePage = {}
+try {
+  ;[settings, homePage] = await Promise.all([getSiteSettings(), sanity.fetch(`*[_type == "homePage"][0]`)])
+} catch (err) {
+  console.warn('[blog index] Sanity fetch failed; using fallbacks.', err)
+}
+
+const business = settings?.business ?? {}
+const header = mergeHeaderFromSettings(settings, homePage?.header)
+const footerEstimate = settings?.footerEstimate ?? homePage?.footerEstimate ?? {}
+const footerEstimateFields = footerEstimate?.formFields ?? {}
+const formsCfg = settings?.forms ?? {}
+const footerBrand = settings?.footerBrand ?? homePage?.footerBrand ?? {}
+const footerColumns = settings?.footerColumns ?? homePage?.footerColumns ?? []
+const footerSupport = settings?.footerSupport ?? homePage?.footerSupport ?? {}
+
+const companyName = asStr(business.companyName) || 'Mile High Gutters'
+const phoneDisplay = asStr(business.phoneDisplay) || '(303) 000-0000'
+const phoneTel = asStr(business.phoneTel) || '3030000000'
+const email = asStr(business.email) || 'hello@example.com'
+const address = asStr(business.addressShort) || 'Denver, Colorado'
+const addressHref = googleBusinessProfileUrl(settings)
+const descriptionShort = asStr(business.descriptionShort)
+const logoWhite = asStr(business.logoHorizontalWhite)
+const logoBlack = asStr(business.logoHorizontalBlack)
+const copyrightHref = asStr(business.copyrightSiteUrl) || '#'
+
+const callLabelNav = applyTemplate(asStr(header.callCtaTemplate), { phoneDisplay }) || phoneDisplay
+const heroCallLabel = applyTemplate(asStr(homePage?.hero?.callCtaTemplate), { phoneDisplay }) || `Call: ${phoneDisplay}`
+const logoAriaLabel = applyTemplate(asStr(header.logoAriaLabelTemplate), { companyName }) || companyName
+const navItems = Array.isArray(header.navItems) ? header.navItems : []
+
+const universalFormFields = footerEstimateFields
+const universalFormAction = asStr(formsCfg?.submitPath) || asStr(footerEstimate?.formAction) || '#'
+const universalFormMethod = asStr(footerEstimate?.formMethod) || 'post'
+const universalFormKicker = asStr(formsCfg?.formKicker) || 'Free Estimate'
+const universalFormAriaLabel = asStr(formsCfg?.formAriaLabel) || 'Blog index lead form'
+const universalFormHeading = asStr(footerEstimate?.headline) || 'Get Started Today'
+const universalFormIntro = asStr(footerEstimate?.intro) || 'Short placeholder form for layout testing.'
+const universalRequiredIndicator = asStr(formsCfg?.requiredIndicator) || '*'
+
+const heroBgSrc = heroBackgroundFor('blog-index')
+const heroBgStyle = heroBgSrc
+  ? `background-image: linear-gradient(135deg, rgba(56, 69, 85, 0.88) 0%, rgba(56, 69, 85, 0.84) 50%, rgba(56, 69, 85, 0.88) 100%), url("${mediaUrl(heroBgSrc)}"); background-size: cover; background-position: center; background-repeat: no-repeat;`
+  : undefined
+
+const heroEyebrow = 'Blog'
+const heroHeadline = 'Gutter tips & guides'
+const heroLead = 'Articles on gutter care, repairs, and protecting your Denver home.'
+
+const allPosts = await fetchAllBlogPosts(sanity)
+const { totalPages } = getBlogPagination(allPosts.length, BLOG_POSTS_PER_PAGE)
+const currentPage = 1
+const posts = sliceBlogPage(allPosts, currentPage, BLOG_POSTS_PER_PAGE)
+
+const pageTitle = 'Gutter Blog | Mile High Gutters'
+const pageDescription = 'Tips, guides, and news about gutters, maintenance, and home protection in Denver.'
+
+const introText =
+  totalPages > 1
+    ? `Browse every post (${allPosts.length} total). Use Previous / Next or the numbered links below — ${BLOG_POSTS_PER_PAGE} articles per page.`
+    : 'Browse every article below.'
+---
+
+<BlogListLayout
+  pageTitle={pageTitle}
+  pageDescription={pageDescription}
+  theme={settings?.theme}
+  formsSubmitPath={asStr(settings?.forms?.submitPath) || '/api/lead'}
+  companyName={companyName}
+  phoneTel={phoneTel}
+  phoneDisplay={phoneDisplay}
+  email={email}
+  address={address}
+  addressHref={addressHref}
+  descriptionShort={descriptionShort}
+  logoWhite={logoWhite}
+  logoBlack={logoBlack}
+  copyrightHref={copyrightHref}
+  callLabelNav={callLabelNav}
+  heroCallLabel={heroCallLabel}
+  logoAriaLabel={logoAriaLabel}
+  navItems={navItems}
+  header={header}
+  footerEstimate={footerEstimate}
+  footerEstimateFields={footerEstimateFields}
+  footerBrand={footerBrand}
+  footerColumns={footerColumns}
+  footerSupport={footerSupport}
+  universalFormFields={universalFormFields}
+  universalFormAction={universalFormAction}
+  universalFormMethod={universalFormMethod}
+  universalFormKicker={universalFormKicker}
+  universalFormAriaLabel={universalFormAriaLabel}
+  universalFormHeading={universalFormHeading}
+  universalFormIntro={universalFormIntro}
+  universalRequiredIndicator={universalRequiredIndicator}
+  heroEyebrow={heroEyebrow}
+  heroHeadline={heroHeadline}
+  heroLead={heroLead}
+  heroBgStyle={heroBgStyle}
+  formIdPrefix="blog-idx"
+  navDdPrefix="blog"
+>
+  <section class="section blog-index-section" id="articles">
+    <div class="container">
+      <h2 class="section-title section-title-secondary blog-index-heading">All articles</h2>
+      <p class="blog-index-intro">{introText}</p>
+      <BlogPostGrid posts={posts} currentPage={currentPage} totalPages={totalPages} />
+    </div>
+  </section>
+</BlogListLayout>

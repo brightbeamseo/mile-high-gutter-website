@@ -1,0 +1,85 @@
+---
+/**
+ * Post cards + scrollable list region + pagination (static URLs).
+ */
+import { asStr, mediaUrl } from '../lib/sanity-strings.js'
+import { excerpt, formatBlogDate } from '../lib/blog-list.js'
+
+const { posts = [], currentPage = 1, totalPages = 1 } = Astro.props
+
+function hrefForPage(n) {
+  if (n <= 1) return '/blog/'
+  return `/blog/page/${n}/`
+}
+---
+
+<div class="blog-index-toolbar">
+  <p class="blog-index-count" role="status">
+    {posts.length === 0
+      ? 'No articles yet.'
+      : `Page ${currentPage} of ${totalPages}`}
+  </p>
+</div>
+
+<div class="blog-index-scroll" tabindex="0" aria-label="Blog article list">
+  <ul class="blog-index-grid">
+    {posts.map((post) => {
+      const slug = asStr(post?.slug)
+      const href = slug ? `/${slug}/` : '#'
+      const title = asStr(post?.headline) || 'Article'
+      const lead = excerpt(asStr(post?.lead), 180)
+      const thumb = asStr(post?.thumb)
+      const thumbAlt = asStr(post?.thumbAlt) || title
+      const dateLabel = formatBlogDate(post?.publishedAt)
+      return (
+        <li class="blog-index-card">
+          <a href={href} class="blog-index-card-link">
+            {thumb ? (
+              <div class="blog-index-card-media">
+                <img src={mediaUrl(thumb)} alt="" width="640" height="360" loading="lazy" decoding="async" />
+              </div>
+            ) : (
+              <div class="blog-index-card-media blog-index-card-media-placeholder" aria-hidden="true" />
+            )}
+            <div class="blog-index-card-body">
+              {dateLabel ? <time class="blog-index-date" datetime={asStr(post?.publishedAt)}>{dateLabel}</time> : null}
+              <h2 class="blog-index-card-title">{title}</h2>
+              {lead ? <p class="blog-index-card-excerpt">{lead}</p> : null}
+              <span class="blog-index-card-cta">Read article</span>
+            </div>
+          </a>
+        </li>
+      )
+    })}
+  </ul>
+</div>
+
+{totalPages > 1 ? (
+  <nav class="blog-pagination" aria-label="Blog pages">
+    {currentPage > 1 ? (
+      <a href={hrefForPage(currentPage - 1)} class="blog-pagination-dir blog-pagination-prev">
+        Previous
+      </a>
+    ) : (
+      <span class="blog-pagination-spacer" aria-hidden="true" />
+    )}
+    <ol class="blog-pagination-list">
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+        <li>
+          {n === currentPage ? (
+            <span class="blog-pagination-current" aria-current="page">{n}</span>
+          ) : (
+            <a href={hrefForPage(n)}>{n}</a>
+          )}
+        </li>
+      ))}
+    </ol>
+    {currentPage < totalPages ? (
+      <a href={hrefForPage(currentPage + 1)} class="blog-pagination-dir blog-pagination-next">
+        Next
+      </a>
+    ) : (
+      <span class="blog-pagination-spacer" aria-hidden="true" />
+    )}
+  </nav>
+) : null}

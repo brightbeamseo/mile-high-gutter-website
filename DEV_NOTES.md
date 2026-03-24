@@ -22,6 +22,7 @@
 | **`Sanity (MHG)/schemaTypes/`** | **Sanity Studio** — schemas derived from **`shared/homepage-content.json`** (see **`SCHEMAS.md`**). Documents: **`siteSettings`** (global business keys), **`homePage`** (page sections). Merge both to recreate the full JSON shape. |
 | **`lib/sanity-write.js`** | **Node-only** Sanity writer: `getSanityWriteClient()`, `upsertDocument(id, type, data)` via `createOrReplace`. Env: **`SANITY_PROJECT_ID`**, **`SANITY_DATASET`**, **`SANITY_API_TOKEN`**; optional **`SANITY_API_VERSION`**. See **`.env.example`**. |
 | **`scripts/import-content.js`** | Pushes **`shared/homepage-content.json`** to Sanity documents **`siteSettingsSingleton`** + **`homePageSingleton`** (`_type` still `siteSettings` / `homePage`; `createOrReplace` + array `_key`s via **`lib/sanity-array-keys.js`**). Run: **`node scripts/import-content.js`** or **`npm run import:content`** (requires write token). |
+| **`scripts/fix-site-settings-string-lists.js`** | After deploying the **`stringListItem`** schema for **`businessCategories`** / **`keywords`**, run **`npm run fix:sanity-string-lists`** once to normalize existing `siteSettings` docs so Studio can publish again (fixes “Item of type object not valid for this list”). |
 
 ## How to edit homepage content
 

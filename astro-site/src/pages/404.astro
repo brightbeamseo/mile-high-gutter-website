@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { getSiteSettings } from '../lib/site-settings.js'
+import { asStr } from '../lib/sanity-strings.js'
+
+let settings = {}
+try {
+  settings = await getSiteSettings()
+} catch {
+  /* offline / build without Sanity */
+}
+
+const title = 'Page not found | Mile High Gutters'
+const description =
+  'The page you were looking for could not be found. Mile High Gutter Denver — gutters, installation, repair, and guards.'
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  theme={settings?.theme}
+  forms={{ submitPath: asStr(settings?.forms?.submitPath) || '/api/lead' }}
+>
+  <main class="section" style="padding-top: var(--space-5xl); padding-bottom: var(--space-5xl);">
+    <div class="container" style="max-width: 40rem; text-align: center;">
+      <p class="hero-eyebrow" style="justify-content: center;">404</p>
+      <h1 class="section-title section-title-secondary" style="margin-bottom: 1rem;">Page not found</h1>
+      <p style="color: var(--color-text-muted); margin: 0 0 1.75rem; line-height: 1.65;">
+        Sorry — we couldn’t find that page. It may have moved, or the link might be outdated.
+      </p>
+      <p style="display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center;">
+        <a href="/" class="btn btn-primary btn-lg">Back to home</a>
+        <a href="/contact-us/" class="btn btn-outline btn-lg">Contact us</a>
+      </p>
+    </div>
+  </main>
+</BaseLayout>

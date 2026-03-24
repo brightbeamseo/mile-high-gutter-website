@@ -135,7 +135,12 @@ export const businessListings = defineType({
   title: 'Business listings',
   type: 'object',
   fields: [
-    defineField({ name: 'googleMaps', type: 'string' }),
+    defineField({
+      name: 'googleMaps',
+      type: 'string',
+      title: 'Google Maps / Business Profile URL',
+      description: 'Used for the footer & estimate address link (opens in a new tab).',
+    }),
     defineField({ name: 'bingPlaces', type: 'string' }),
     defineField({ name: 'facebook', type: 'string' }),
     defineField({ name: 'instagram', type: 'string' }),
@@ -150,7 +155,17 @@ export const siteForms = defineType({
   name: 'siteForms',
   title: 'Forms',
   type: 'object',
-  fields: [defineField({ name: 'submitPath', type: 'string', title: 'Lead POST path' })],
+  fields: [
+    defineField({ name: 'submitPath', type: 'string', title: 'Lead POST path' }),
+    defineField({ name: 'formKicker', type: 'string', title: 'Universal form kicker' }),
+    defineField({ name: 'formAriaLabel', type: 'string', title: 'Universal form aria-label' }),
+    defineField({
+      name: 'requiredIndicator',
+      type: 'string',
+      title: 'Required indicator',
+      description: 'Symbol shown for required fields (example: *).',
+    }),
+  ],
 })
 
 export const offerBar = defineType({
@@ -164,6 +179,30 @@ export const offerBar = defineType({
     defineField({ name: 'ctaText', type: 'string' }),
     defineField({ name: 'ctaHref', type: 'string' }),
   ],
+})
+
+/**
+ * String in an array — use this instead of `of: [{ type: 'string' }]` for site settings lists.
+ * Plain string arrays often end up as `{ value: "..." }` objects in the dataset, which then
+ * fail validation ("Item of type object not valid for this list"). This object type matches that shape.
+ */
+export const stringListItem = defineType({
+  name: 'stringListItem',
+  title: 'Text',
+  type: 'object',
+  fields: [
+    defineField({
+      name: 'value',
+      type: 'string',
+      title: 'Text',
+    }),
+  ],
+  preview: {
+    select: { title: 'value' },
+    prepare({ title }) {
+      return { title: title || '(empty)' }
+    },
+  },
 })
 
 export const navLinkItem = defineType({
@@ -330,6 +369,12 @@ export const serviceItem = defineType({
     defineField({ name: 'number', type: 'string' }),
     defineField({ name: 'title', type: 'string' }),
     defineField({ name: 'description', type: 'text', rows: 3 }),
+    defineField({
+      name: 'href',
+      title: 'Service Page Link',
+      type: 'string',
+      description: 'Optional. If empty, the site auto-generates a /products-services/.../ link from the title.',
+    }),
   ],
 })
 
@@ -671,6 +716,18 @@ export const footerSupport = defineType({
   ],
 })
 
+export const cityContentSection = defineType({
+  name: 'cityContentSection',
+  title: 'City content section',
+  type: 'object',
+  fields: [
+    defineField({name: 'heading', type: 'string'}),
+    defineField({name: 'body', type: 'text', rows: 5}),
+    defineField({name: 'imageSrc', type: 'string'}),
+    defineField({name: 'imageAlt', type: 'string'}),
+  ],
+})
+
 /** All object types to register in schema (excluding documents siteSettings + homePage) */
 export const homepageObjectTypes = [
   layoutBackgroundSection,
@@ -683,6 +740,7 @@ export const homepageObjectTypes = [
   business,
   businessListings,
   siteForms,
+  stringListItem,
   offerBar,
   navLinkItem,
   navItem,
@@ -725,4 +783,5 @@ export const homepageObjectTypes = [
   footerColumn,
   footerSupportLink,
   footerSupport,
+  cityContentSection,
 ]

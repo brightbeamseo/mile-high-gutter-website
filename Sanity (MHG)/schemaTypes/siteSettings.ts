@@ -13,12 +13,16 @@ export const siteSettings = defineType({
     defineField({
       name: 'businessCategories',
       type: 'array',
-      of: [{type: 'string'}],
+      title: 'Business categories',
+      description: 'Each row is one line of text (stored as a small object so Studio stays valid).',
+      of: [{type: 'stringListItem'}],
     }),
     defineField({
       name: 'keywords',
       type: 'array',
-      of: [{type: 'string'}],
+      title: 'Keywords',
+      description: 'SEO-style keywords, one per row.',
+      of: [{type: 'stringListItem'}],
     }),
     defineField({name: 'businessListings', type: 'businessListings'}),
     defineField({
@@ -36,10 +40,48 @@ export const siteSettings = defineType({
     }),
     defineField({name: 'statsValues', type: 'statsValues'}),
     defineField({
+      name: 'header',
+      type: 'header',
+      title: 'Global Header',
+      description: 'Navigation and header CTAs used across all pages.',
+    }),
+    defineField({
+      name: 'footerEstimate',
+      type: 'footerEstimate',
+      title: 'Global Footer Estimate',
+      description: 'Top contact/estimate footer section shared across pages.',
+    }),
+    defineField({
+      name: 'footerBrand',
+      type: 'footerBrand',
+      title: 'Global Footer Brand',
+      description: 'Footer brand block and social links shared across pages.',
+    }),
+    defineField({
+      name: 'footerColumns',
+      type: 'array',
+      title: 'Global Footer Columns',
+      of: [{type: 'footerColumn'}],
+    }),
+    defineField({
+      name: 'footerSupport',
+      type: 'footerSupport',
+      title: 'Global Footer Support',
+      description: 'Bottom legal/support links shared across pages.',
+    }),
+    defineField({
       name: 'mapEmbedUrl',
       type: 'text',
       title: 'mapEmbedUrl',
       rows: 2,
+    }),
+    defineField({
+      name: 'blogAuthorBio',
+      type: 'text',
+      title: 'Blog author bio',
+      rows: 5,
+      description:
+        'Shown at the end of every blog post with your logo (company as author). Plain text.',
     }),
   ],
 })

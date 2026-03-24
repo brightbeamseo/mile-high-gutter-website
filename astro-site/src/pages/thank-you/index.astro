@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { getSiteSettings } from '../../lib/site-settings.js'
+import { asStr } from '../../lib/sanity-strings.js'
+
+let settings = {}
+try {
+  settings = await getSiteSettings()
+} catch (err) {
+  console.warn('[thank-you] Sanity fetch failed.', err)
+}
+---
+
+<BaseLayout
+  title="Thank You | Mile High Gutters"
+  description="Thank you for contacting Mile High Gutters."
+  theme={settings?.theme}
+  forms={{ submitPath: asStr(settings?.forms?.submitPath) || '/api/lead' }}
+>
+  <main class="section">
+    <div class="container" style="max-width: 70ch;">
+      <h1 class="section-title section-title-secondary">Thank You</h1>
+      <p class="section-lead">
+        Thanks! We're excited to help you out. We'll get back to you as soon as possible.
+      </p>
+    </div>
+  </main>
+</BaseLayout>

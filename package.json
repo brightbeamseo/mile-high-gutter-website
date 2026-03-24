@@ -9,7 +9,9 @@
     "sync-api": "mkdir -p astro-site/api && cp api/lead.js astro-site/api/lead.js",
     "build": "npm run sync-api && python3 scripts/build-html.py",
     "watch": "python3 scripts/watch-html.py",
-    "import:content": "node scripts/import-content.js"
+    "import:content": "node scripts/import-content.js",
+    "import:blog": "node scripts/import-blog-posts.js",
+    "fix:sanity-string-lists": "node scripts/fix-site-settings-string-lists.js"
   },
   "dependencies": {
     "@sanity/client": "^7.20.0",

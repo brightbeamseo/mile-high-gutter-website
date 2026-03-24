@@ -94,6 +94,9 @@ export function assertSanityHomepage(settings, homePage) {
 
   const forms = reqObj('siteSettings.forms', settings.forms)
   reqStr('siteSettings.forms.submitPath', forms.submitPath)
+  reqStr('siteSettings.forms.formKicker', forms.formKicker)
+  reqStr('siteSettings.forms.formAriaLabel', forms.formAriaLabel)
+  reqStr('siteSettings.forms.requiredIndicator', forms.requiredIndicator)
 
   const business = reqObj('siteSettings.business', settings.business)
   const businessStr = [
@@ -137,28 +140,30 @@ export function assertSanityHomepage(settings, homePage) {
   reqStr('homePage.layoutBackgrounds.services.imageSrc', layoutBg.services?.imageSrc)
   reqStr('homePage.layoutBackgrounds.uniquePoints.imageSrc', layoutBg.uniquePoints?.imageSrc)
 
-  const header = reqObj('homePage.header', homePage.header)
-  const offerBar = reqObj('homePage.header.offerBar', header.offerBar)
+  const headerSource = homePage.header ?? settings.header
+  const headerSourcePath = homePage.header ? 'homePage.header' : 'siteSettings.header'
+  const header = reqObj(headerSourcePath, headerSource)
+  const offerBar = reqObj(`${headerSourcePath}.offerBar`, header.offerBar)
   ;['textBeforeDiscount', 'discountLabel', 'textAfterDiscount', 'ctaText', 'ctaHref'].forEach(
-    (k) => reqStr(`homePage.header.offerBar.${k}`, offerBar[k]),
+    (k) => reqStr(`${headerSourcePath}.offerBar.${k}`, offerBar[k]),
   )
-  const navItems = reqArr('homePage.header.navItems', header.navItems)
+  const navItems = reqArr(`${headerSourcePath}.navItems`, header.navItems)
   for (let i = 0; i < navItems.length; i++) {
-    const item = reqObj(`homePage.header.navItems[${i}]`, navItems[i])
-    reqStr(`homePage.header.navItems[${i}].label`, item.label)
+    const item = reqObj(`${headerSourcePath}.navItems[${i}]`, navItems[i])
+    reqStr(`${headerSourcePath}.navItems[${i}].label`, item.label)
     const dropdown = item.dropdown
     if (Array.isArray(dropdown) && dropdown.length > 0) {
       dropdown.forEach((link, j) => {
-        const l = reqObj(`homePage.header.navItems[${i}].dropdown[${j}]`, link)
-        reqStr(`homePage.header.navItems[${i}].dropdown[${j}].label`, l.label)
-        reqStr(`homePage.header.navItems[${i}].dropdown[${j}].href`, l.href)
+        const l = reqObj(`${headerSourcePath}.navItems[${i}].dropdown[${j}]`, link)
+        reqStr(`${headerSourcePath}.navItems[${i}].dropdown[${j}].label`, l.label)
+        reqStr(`${headerSourcePath}.navItems[${i}].dropdown[${j}].href`, l.href)
       })
     } else {
-      reqStr(`homePage.header.navItems[${i}].href`, item.href)
+      reqStr(`${headerSourcePath}.navItems[${i}].href`, item.href)
     }
   }
-  reqStr('homePage.header.callCtaTemplate', header.callCtaTemplate)
-  reqStr('homePage.header.logoAriaLabelTemplate', header.logoAriaLabelTemplate)
+  reqStr(`${headerSourcePath}.callCtaTemplate`, header.callCtaTemplate)
+  reqStr(`${headerSourcePath}.logoAriaLabelTemplate`, header.logoAriaLabelTemplate)
 
   const hero = reqObj('homePage.hero', homePage.hero)
   const hf = [
@@ -166,26 +171,11 @@ export function assertSanityHomepage(settings, homePage) {
     'headline',
     'lead',
     'callCtaTemplate',
-    'formAriaLabel',
-    'formKicker',
-    'formHeadline',
-    'formSub',
-    'formSubmitCta',
-    'formSubmitHref',
     'typedFallbackPhrase',
   ]
   for (const k of hf) {
     reqStr(`homePage.hero.${k}`, hero[k])
   }
-  const heroForm = reqObj('homePage.hero.formFields', hero.formFields)
-  ;[
-    'nameLabel',
-    'emailLabel',
-    'phoneLabel',
-    'cityLabel',
-    'projectDetailsLabel',
-    'requiredIndicator',
-  ].forEach((k) => reqStr(`homePage.hero.formFields.${k}`, heroForm[k]))
 
   const typedPhrases = reqArr('homePage.hero.typedPhrases', hero.typedPhrases)
   typedPhrases.forEach((p, i) =>
@@ -355,12 +345,16 @@ export function assertSanityHomepage(settings, homePage) {
     reqStr(`homePage.faq.items[${i}].answerHtml`, it.answerHtml)
   })
 
-  const fe = reqObj('homePage.footerEstimate', homePage.footerEstimate)
-  reqStr('homePage.footerEstimate.headline', fe.headline)
-  reqStr('homePage.footerEstimate.intro', fe.intro)
-  reqStr('homePage.footerEstimate.formAction', fe.formAction)
-  reqStr('homePage.footerEstimate.formMethod', fe.formMethod)
-  const fef = reqObj('homePage.footerEstimate.formFields', fe.formFields)
+  const footerEstimateSource = homePage.footerEstimate ?? settings.footerEstimate
+  const footerEstimatePath = homePage.footerEstimate
+    ? 'homePage.footerEstimate'
+    : 'siteSettings.footerEstimate'
+  const fe = reqObj(footerEstimatePath, footerEstimateSource)
+  reqStr(`${footerEstimatePath}.headline`, fe.headline)
+  reqStr(`${footerEstimatePath}.intro`, fe.intro)
+  reqStr(`${footerEstimatePath}.formAction`, fe.formAction)
+  reqStr(`${footerEstimatePath}.formMethod`, fe.formMethod)
+  const fef = reqObj(`${footerEstimatePath}.formFields`, fe.formFields)
   ;[
     'nameLabel',
     'emailLabel',
@@ -368,52 +362,60 @@ export function assertSanityHomepage(settings, homePage) {
     'cityLabel',
     'projectDetailsLabel',
     'submitButton',
-  ].forEach((k) => reqStr(`homePage.footerEstimate.formFields.${k}`, fef[k]))
+  ].forEach((k) => reqStr(`${footerEstimatePath}.formFields.${k}`, fef[k]))
 
-  const fb = reqObj('homePage.footerBrand', homePage.footerBrand)
-  reqStr('homePage.footerBrand.tagline', fb.tagline)
-  reqStr('homePage.footerBrand.socialAriaLabel', fb.socialAriaLabel)
-  const socials = reqArr('homePage.footerBrand.socialLinks', fb.socialLinks)
+  const footerBrandSource = homePage.footerBrand ?? settings.footerBrand
+  const footerBrandPath = homePage.footerBrand ? 'homePage.footerBrand' : 'siteSettings.footerBrand'
+  const fb = reqObj(footerBrandPath, footerBrandSource)
+  reqStr(`${footerBrandPath}.tagline`, fb.tagline)
+  reqStr(`${footerBrandPath}.socialAriaLabel`, fb.socialAriaLabel)
+  const socials = reqArr(`${footerBrandPath}.socialLinks`, fb.socialLinks)
   socials.forEach((s, i) => {
-    const sl = reqObj(`homePage.footerBrand.socialLinks[${i}]`, s)
-    reqStr(`homePage.footerBrand.socialLinks[${i}].platform`, sl.platform)
-    reqStr(`homePage.footerBrand.socialLinks[${i}].href`, sl.href)
-    reqStr(`homePage.footerBrand.socialLinks[${i}].ariaLabel`, sl.ariaLabel)
+    const sl = reqObj(`${footerBrandPath}.socialLinks[${i}]`, s)
+    reqStr(`${footerBrandPath}.socialLinks[${i}].platform`, sl.platform)
+    reqStr(`${footerBrandPath}.socialLinks[${i}].href`, sl.href)
+    reqStr(`${footerBrandPath}.socialLinks[${i}].ariaLabel`, sl.ariaLabel)
   })
 
-  const fcols = reqArr('homePage.footerColumns', homePage.footerColumns)
+  const footerColumnsSource = homePage.footerColumns ?? settings.footerColumns
+  const footerColumnsPath = homePage.footerColumns ? 'homePage.footerColumns' : 'siteSettings.footerColumns'
+  const fcols = reqArr(footerColumnsPath, footerColumnsSource)
   fcols.forEach((col, i) => {
-    const c = reqObj(`homePage.footerColumns[${i}]`, col)
-    reqStr(`homePage.footerColumns[${i}].heading`, c.heading)
+    const c = reqObj(`${footerColumnsPath}[${i}]`, col)
+    reqStr(`${footerColumnsPath}[${i}].heading`, c.heading)
     const hasLinks = Array.isArray(c.links) && c.links.length > 0
     const hasHours =
       isNonEmptyString(c.hoursHeading) && isNonEmptyString(c.hoursText)
     req(
-      `homePage.footerColumns[${i}]`,
+      `${footerColumnsPath}[${i}]`,
       hasLinks || hasHours,
       'each column needs either links[] or hoursHeading + hoursText',
     )
     if (hasLinks) {
-      reqStr(`homePage.footerColumns[${i}].ariaLabel`, c.ariaLabel)
+      reqStr(`${footerColumnsPath}[${i}].ariaLabel`, c.ariaLabel)
       c.links.forEach((link, j) => {
-        const l = reqObj(`homePage.footerColumns[${i}].links[${j}]`, link)
-        reqStr(`homePage.footerColumns[${i}].links[${j}].label`, l.label)
-        reqStr(`homePage.footerColumns[${i}].links[${j}].href`, l.href)
+        const l = reqObj(`${footerColumnsPath}[${i}].links[${j}]`, link)
+        reqStr(`${footerColumnsPath}[${i}].links[${j}].label`, l.label)
+        reqStr(`${footerColumnsPath}[${i}].links[${j}].href`, l.href)
       })
     }
     if (hasHours) {
-      reqStr(`homePage.footerColumns[${i}].hoursHeading`, c.hoursHeading)
-      reqStr(`homePage.footerColumns[${i}].hoursText`, c.hoursText)
+      reqStr(`${footerColumnsPath}[${i}].hoursHeading`, c.hoursHeading)
+      reqStr(`${footerColumnsPath}[${i}].hoursText`, c.hoursText)
     }
   })
 
-  const fs = reqObj('homePage.footerSupport', homePage.footerSupport)
-  reqStr('homePage.footerSupport.ariaLabel', fs.ariaLabel)
-  reqStr('homePage.footerSupport.copyrightTemplate', fs.copyrightTemplate)
-  const fsLinks = reqArr('homePage.footerSupport.links', fs.links)
+  const footerSupportSource = homePage.footerSupport ?? settings.footerSupport
+  const footerSupportPath = homePage.footerSupport
+    ? 'homePage.footerSupport'
+    : 'siteSettings.footerSupport'
+  const fs = reqObj(footerSupportPath, footerSupportSource)
+  reqStr(`${footerSupportPath}.ariaLabel`, fs.ariaLabel)
+  reqStr(`${footerSupportPath}.copyrightTemplate`, fs.copyrightTemplate)
+  const fsLinks = reqArr(`${footerSupportPath}.links`, fs.links)
   fsLinks.forEach((link, i) => {
-    const l = reqObj(`homePage.footerSupport.links[${i}]`, link)
-    reqStr(`homePage.footerSupport.links[${i}].label`, l.label)
-    reqStr(`homePage.footerSupport.links[${i}].href`, l.href)
+    const l = reqObj(`${footerSupportPath}.links[${i}]`, link)
+    reqStr(`${footerSupportPath}.links[${i}].label`, l.label)
+    reqStr(`${footerSupportPath}.links[${i}].href`, l.href)
   })
 }

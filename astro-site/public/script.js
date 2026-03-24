@@ -9,6 +9,33 @@
     yearEl.textContent = new Date().getFullYear();
   }
 
+  // External http(s) links: always open in a new tab (same-site / relative / # / mailto / tel unchanged)
+  (function normalizeExternalLinks() {
+    var originHost = window.location.hostname;
+    document.querySelectorAll('a[href]').forEach(function (a) {
+      var href = a.getAttribute('href');
+      if (!href || !href.trim()) return;
+      var trimmed = href.trim();
+      if (trimmed.charAt(0) === '#' || trimmed.charAt(0) === '?') return;
+      if (trimmed.indexOf('/') === 0 && trimmed.indexOf('//') !== 0) return;
+      if (/^mailto:/i.test(trimmed) || /^tel:/i.test(trimmed)) return;
+      if (/^javascript:/i.test(trimmed)) return;
+      var url;
+      try {
+        url = new URL(trimmed, window.location.href);
+      } catch (e) {
+        return;
+      }
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
+      if (url.hostname === originHost) return;
+      a.setAttribute('target', '_blank');
+      var rel = (a.getAttribute('rel') || '').split(/\s+/).filter(Boolean);
+      if (rel.indexOf('noopener') === -1) rel.push('noopener');
+      if (rel.indexOf('noreferrer') === -1) rel.push('noreferrer');
+      a.setAttribute('rel', rel.join(' '));
+    });
+  })();
+
   // Smooth anchor scroll with sticky-header offset
   function getHeaderOffset() {
     var header = document.querySelector('.header');
@@ -38,9 +65,12 @@
   });
 
   // Section/card entry animations
-  /* Exclude .stats-thin and .unique-points: transform-based reveal causes 1px white hairlines between full-bleed sections */
+  /* Exclude .stats-thin and .unique-points: transform-based reveal causes 1px white hairlines between full-bleed sections.
+     Exclude .projects-gallery-section: it contains position:fixed lightbox; any ancestor transform breaks fixed positioning. */
   var revealTargets = Array.prototype.slice.call(
-    document.querySelectorAll('main > section:not(.stats-thin, .unique-points), footer > section, .service-card, .result-item, .testimonial, .team-card, .faq-item')
+    document.querySelectorAll(
+      'main > section:not(.stats-thin, .unique-points, .projects-gallery-section), footer > section, .service-card, .result-item, .testimonial, .team-card, .faq-item'
+    )
   );
 
   if (revealTargets.length) {

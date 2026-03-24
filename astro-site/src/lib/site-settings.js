@@ -1,0 +1,169 @@
+import { sanity } from './sanity.js'
+
+function normalizeHref(href) {
+  if (typeof href !== 'string') return href
+  const trimmed = href.trim()
+  if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return href
+  }
+  if (!trimmed.includes('.html')) return href
+  return trimmed.replace(/\.html(?=$|[?#])/g, '/')
+}
+
+function normalizeLabel(label) {
+  if (typeof label !== 'string') return label
+  const v = label.trim().toLowerCase()
+  if (v === 'gallery' || v === 'our projects') return 'Projects'
+  if (v === 'google reviews') return 'Reviews'
+  if (v === 'our team') return 'About Us'
+  return label
+}
+
+function normalizeProjectsHref(label, href) {
+  if (typeof href === 'string' && href.trim().toLowerCase() === '/gallery/') return '/projects/'
+  if (typeof label !== 'string') return href
+  const v = label.trim().toLowerCase()
+  if (v === 'projects' || v === 'our projects' || v === 'gallery') return '/projects/'
+  return href
+}
+
+function normalizeReviewHref(label, href) {
+  if (typeof label !== 'string') return href
+  const v = label.trim().toLowerCase()
+  if (v === 'reviews' || v === 'google reviews') return '/reviews/'
+  return href
+}
+
+function normalizeAboutHref(label, href) {
+  if (typeof label !== 'string') return href
+  const v = label.trim().toLowerCase()
+  if (v === 'about us' || v === 'our team') return '/about-us/'
+  return href
+}
+
+function normalizeHeader(header) {
+  if (!header || typeof header !== 'object') return header
+  const navItems = Array.isArray(header.navItems)
+    ? header.navItems.map((item) => ({
+        ...item,
+        label: normalizeLabel(item?.label),
+        href: normalizeAboutHref(
+          item?.label,
+          normalizeReviewHref(item?.label, normalizeProjectsHref(item?.label, normalizeHref(item?.href)))
+        ),
+        dropdown: Array.isArray(item?.dropdown)
+          ? item.dropdown.map((link) => ({
+              ...link,
+              label: normalizeLabel(link?.label),
+              href: normalizeAboutHref(
+                link?.label,
+                normalizeReviewHref(link?.label, normalizeProjectsHref(link?.label, normalizeHref(link?.href)))
+              ),
+            }))
+          : item?.dropdown,
+      }))
+    : header.navItems
+  return { ...header, navItems }
+}
+
+function normalizeFooterColumns(columns) {
+  if (!Array.isArray(columns)) return columns
+  return columns.map((col) => ({
+    ...col,
+    links: Array.isArray(col?.links)
+      ? col.links.map((link) => ({
+          ...link,
+          label: normalizeLabel(link?.label),
+          href: normalizeAboutHref(
+            link?.label,
+            normalizeReviewHref(link?.label, normalizeProjectsHref(link?.label, normalizeHref(link?.href)))
+          ),
+        }))
+      : col?.links,
+  }))
+}
+
+function normalizeFooterSupport(support) {
+  if (!support || typeof support !== 'object') return support
+  const links = Array.isArray(support.links)
+    ? support.links.map((link) => ({
+        ...link,
+        label: normalizeLabel(link?.label),
+        href: normalizeAboutHref(
+          link?.label,
+          normalizeReviewHref(link?.label, normalizeProjectsHref(link?.label, normalizeHref(link?.href)))
+        ),
+      }))
+    : support.links
+  return { ...support, links }
+}
+
+function hasUpdatedLinks(doc) {
+  const navHref = doc?.header?.navItems?.[1]?.href
+  const privacyHref = doc?.footerSupport?.links?.[0]?.href
+  return typeof navHref === 'string' && navHref.includes('/gallery/') &&
+    typeof privacyHref === 'string' && privacyHref.includes('/privacy-policy/')
+}
+
+/**
+ * Prefer Site settings for the full header; many pages fall back to `homePage.header`.
+ * Offer bar (discount %, CTA, etc.) must always use Site settings when present — homePage
+ * often has a stale copy and was overriding the live Sanity singleton.
+ */
+export function mergeHeaderFromSettings(settings, fallbackHeader) {
+  const base = settings?.header ?? fallbackHeader ?? {}
+  return {
+    ...base,
+    // Merge field-by-field so a partial `header.offerBar` on site settings still wins
+    // (Sanity often sends only changed fields; `??` replaced the whole block with homePage's 10%).
+    offerBar: {
+      ...fallbackHeader?.offerBar,
+      ...settings?.header?.offerBar,
+    },
+  }
+}
+
+export async function getSiteSettings() {
+  const docs = await sanity.fetch(`*[_type == "siteSettings"]`)
+  const list = Array.isArray(docs) ? docs : []
+
+  /** Only this document id is the canonical promo/header copy source (see import script + Studio). */
+  const singletonDoc = list.find((d) => d?._id === 'siteSettingsSingleton')
+  const singleton = singletonDoc || list[0] || {}
+  const linksSource =
+    list.find((d) => d?._id !== singleton?._id && hasUpdatedLinks(d)) ||
+    list.find((d) => d?._id !== singleton?._id && Array.isArray(d?.header?.navItems)) ||
+    singleton
+
+  // Nav/footer links may come from a second siteSettings doc; offer bar must follow
+  // **siteSettingsSingleton** only — never list[0]'s offerBar when that isn't the singleton.
+  const rawHeader = linksSource?.header ?? singleton?.header
+  const singletonOffer = singletonDoc?.header?.offerBar
+  const mergedHeader =
+    rawHeader && singletonOffer != null
+      ? {
+          ...rawHeader,
+          offerBar: { ...rawHeader?.offerBar, ...singletonOffer },
+        }
+      : rawHeader
+
+  /**
+   * Footer columns: prefer the canonical site settings doc (`singleton`) when it has columns.
+   * Otherwise `linksSource` (a second siteSettings doc) was used first — that hid Studio edits
+   * on the singleton (e.g. new “Blog” link) when the secondary doc still had old footer columns.
+   */
+  const footerColumnsRaw =
+    Array.isArray(singleton?.footerColumns) && singleton.footerColumns.length > 0
+      ? singleton.footerColumns
+      : (linksSource?.footerColumns ?? singleton?.footerColumns)
+
+  return {
+    ...singleton,
+    header: normalizeHeader(mergedHeader ?? singleton?.header) ?? {},
+    footerEstimate: linksSource?.footerEstimate ?? singleton?.footerEstimate,
+    footerBrand: linksSource?.footerBrand ?? singleton?.footerBrand,
+    footerColumns: normalizeFooterColumns(footerColumnsRaw),
+    footerSupport: normalizeFooterSupport(linksSource?.footerSupport ?? singleton?.footerSupport),
+    forms: singleton?.forms ?? linksSource?.forms,
+  }
+}

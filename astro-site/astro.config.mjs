@@ -1,5 +1,13 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
+
+/** Canonical production URL (www) — matches astro-site/vercel.json host redirect */
+const site = 'https://www.milehighgutter.com';
 
 // https://astro.build/config
-export default defineConfig({});
+export default defineConfig({
+  site,
+  trailingSlash: 'always',
+  integrations: [sitemap()],
+});

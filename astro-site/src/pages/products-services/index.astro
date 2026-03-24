@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { sanity } from '../../lib/sanity.js'
+import { getSiteSettings } from '../../lib/site-settings.js'
+import { asStr } from '../../lib/sanity-strings.js'
+
+let settings = {}
+let pages = []
+try {
+  ;[settings, pages] = await Promise.all([
+    getSiteSettings(),
+    sanity.fetch(
+      `*[_type == "cityServicePage" && defined(slug.current)]{title, headline, lead, "slug": slug.current} | order(title asc)`
+    ),
+  ])
+} catch (err) {
+  console.warn('[products-services/index] Sanity fetch failed.', err)
+}
+
+const pageTitle = 'Products & Services | Mile High Gutters'
+const pageDescription = 'Explore gutter products and services in Denver.'
+const items = Array.isArray(pages) ? pages : []
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  theme={settings?.theme}
+  forms={{ submitPath: asStr(settings?.forms?.submitPath) || '/api/lead' }}
+>
+  <main class="section">
+    <div class="container">
+      <h1 class="section-title section-title-secondary">Products & Services</h1>
+      <p class="section-lead" style="max-width: 70ch;">
+        Service page hub. Each item below is driven by Sanity and renders at `/products-services/[slug]/`.
+      </p>
+      <div style="display:grid; gap:1rem; margin-top:1.5rem;">
+        {items.length > 0 ? (
+          items.map((item) => (
+            <article style="padding:1rem 1.25rem; border:1px solid rgba(0,0,0,0.08); border-radius:12px;">
+              <h2 style="margin:0 0 .5rem;">
+                <a href={`/products-services/${asStr(item.slug)}/`}>
+                  {asStr(item.title) || asStr(item.headline) || asStr(item.slug)}
+                </a>
+              </h2>
+              <p style="margin:0; color:#4b5563;">{asStr(item.lead) || 'Content placeholder page. Update in Sanity.'}</p>
+            </article>
+          ))
+        ) : (
+          <p>No city service pages found yet in Sanity.</p>
+        )}
+      </div>
+    </div>
+  </main>
+</BaseLayout>

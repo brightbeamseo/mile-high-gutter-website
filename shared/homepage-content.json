@@ -549,7 +549,8 @@
         { "label": "Google Reviews", "href": "#reviews" },
         { "label": "Service Area", "href": "#service-area" },
         { "label": "FAQ", "href": "#faq" },
-        { "label": "Contact Us", "href": "#contact" }
+        { "label": "Contact Us", "href": "#contact" },
+        { "label": "Blog", "href": "/blog/" }
       ]
     },
     {

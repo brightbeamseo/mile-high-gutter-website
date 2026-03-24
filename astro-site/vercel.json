@@ -1,5 +1,29 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "milehighgutter.com"
+        }
+      ],
+      "destination": "https://www.milehighgutter.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/city-service-base/",
+      "destination": "/products-services/gutter-repair-denver-co/",
+      "permanent": true
+    },
+    {
+      "source": "/:path((?!api/)(?!.*\\.).*[^/])",
+      "destination": "/:path/",
+      "permanent": true
+    }
+  ],
   "functions": {
     "api/lead.js": {
       "maxDuration": 30
