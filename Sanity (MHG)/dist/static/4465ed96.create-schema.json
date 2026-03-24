@@ -1,0 +1,2227 @@
+[
+  {
+    "fields": [
+      {
+        "name": "business",
+        "type": "business"
+      },
+      {
+        "description": "Each row is one line of text (stored as a small object so Studio stays valid).",
+        "of": [
+          {
+            "type": "stringListItem",
+            "title": "Text"
+          }
+        ],
+        "name": "businessCategories",
+        "type": "array",
+        "title": "Business categories"
+      },
+      {
+        "description": "SEO-style keywords, one per row.",
+        "of": [
+          {
+            "type": "stringListItem",
+            "title": "Text"
+          }
+        ],
+        "name": "keywords",
+        "type": "array"
+      },
+      {
+        "name": "businessListings",
+        "type": "businessListings"
+      },
+      {
+        "description": "Lead form endpoint path (e.g. /api/lead).",
+        "name": "forms",
+        "type": "siteForms"
+      },
+      {
+        "name": "meta",
+        "type": "meta"
+      },
+      {
+        "description": "Overrides :root CSS variables (same shape as shared/homepage-content.json theme).",
+        "name": "theme",
+        "type": "theme"
+      },
+      {
+        "name": "statsValues",
+        "type": "statsValues"
+      },
+      {
+        "description": "Navigation and header CTAs used across all pages.",
+        "name": "header",
+        "type": "header",
+        "title": "Global Header"
+      },
+      {
+        "description": "Top contact/estimate footer section shared across pages.",
+        "name": "footerEstimate",
+        "type": "footerEstimate",
+        "title": "Global Footer Estimate"
+      },
+      {
+        "description": "Footer brand block and social links shared across pages.",
+        "name": "footerBrand",
+        "type": "footerBrand",
+        "title": "Global Footer Brand"
+      },
+      {
+        "of": [
+          {
+            "type": "footerColumn",
+            "title": "Footer column"
+          }
+        ],
+        "name": "footerColumns",
+        "type": "array",
+        "title": "Global Footer Columns"
+      },
+      {
+        "description": "Bottom legal/support links shared across pages.",
+        "name": "footerSupport",
+        "type": "footerSupport",
+        "title": "Global Footer Support"
+      },
+      {
+        "rows": 2,
+        "name": "mapEmbedUrl",
+        "type": "text",
+        "title": "mapEmbedUrl"
+      },
+      {
+        "rows": 5,
+        "description": "Shown at the end of every blog post with your logo (company as author). Plain text.",
+        "name": "blogAuthorBio",
+        "type": "text",
+        "title": "Blog author bio"
+      }
+    ],
+    "name": "siteSettings",
+    "type": "document",
+    "title": "Site settings"
+  },
+  {
+    "fields": [
+      {
+        "initialValue": "home",
+        "name": "page",
+        "type": "string",
+        "title": "page"
+      },
+      {
+        "name": "layoutBackgrounds",
+        "type": "layoutBackgrounds"
+      },
+      {
+        "name": "header",
+        "type": "header"
+      },
+      {
+        "name": "hero",
+        "type": "hero"
+      },
+      {
+        "name": "brandsMarquee",
+        "type": "brandsMarquee"
+      },
+      {
+        "name": "projects",
+        "type": "projects"
+      },
+      {
+        "name": "whyChoose",
+        "type": "whyChoose"
+      },
+      {
+        "name": "services",
+        "type": "services"
+      },
+      {
+        "name": "about",
+        "type": "about"
+      },
+      {
+        "name": "uniquePoints",
+        "type": "uniquePoints"
+      },
+      {
+        "name": "statsBar",
+        "type": "statsBar"
+      },
+      {
+        "name": "contactBanner",
+        "type": "contactBanner"
+      },
+      {
+        "name": "reviews",
+        "type": "reviews"
+      },
+      {
+        "name": "serviceArea",
+        "type": "serviceArea"
+      },
+      {
+        "name": "team",
+        "type": "team"
+      },
+      {
+        "name": "faq",
+        "type": "faq"
+      },
+      {
+        "name": "footerEstimate",
+        "type": "footerEstimate"
+      },
+      {
+        "name": "footerBrand",
+        "type": "footerBrand"
+      },
+      {
+        "of": [
+          {
+            "type": "footerColumn",
+            "title": "Footer column"
+          }
+        ],
+        "name": "footerColumns",
+        "type": "array"
+      },
+      {
+        "name": "footerSupport",
+        "type": "footerSupport"
+      }
+    ],
+    "name": "homePage",
+    "type": "document",
+    "title": "Homepage"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "name": "eyebrow",
+        "type": "string"
+      },
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "name": "lead",
+        "type": "text"
+      },
+      {
+        "description": "Page-specific section backgrounds for this city page.",
+        "name": "layoutBackgrounds",
+        "type": "layoutBackgrounds",
+        "title": "Background Images"
+      },
+      {
+        "description": "Main page-specific content blocks. Image fields are optional per section.",
+        "of": [
+          {
+            "type": "cityContentSection",
+            "title": "City content section"
+          }
+        ],
+        "name": "contentSections",
+        "type": "array"
+      },
+      {
+        "description": "Page-specific review content for this city page.",
+        "name": "reviews",
+        "type": "reviews",
+        "title": "Page Reviews"
+      },
+      {
+        "name": "faq",
+        "type": "faq",
+        "title": "Page FAQ"
+      },
+      {
+        "rows": 2,
+        "description": "Optional page-specific map embed URL. Falls back to global site map.",
+        "name": "mapEmbedUrl",
+        "type": "text",
+        "title": "Map Embed URL"
+      }
+    ],
+    "name": "cityServicePage",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Internal title"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "slug",
+        "type": "slug",
+        "title": "URL slug"
+      },
+      {
+        "description": "Browser title & meta description for search results.",
+        "name": "meta",
+        "type": "meta",
+        "title": "SEO"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "publishedAt",
+        "type": "datetime",
+        "title": "Published date"
+      },
+      {
+        "name": "eyebrow",
+        "type": "string",
+        "title": "Hero eyebrow"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "headline",
+        "type": "string",
+        "title": "Hero headline"
+      },
+      {
+        "rows": 4,
+        "name": "lead",
+        "type": "text",
+        "title": "Hero lead paragraph"
+      },
+      {
+        "description": "Optional hero background (same as other pages).",
+        "name": "layoutBackgrounds",
+        "type": "layoutBackgrounds",
+        "title": "Background images"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 1
+              }
+            ]
+          }
+        ],
+        "of": [
+          {
+            "type": "cityContentSection",
+            "title": "City content section"
+          }
+        ],
+        "name": "contentSections",
+        "type": "array",
+        "title": "Article content"
+      }
+    ],
+    "name": "blogPost",
+    "type": "document",
+    "title": "Blog post"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "rows": 24,
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "description": "Plain text legal copy. Keep formatting simple.",
+        "name": "content",
+        "type": "text"
+      }
+    ],
+    "name": "legalPage",
+    "type": "document",
+    "title": "Legal"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "name": "eyebrow",
+        "type": "string"
+      },
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "name": "lead",
+        "type": "text"
+      },
+      {
+        "description": "Questions and answers rendered in the accordion.",
+        "name": "faq",
+        "type": "faq",
+        "title": "FAQ Content"
+      }
+    ],
+    "name": "faqPage",
+    "type": "document",
+    "title": "FAQ Page"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "name": "eyebrow",
+        "type": "string"
+      },
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "name": "lead",
+        "type": "text"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "min",
+                "constraint": 1
+              }
+            ]
+          }
+        ],
+        "of": [
+          {
+            "type": "projectSlide",
+            "title": "Project slide"
+          }
+        ],
+        "name": "images",
+        "type": "array",
+        "title": "Gallery Images"
+      }
+    ],
+    "name": "galleryPage",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "name": "eyebrow",
+        "type": "string"
+      },
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "name": "lead",
+        "type": "text"
+      }
+    ],
+    "name": "contactPage",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "name": "eyebrow",
+        "type": "string"
+      },
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "name": "lead",
+        "type": "text"
+      },
+      {
+        "description": "Review summary and testimonial cards. Add more anytime.",
+        "name": "reviews",
+        "type": "reviews",
+        "title": "Reviews Content"
+      }
+    ],
+    "name": "reviewsPage",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "name": "imageSrc",
+        "type": "string",
+        "title": "Image path (imageSrc)"
+      },
+      {
+        "name": "location",
+        "type": "string"
+      }
+    ],
+    "name": "layoutBackgroundSection",
+    "type": "object",
+    "title": "Layout background section"
+  },
+  {
+    "fields": [
+      {
+        "rows": 2,
+        "name": "note",
+        "type": "text",
+        "title": "note"
+      },
+      {
+        "name": "hero",
+        "type": "layoutBackgroundSection"
+      },
+      {
+        "name": "uniquePoints",
+        "type": "layoutBackgroundSection"
+      },
+      {
+        "name": "services",
+        "type": "layoutBackgroundSection"
+      }
+    ],
+    "name": "layoutBackgrounds",
+    "type": "object",
+    "title": "Layout backgrounds"
+  },
+  {
+    "fields": [
+      {
+        "name": "title",
+        "type": "string",
+        "title": "title"
+      },
+      {
+        "rows": 3,
+        "name": "description",
+        "type": "text",
+        "title": "description"
+      }
+    ],
+    "name": "meta",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "name": "background",
+        "type": "string",
+        "title": "background → --color-bg"
+      },
+      {
+        "name": "backgroundAlt",
+        "type": "string",
+        "title": "backgroundAlt → --color-bg-alt"
+      },
+      {
+        "name": "surface",
+        "type": "string",
+        "title": "surface → --color-surface"
+      },
+      {
+        "name": "text",
+        "type": "string",
+        "title": "text → --color-text"
+      },
+      {
+        "name": "textMuted",
+        "type": "string",
+        "title": "textMuted → --color-text-muted"
+      },
+      {
+        "name": "accent",
+        "type": "string",
+        "title": "accent → --color-accent"
+      },
+      {
+        "name": "accentHover",
+        "type": "string",
+        "title": "accentHover → --color-accent-hover"
+      },
+      {
+        "name": "primary",
+        "type": "string",
+        "title": "primary (brand dark) → --color-dark"
+      },
+      {
+        "name": "border",
+        "type": "string",
+        "title": "border → --color-border"
+      }
+    ],
+    "name": "themeColors",
+    "type": "object",
+    "title": "Theme colors"
+  },
+  {
+    "fields": [
+      {
+        "description": "e.g. \"Poppins\", system-ui, sans-serif",
+        "name": "heading",
+        "type": "string",
+        "title": "heading stack → --font-heading"
+      },
+      {
+        "description": "e.g. \"Merriweather\", Georgia, serif",
+        "name": "body",
+        "type": "string",
+        "title": "body stack → --font-body"
+      }
+    ],
+    "name": "themeFonts",
+    "type": "object",
+    "title": "Theme fonts"
+  },
+  {
+    "fields": [
+      {
+        "name": "default",
+        "type": "string",
+        "title": "default → --shadow"
+      },
+      {
+        "name": "large",
+        "type": "string",
+        "title": "large → --shadow-lg"
+      }
+    ],
+    "name": "themeShadows",
+    "type": "object",
+    "title": "Theme shadows"
+  },
+  {
+    "fields": [
+      {
+        "rows": 2,
+        "name": "note",
+        "type": "text",
+        "title": "note"
+      },
+      {
+        "name": "colors",
+        "type": "themeColors"
+      },
+      {
+        "name": "fonts",
+        "type": "themeFonts"
+      },
+      {
+        "name": "shadows",
+        "type": "themeShadows"
+      }
+    ],
+    "name": "theme",
+    "type": "object",
+    "title": "Theme (CSS variables)"
+  },
+  {
+    "fields": [
+      {
+        "name": "companyName",
+        "type": "string"
+      },
+      {
+        "name": "companyNameShort",
+        "type": "string"
+      },
+      {
+        "name": "phoneDisplay",
+        "type": "string"
+      },
+      {
+        "name": "phoneTel",
+        "type": "string"
+      },
+      {
+        "name": "email",
+        "type": "string"
+      },
+      {
+        "name": "websiteUrl",
+        "type": "string"
+      },
+      {
+        "name": "addressShort",
+        "type": "string"
+      },
+      {
+        "name": "addressMetro",
+        "type": "string"
+      },
+      {
+        "name": "copyrightSiteUrl",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "name": "descriptionShort",
+        "type": "text"
+      },
+      {
+        "rows": 5,
+        "name": "descriptionLong",
+        "type": "text"
+      },
+      {
+        "name": "hoursText",
+        "type": "string"
+      },
+      {
+        "name": "dateOpened",
+        "type": "string"
+      },
+      {
+        "name": "logoHorizontalBlack",
+        "type": "string",
+        "title": "logoHorizontalBlack (path)"
+      },
+      {
+        "name": "logoHorizontalBlackLocation",
+        "type": "string"
+      },
+      {
+        "name": "logoHorizontalWhite",
+        "type": "string",
+        "title": "logoHorizontalWhite (path)"
+      },
+      {
+        "name": "logoHorizontalWhiteLocation",
+        "type": "string"
+      }
+    ],
+    "name": "business",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "description": "Used for the footer & estimate address link (opens in a new tab).",
+        "name": "googleMaps",
+        "type": "string",
+        "title": "Google Maps / Business Profile URL"
+      },
+      {
+        "name": "bingPlaces",
+        "type": "string"
+      },
+      {
+        "name": "facebook",
+        "type": "string"
+      },
+      {
+        "name": "instagram",
+        "type": "string"
+      },
+      {
+        "name": "twitter",
+        "type": "string"
+      },
+      {
+        "name": "linkedin",
+        "type": "string"
+      },
+      {
+        "name": "yelp",
+        "type": "string"
+      }
+    ],
+    "name": "businessListings",
+    "type": "object",
+    "title": "Business listings"
+  },
+  {
+    "fields": [
+      {
+        "name": "submitPath",
+        "type": "string",
+        "title": "Lead POST path"
+      },
+      {
+        "name": "formKicker",
+        "type": "string",
+        "title": "Universal form kicker"
+      },
+      {
+        "name": "formAriaLabel",
+        "type": "string",
+        "title": "Universal form aria-label"
+      },
+      {
+        "description": "Symbol shown for required fields (example: *).",
+        "name": "requiredIndicator",
+        "type": "string",
+        "title": "Required indicator"
+      }
+    ],
+    "name": "siteForms",
+    "type": "object",
+    "title": "Forms"
+  },
+  {
+    "fields": [
+      {
+        "name": "value",
+        "type": "string",
+        "title": "Text"
+      }
+    ],
+    "name": "stringListItem",
+    "type": "object",
+    "title": "Text"
+  },
+  {
+    "fields": [
+      {
+        "name": "textBeforeDiscount",
+        "type": "string"
+      },
+      {
+        "name": "discountLabel",
+        "type": "string"
+      },
+      {
+        "name": "textAfterDiscount",
+        "type": "string"
+      },
+      {
+        "name": "ctaText",
+        "type": "string"
+      },
+      {
+        "name": "ctaHref",
+        "type": "string"
+      }
+    ],
+    "name": "offerBar",
+    "type": "object",
+    "title": "Offer bar"
+  },
+  {
+    "fields": [
+      {
+        "name": "label",
+        "type": "string"
+      },
+      {
+        "name": "href",
+        "type": "string"
+      }
+    ],
+    "name": "navLinkItem",
+    "type": "object",
+    "title": "Nav link"
+  },
+  {
+    "fields": [
+      {
+        "name": "label",
+        "type": "string"
+      },
+      {
+        "name": "href",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "navLinkItem",
+            "title": "Nav link"
+          }
+        ],
+        "name": "dropdown",
+        "type": "array"
+      }
+    ],
+    "name": "navItem",
+    "type": "object",
+    "title": "Nav item"
+  },
+  {
+    "fields": [
+      {
+        "name": "offerBar",
+        "type": "offerBar"
+      },
+      {
+        "of": [
+          {
+            "type": "navItem",
+            "title": "Nav item"
+          }
+        ],
+        "name": "navItems",
+        "type": "array"
+      },
+      {
+        "name": "callCtaTemplate",
+        "type": "string"
+      },
+      {
+        "name": "logoAriaLabelTemplate",
+        "type": "string"
+      }
+    ],
+    "name": "header",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "name": "nameLabel",
+        "type": "string"
+      },
+      {
+        "name": "emailLabel",
+        "type": "string"
+      },
+      {
+        "name": "phoneLabel",
+        "type": "string"
+      },
+      {
+        "name": "cityLabel",
+        "type": "string"
+      },
+      {
+        "name": "projectDetailsLabel",
+        "type": "string"
+      },
+      {
+        "name": "requiredIndicator",
+        "type": "string"
+      }
+    ],
+    "name": "heroFormFields",
+    "type": "object",
+    "title": "Hero form fields"
+  },
+  {
+    "fields": [
+      {
+        "name": "eyebrow",
+        "type": "string"
+      },
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "name": "lead",
+        "type": "text"
+      },
+      {
+        "name": "callCtaTemplate",
+        "type": "string"
+      },
+      {
+        "name": "formAriaLabel",
+        "type": "string"
+      },
+      {
+        "name": "formKicker",
+        "type": "string"
+      },
+      {
+        "name": "formHeadline",
+        "type": "string"
+      },
+      {
+        "rows": 2,
+        "name": "formSub",
+        "type": "text"
+      },
+      {
+        "name": "formFields",
+        "type": "heroFormFields"
+      },
+      {
+        "name": "formSubmitCta",
+        "type": "string"
+      },
+      {
+        "name": "formSubmitHref",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "typedPhrases",
+        "type": "array"
+      },
+      {
+        "name": "typedFallbackPhrase",
+        "type": "string"
+      }
+    ],
+    "name": "hero",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "brands",
+        "type": "array"
+      }
+    ],
+    "name": "brandsMarquee",
+    "type": "object",
+    "title": "Brands marquee"
+  },
+  {
+    "fields": [
+      {
+        "name": "imageSrc",
+        "type": "string"
+      },
+      {
+        "name": "imageAlt",
+        "type": "string"
+      },
+      {
+        "name": "location",
+        "type": "string"
+      }
+    ],
+    "name": "projectSlide",
+    "type": "object",
+    "title": "Project slide"
+  },
+  {
+    "fields": [
+      {
+        "name": "sectionAriaLabel",
+        "type": "string"
+      },
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "projectSlide",
+            "title": "Project slide"
+          }
+        ],
+        "name": "slides",
+        "type": "array"
+      },
+      {
+        "name": "controlsAriaLabel",
+        "type": "string"
+      },
+      {
+        "name": "prevAriaLabel",
+        "type": "string"
+      },
+      {
+        "name": "nextAriaLabel",
+        "type": "string"
+      },
+      {
+        "name": "prevLabel",
+        "type": "string"
+      },
+      {
+        "name": "nextLabel",
+        "type": "string"
+      }
+    ],
+    "name": "projects",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "rows": 2,
+        "name": "text",
+        "type": "text"
+      }
+    ],
+    "name": "whyChooseBullet",
+    "type": "object",
+    "title": "Why choose bullet"
+  },
+  {
+    "fields": [
+      {
+        "name": "homesCountTemplate",
+        "type": "string"
+      },
+      {
+        "name": "homesCountKey",
+        "type": "string"
+      },
+      {
+        "name": "line2",
+        "type": "string"
+      },
+      {
+        "name": "line3",
+        "type": "string"
+      }
+    ],
+    "name": "whyChooseStamp",
+    "type": "object",
+    "title": "Why choose stamp"
+  },
+  {
+    "fields": [
+      {
+        "name": "callTemplate",
+        "type": "string"
+      },
+      {
+        "name": "estimate",
+        "type": "string"
+      },
+      {
+        "name": "estimateHref",
+        "type": "string"
+      }
+    ],
+    "name": "whyChooseCtas",
+    "type": "object",
+    "title": "Why choose CTAs"
+  },
+  {
+    "fields": [
+      {
+        "name": "imageSrc",
+        "type": "string"
+      },
+      {
+        "name": "imageAlt",
+        "type": "string"
+      },
+      {
+        "name": "location",
+        "type": "string"
+      },
+      {
+        "name": "stamp",
+        "type": "whyChooseStamp"
+      },
+      {
+        "name": "eyebrow",
+        "type": "string"
+      },
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "name": "lead",
+        "type": "text"
+      },
+      {
+        "of": [
+          {
+            "type": "whyChooseBullet",
+            "title": "Why choose bullet"
+          }
+        ],
+        "name": "bullets",
+        "type": "array"
+      },
+      {
+        "rows": 2,
+        "name": "note",
+        "type": "text"
+      },
+      {
+        "name": "ctas",
+        "type": "whyChooseCtas"
+      }
+    ],
+    "name": "whyChoose",
+    "type": "object",
+    "title": "Why choose"
+  },
+  {
+    "fields": [
+      {
+        "name": "number",
+        "type": "string"
+      },
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "description": "Optional. If empty, the site auto-generates a /products-services/.../ link from the title.",
+        "name": "href",
+        "type": "string",
+        "title": "Service Page Link"
+      }
+    ],
+    "name": "serviceItem",
+    "type": "object",
+    "title": "Service item"
+  },
+  {
+    "fields": [
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "serviceItem",
+            "title": "Service item"
+          }
+        ],
+        "name": "items",
+        "type": "array"
+      }
+    ],
+    "name": "services",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "name": "posterSrc",
+        "type": "string"
+      },
+      {
+        "name": "posterLocation",
+        "type": "string"
+      },
+      {
+        "name": "sourceSrc",
+        "type": "string"
+      },
+      {
+        "name": "sourceType",
+        "type": "string"
+      }
+    ],
+    "name": "aboutVideo",
+    "type": "object",
+    "title": "About video"
+  },
+  {
+    "fields": [
+      {
+        "name": "callTemplate",
+        "type": "string"
+      },
+      {
+        "name": "estimate",
+        "type": "string"
+      },
+      {
+        "name": "estimateHref",
+        "type": "string"
+      }
+    ],
+    "name": "aboutCtas",
+    "type": "object",
+    "title": "About CTAs"
+  },
+  {
+    "fields": [
+      {
+        "name": "eyebrow",
+        "type": "string"
+      },
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "name": "lead",
+        "type": "text"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "bullets",
+        "type": "array"
+      },
+      {
+        "name": "video",
+        "type": "aboutVideo"
+      },
+      {
+        "name": "badgesAriaLabel",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "badges",
+        "type": "array"
+      },
+      {
+        "name": "ctas",
+        "type": "aboutCtas"
+      }
+    ],
+    "name": "about",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "name": "iconId",
+        "type": "string"
+      },
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "rows": 2,
+        "name": "description",
+        "type": "text"
+      }
+    ],
+    "name": "uniquePointItem",
+    "type": "object",
+    "title": "Unique point item"
+  },
+  {
+    "fields": [
+      {
+        "name": "eyebrow",
+        "type": "string"
+      },
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "uniquePointItem",
+            "title": "Unique point item"
+          }
+        ],
+        "name": "items",
+        "type": "array"
+      }
+    ],
+    "name": "uniquePoints",
+    "type": "object",
+    "title": "Unique points"
+  },
+  {
+    "fields": [
+      {
+        "name": "valueKey",
+        "type": "string"
+      },
+      {
+        "name": "label",
+        "type": "string"
+      }
+    ],
+    "name": "statsBarItem",
+    "type": "object",
+    "title": "Stats bar item"
+  },
+  {
+    "fields": [
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "statsBarItem",
+            "title": "Stats bar item"
+          }
+        ],
+        "name": "items",
+        "type": "array"
+      }
+    ],
+    "name": "statsBar",
+    "type": "object",
+    "title": "Stats bar"
+  },
+  {
+    "fields": [
+      {
+        "name": "statsYearsExperience",
+        "type": "string"
+      },
+      {
+        "name": "statsJobsCompleted",
+        "type": "string"
+      },
+      {
+        "name": "statsAvgRating",
+        "type": "string"
+      },
+      {
+        "name": "statsResponseTime",
+        "type": "string"
+      },
+      {
+        "name": "whyChooseHomesCount",
+        "type": "string"
+      }
+    ],
+    "name": "statsValues",
+    "type": "object",
+    "title": "Stats values"
+  },
+  {
+    "fields": [
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "rows": 2,
+        "name": "paragraph1",
+        "type": "text"
+      },
+      {
+        "name": "paragraph2",
+        "type": "string"
+      },
+      {
+        "name": "phoneIconSrc",
+        "type": "string"
+      },
+      {
+        "name": "phoneIconLocation",
+        "type": "string"
+      }
+    ],
+    "name": "contactBanner",
+    "type": "object",
+    "title": "Contact banner"
+  },
+  {
+    "fields": [
+      {
+        "name": "brandLabel",
+        "type": "string"
+      },
+      {
+        "name": "googleIconSrc",
+        "type": "string"
+      },
+      {
+        "name": "googleIconLocation",
+        "type": "string"
+      },
+      {
+        "name": "ratingValueKey",
+        "type": "string"
+      },
+      {
+        "name": "starsImageSrc",
+        "type": "string"
+      },
+      {
+        "name": "starsImageLocation",
+        "type": "string"
+      },
+      {
+        "name": "starsImageAlt",
+        "type": "string"
+      },
+      {
+        "name": "reviewCountKey",
+        "type": "string"
+      },
+      {
+        "name": "reviewCountPrefix",
+        "type": "string"
+      },
+      {
+        "name": "reviewCountSuffix",
+        "type": "string"
+      },
+      {
+        "name": "ctaText",
+        "type": "string"
+      },
+      {
+        "name": "ctaHref",
+        "type": "string"
+      }
+    ],
+    "name": "reviewsSummary",
+    "type": "object",
+    "title": "Reviews summary"
+  },
+  {
+    "fields": [
+      {
+        "name": "reviewsRating",
+        "type": "string"
+      },
+      {
+        "name": "reviewsCount",
+        "type": "string"
+      }
+    ],
+    "name": "reviewValues",
+    "type": "object",
+    "title": "Review values"
+  },
+  {
+    "fields": [
+      {
+        "name": "author",
+        "type": "string"
+      },
+      {
+        "name": "timeAgo",
+        "type": "string"
+      },
+      {
+        "name": "avatarSrc",
+        "type": "string"
+      },
+      {
+        "name": "avatarLocation",
+        "type": "string"
+      },
+      {
+        "rows": 4,
+        "name": "quote",
+        "type": "text"
+      }
+    ],
+    "name": "testimonial",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "name": "summary",
+        "type": "reviewsSummary"
+      },
+      {
+        "name": "reviewValues",
+        "type": "reviewValues"
+      },
+      {
+        "name": "postedOnLabel",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "testimonial"
+          }
+        ],
+        "name": "testimonials",
+        "type": "array"
+      }
+    ],
+    "name": "reviews",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "href",
+        "type": "string"
+      }
+    ],
+    "name": "cityLink",
+    "type": "object",
+    "title": "City link"
+  },
+  {
+    "fields": [
+      {
+        "name": "eyebrow",
+        "type": "string"
+      },
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "name": "intro",
+        "type": "text"
+      },
+      {
+        "name": "mapEmbedUrlKey",
+        "type": "string"
+      },
+      {
+        "name": "mapIframeTitleTemplate",
+        "type": "string"
+      },
+      {
+        "name": "citiesLabel",
+        "type": "string"
+      },
+      {
+        "name": "citiesNavAriaLabel",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "cityLink",
+            "title": "City link"
+          }
+        ],
+        "name": "cities",
+        "type": "array"
+      }
+    ],
+    "name": "serviceArea",
+    "type": "object",
+    "title": "Service area"
+  },
+  {
+    "fields": [
+      {
+        "name": "imageSrc",
+        "type": "string"
+      },
+      {
+        "name": "imageAlt",
+        "type": "string"
+      },
+      {
+        "name": "location",
+        "type": "string"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "rows": 2,
+        "name": "bio",
+        "type": "text"
+      }
+    ],
+    "name": "teamMember",
+    "type": "object",
+    "title": "Team member"
+  },
+  {
+    "fields": [
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "teamMember",
+            "title": "Team member"
+          }
+        ],
+        "name": "members",
+        "type": "array"
+      }
+    ],
+    "name": "team",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "name": "question",
+        "type": "string"
+      },
+      {
+        "rows": 5,
+        "name": "answerHtml",
+        "type": "text"
+      }
+    ],
+    "name": "faqItem",
+    "type": "object",
+    "title": "FAQ item"
+  },
+  {
+    "fields": [
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "name": "headingId",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "faqItem",
+            "title": "FAQ item"
+          }
+        ],
+        "name": "items",
+        "type": "array"
+      }
+    ],
+    "name": "faq",
+    "type": "object",
+    "title": "FAQ"
+  },
+  {
+    "fields": [
+      {
+        "name": "nameLabel",
+        "type": "string"
+      },
+      {
+        "name": "emailLabel",
+        "type": "string"
+      },
+      {
+        "name": "phoneLabel",
+        "type": "string"
+      },
+      {
+        "name": "cityLabel",
+        "type": "string"
+      },
+      {
+        "name": "projectDetailsLabel",
+        "type": "string"
+      },
+      {
+        "name": "submitButton",
+        "type": "string"
+      }
+    ],
+    "name": "footerEstimateFormFields",
+    "type": "object",
+    "title": "Footer estimate form fields"
+  },
+  {
+    "fields": [
+      {
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "rows": 2,
+        "name": "intro",
+        "type": "text"
+      },
+      {
+        "name": "formFields",
+        "type": "footerEstimateFormFields"
+      },
+      {
+        "name": "formAction",
+        "type": "string"
+      },
+      {
+        "name": "formMethod",
+        "type": "string"
+      }
+    ],
+    "name": "footerEstimate",
+    "type": "object",
+    "title": "Footer estimate"
+  },
+  {
+    "fields": [
+      {
+        "name": "platform",
+        "type": "string"
+      },
+      {
+        "name": "href",
+        "type": "string"
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      }
+    ],
+    "name": "socialLink",
+    "type": "object",
+    "title": "Social link"
+  },
+  {
+    "fields": [
+      {
+        "rows": 2,
+        "name": "tagline",
+        "type": "text"
+      },
+      {
+        "name": "socialAriaLabel",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "socialLink",
+            "title": "Social link"
+          }
+        ],
+        "name": "socialLinks",
+        "type": "array"
+      }
+    ],
+    "name": "footerBrand",
+    "type": "object",
+    "title": "Footer brand"
+  },
+  {
+    "fields": [
+      {
+        "name": "label",
+        "type": "string"
+      },
+      {
+        "name": "href",
+        "type": "string"
+      }
+    ],
+    "name": "footerColumnLink",
+    "type": "object",
+    "title": "Footer column link"
+  },
+  {
+    "fields": [
+      {
+        "name": "heading",
+        "type": "string"
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "footerColumnLink",
+            "title": "Footer column link"
+          }
+        ],
+        "name": "links",
+        "type": "array"
+      },
+      {
+        "name": "hoursHeading",
+        "type": "string"
+      },
+      {
+        "name": "hoursText",
+        "type": "string"
+      }
+    ],
+    "name": "footerColumn",
+    "type": "object",
+    "title": "Footer column"
+  },
+  {
+    "fields": [
+      {
+        "name": "label",
+        "type": "string"
+      },
+      {
+        "name": "href",
+        "type": "string"
+      },
+      {
+        "name": "target",
+        "type": "string"
+      },
+      {
+        "name": "rel",
+        "type": "string"
+      }
+    ],
+    "name": "footerSupportLink",
+    "type": "object",
+    "title": "Footer support link"
+  },
+  {
+    "fields": [
+      {
+        "name": "ariaLabel",
+        "type": "string"
+      },
+      {
+        "name": "copyrightTemplate",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "footerSupportLink",
+            "title": "Footer support link"
+          }
+        ],
+        "name": "links",
+        "type": "array"
+      }
+    ],
+    "name": "footerSupport",
+    "type": "object",
+    "title": "Footer support"
+  },
+  {
+    "fields": [
+      {
+        "name": "heading",
+        "type": "string"
+      },
+      {
+        "rows": 5,
+        "name": "body",
+        "type": "text"
+      },
+      {
+        "name": "imageSrc",
+        "type": "string"
+      },
+      {
+        "name": "imageAlt",
+        "type": "string"
+      }
+    ],
+    "name": "cityContentSection",
+    "type": "object",
+    "title": "City content section"
+  }
+]
