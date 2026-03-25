@@ -514,7 +514,7 @@
   var leadForms = Array.prototype.slice.call(document.querySelectorAll('form[data-lead-form]'));
 
   function readFormsConfig() {
-    var defaults = { submitPath: '/api/lead' };
+    var defaults = { submitPath: '/api/lead', recaptchaSiteKey: '' };
     if (!formsCfgEl || !formsCfgEl.textContent) {
       return defaults;
     }
@@ -522,7 +522,8 @@
       var parsed = JSON.parse(formsCfgEl.textContent);
       if (parsed && typeof parsed === 'object') {
         return {
-          submitPath: typeof parsed.submitPath === 'string' && parsed.submitPath ? parsed.submitPath : defaults.submitPath
+          submitPath: typeof parsed.submitPath === 'string' && parsed.submitPath ? parsed.submitPath : defaults.submitPath,
+          recaptchaSiteKey: typeof parsed.recaptchaSiteKey === 'string' ? parsed.recaptchaSiteKey : ''
         };
       }
     } catch (e) {
@@ -543,6 +544,7 @@
   if (leadForms.length) {
     var cfg = readFormsConfig();
     var endpoint = cfg.submitPath.indexOf('/') === 0 ? cfg.submitPath : '/' + cfg.submitPath;
+    var recaptchaSiteKey = cfg.recaptchaSiteKey || '';
 
     leadForms.forEach(function (form) {
       var phoneInput = form.querySelector('input[name="phone"]');
@@ -611,19 +613,29 @@
               var msg =
                 err === 'server_misconfigured'
                   ? 'This form is not configured yet. Please call us instead.'
-                  : err === 'missing_fields'
-                    ? 'Please fill in all required fields.'
-                    : err === 'invalid_email'
-                      ? 'Please enter a valid email address.'
-                      : err === 'upstream_unreachable'
-                        ? 'Could not reach the form service. Please try again or call us.'
-                        : err === 'upstream_error'
-                          ? 'The form service rejected the submission (code ' +
-                            (zst || result.status || '?') +
-                            '). Check the Zapier webhook URL in Vercel, or call us.'
-                          : err === 'bad_response' || result.status === 404
-                            ? 'Form endpoint not found (404). Redeploy the site or check Vercel Root Directory / api folder.'
-                            : 'Something went wrong. Please try again or call us.';
+                  : err === 'recaptcha_misconfigured'
+                    ? 'This form is missing security configuration. Please call us instead.'
+                    : err === 'recaptcha_missing' || err === 'recaptcha_failed'
+                      ? 'Security check failed. Please refresh the page and try again.'
+                      : err === 'recaptcha_low_score'
+                        ? 'We could not verify this submission. Please try again or call us.'
+                        : err === 'recaptcha_action_mismatch'
+                          ? 'Security check mismatch. Please refresh and try again.'
+                          : err === 'recaptcha_unreachable'
+                            ? 'Could not verify security. Please try again in a moment.'
+                            : err === 'missing_fields'
+                              ? 'Please fill in all required fields.'
+                              : err === 'invalid_email'
+                                ? 'Please enter a valid email address.'
+                                : err === 'upstream_unreachable'
+                                  ? 'Could not reach the form service. Please try again or call us.'
+                                  : err === 'upstream_error'
+                                    ? 'The form service rejected the submission (code ' +
+                                      (zst || result.status || '?') +
+                                      '). Check the Zapier webhook URL in Vercel, or call us.'
+                                    : err === 'bad_response' || result.status === 404
+                                      ? 'Form endpoint not found (404). Redeploy the site or check Vercel Root Directory / api folder.'
+                                      : 'Something went wrong. Please try again or call us.';
               setStatus(form, msg, 'error');
             })
             .catch(function () {
@@ -632,7 +644,31 @@
             });
         };
 
-        runSend();
+        var startSend = function () {
+          if (!recaptchaSiteKey) {
+            runSend();
+            return;
+          }
+          if (typeof window.grecaptcha === 'undefined' || !window.grecaptcha.execute) {
+            if (submitBtn) submitBtn.classList.remove('is-busy');
+            setStatus(form, 'Security check failed to load. Please refresh the page and try again.', 'error');
+            return;
+          }
+          window.grecaptcha.ready(function () {
+            window.grecaptcha
+              .execute(recaptchaSiteKey, { action: 'lead_form' })
+              .then(function (token) {
+                payload.recaptchaToken = token;
+                runSend();
+              })
+              .catch(function () {
+                if (submitBtn) submitBtn.classList.remove('is-busy');
+                setStatus(form, 'Security check failed. Please try again.', 'error');
+              });
+          });
+        };
+
+        startSend();
       });
     });
   }

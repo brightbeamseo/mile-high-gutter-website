@@ -1,9 +1,12 @@
 /**
  * CANONICAL lead API — Vercel `/api/lead`. After edits, run `npm run sync-api` (copies to `astro-site/api/`).
  *
- * Forwards JSON to Zapier. reCAPTCHA disabled — add back later if needed.
+ * Verifies reCAPTCHA v3, then forwards JSON to Zapier.
  *
- * Env: ZAPIER_WEBHOOK_URL (required, https)
+ * Env:
+ * - ZAPIER_WEBHOOK_URL (required, https)
+ * - RECAPTCHA_SECRET_KEY (required) — from Google reCAPTCHA admin
+ * - RECAPTCHA_MIN_SCORE (optional, default 0.5) — v3 score threshold
  */
 
 /** Visitor-submitted phone from forms → NNN-NNN-NNNN when US 10 digits. */
@@ -14,6 +17,8 @@ function formatUsPhoneDashes(value) {
   if (n.length === 10) return `${n.slice(0, 3)}-${n.slice(3, 6)}-${n.slice(6)}`;
   return String(value || '').trim();
 }
+
+const RECAPTCHA_ACTION = 'lead_form';
 
 function jsonResponse(data, status, extraHeaders = {}) {
   return Response.json(data, {
@@ -26,6 +31,29 @@ function jsonResponse(data, status, extraHeaders = {}) {
       ...extraHeaders,
     },
   });
+}
+
+async function verifyRecaptchaV3(token, secret, remoteIp) {
+  const params = new URLSearchParams();
+  params.set('secret', secret);
+  params.set('response', token);
+  if (remoteIp) params.set('remoteip', remoteIp);
+  const res = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString(),
+  });
+  if (!res.ok) return { ok: false, reason: 'verify_http' };
+  const data = await res.json();
+  if (!data.success) return { ok: false, reason: 'verify_failed', raw: data };
+  if (data.action && data.action !== RECAPTCHA_ACTION) {
+    return { ok: false, reason: 'action_mismatch', raw: data };
+  }
+  const score = typeof data.score === 'number' ? data.score : 0;
+  const min = Number.parseFloat(process.env.RECAPTCHA_MIN_SCORE || '0.5');
+  const threshold = Number.isFinite(min) ? min : 0.5;
+  if (score < threshold) return { ok: false, reason: 'low_score', score, raw: data };
+  return { ok: true, score, raw: data };
 }
 
 export default {
@@ -52,6 +80,11 @@ export default {
       return jsonResponse({ ok: false, error: 'server_misconfigured' }, 503);
     }
 
+    const recaptchaSecret = (process.env.RECAPTCHA_SECRET_KEY || '').trim();
+    if (!recaptchaSecret) {
+      return jsonResponse({ ok: false, error: 'recaptcha_misconfigured' }, 503);
+    }
+
     let body;
     try {
       body = await request.json();
@@ -66,6 +99,29 @@ export default {
     const hp = body.website != null ? String(body.website).trim() : '';
     if (hp.length > 0) {
       return jsonResponse({ ok: true }, 200);
+    }
+
+    const recaptchaToken = String(body.recaptchaToken || '').trim();
+    if (!recaptchaToken) {
+      return jsonResponse({ ok: false, error: 'recaptcha_missing' }, 400);
+    }
+
+    const forwardedFor = request.headers.get('x-forwarded-for');
+    const remoteIp = forwardedFor ? forwardedFor.split(',')[0].trim() : undefined;
+    let verify;
+    try {
+      verify = await verifyRecaptchaV3(recaptchaToken, recaptchaSecret, remoteIp);
+    } catch {
+      return jsonResponse({ ok: false, error: 'recaptcha_unreachable' }, 502);
+    }
+    if (!verify.ok) {
+      const err =
+        verify.reason === 'low_score'
+          ? 'recaptcha_low_score'
+          : verify.reason === 'action_mismatch'
+            ? 'recaptcha_action_mismatch'
+            : 'recaptcha_failed';
+      return jsonResponse({ ok: false, error: err }, 400);
     }
 
     const name = String(body.name || '').trim().slice(0, 500);

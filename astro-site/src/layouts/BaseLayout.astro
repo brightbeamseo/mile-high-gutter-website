@@ -17,7 +17,11 @@ if (!forms || typeof forms.submitPath !== 'string' || !forms.submitPath.trim()) 
 
 const themeCss = buildThemeCss(theme)
 
-const formsJson = JSON.stringify(forms).replace(/</g, '\\u003c')
+const recaptchaSiteKey =
+  (import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '').trim() ||
+  '6LdBAJgsAAAAAEEaAljBBQUMkyJaEfhw0Bas6ZKL'
+const formsForClient = { ...forms, recaptchaSiteKey }
+const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -42,6 +46,13 @@ const formsJson = JSON.stringify(forms).replace(/</g, '\\u003c')
       rel="stylesheet"
     />
     <script type="application/json" id="site-forms-config" set:html={formsJson} />
+    {recaptchaSiteKey ? (
+      <script
+        src={`https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(recaptchaSiteKey)}`}
+        async
+        defer
+      />
+    ) : null}
   </head>
   <body class:list={[{ 'home-reveal-animate': homeRevealAnimations }]}>
     <slot />
