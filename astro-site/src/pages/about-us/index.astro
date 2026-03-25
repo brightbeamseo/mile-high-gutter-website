@@ -172,6 +172,16 @@ const universalRequiredIndicator = asStr(formsCfg?.requiredIndicator) || '*'
             <p>{asStr(footerEstimate?.intro) || 'Contact us for fast service and straightforward estimates.'}</p>
             <FooterContactInfo variant="estimate" phoneTel={phoneTel} phoneDisplay={phoneDisplay} email={email} address={address} />
           </div>
+          <form class="contact-form" data-lead-form="about-footer" action={universalFormAction} method={universalFormMethod}>
+            <div class="contact-form-grid">
+              <div class="contact-form-field"><label for="about-contact-name">{asStr(universalFormFields?.nameLabel) || 'Name'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id="about-contact-name" name="name" type="text" required autocomplete="name" /></div>
+              <div class="contact-form-field"><label for="about-contact-email">{asStr(universalFormFields?.emailLabel) || 'Email'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id="about-contact-email" name="email" type="email" required autocomplete="email" /></div>
+              <div class="contact-form-field"><label for="about-contact-phone">{asStr(universalFormFields?.phoneLabel) || 'Phone'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id="about-contact-phone" name="phone" type="tel" required autocomplete="tel" /></div>
+              <div class="contact-form-field"><label for="about-contact-location">{asStr(universalFormFields?.cityLabel) || 'City'}</label><input id="about-contact-location" name="location" type="text" autocomplete="address-level2" /></div>
+              <div class="contact-form-field contact-form-field-full"><label for="about-contact-message">{asStr(universalFormFields?.projectDetailsLabel) || 'Project Details'}</label><textarea id="about-contact-message" name="message" rows="4"></textarea></div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">{asStr(footerEstimateFields?.submitButton) || 'Request Quote'}</button>
+          </form>
         </div>
       </div>
     </section>

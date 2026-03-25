@@ -1,25 +1,15 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro'
-import { getSiteSettings } from '../lib/site-settings.js'
-import { asStr } from '../lib/sanity-strings.js'
-
-let settings = {}
-try {
-  settings = await getSiteSettings()
-} catch {
-  /* offline / build without Sanity */
-}
+import StandardPageChrome from '../components/StandardPageChrome.astro'
 
 const title = 'Page not found | Mile High Gutters'
 const description =
   'The page you were looking for could not be found. Mile High Gutter Denver — gutters, installation, repair, and guards.'
 ---
 
-<BaseLayout
+<StandardPageChrome
   title={title}
   description={description}
-  theme={settings?.theme}
-  forms={{ submitPath: asStr(settings?.forms?.submitPath) || '/api/lead' }}
+  navDdPrefix="not-found"
 >
   <main class="section" style="padding-top: var(--space-5xl); padding-bottom: var(--space-5xl);">
     <div class="container" style="max-width: 40rem; text-align: center;">
@@ -34,4 +24,4 @@ const description =
       </p>
     </div>
   </main>
-</BaseLayout>
+</StandardPageChrome>

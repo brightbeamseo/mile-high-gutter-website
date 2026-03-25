@@ -2,9 +2,14 @@
 import Analytics from '@vercel/analytics/astro'
 import SpeedInsights from '@vercel/speed-insights/astro'
 import '../../../styles.css'
+import { buildHomeAndConstructionBusinessJsonLd } from '../lib/local-business-json-ld.js'
+import { getSiteSettings } from '../lib/site-settings.js'
 import { buildThemeCss } from '../lib/theme-css.js'
 
-const { title, description, theme, forms } = Astro.props
+const { title, description, theme, forms, homeRevealAnimations = false } = Astro.props
+
+const settings = await getSiteSettings()
+const localBusinessJsonLd = buildHomeAndConstructionBusinessJsonLd(settings)
 
 if (!forms || typeof forms.submitPath !== 'string' || !forms.submitPath.trim()) {
   throw new Error('BaseLayout: forms.submitPath is required (set from Sanity siteSettings.forms).')
@@ -21,6 +26,9 @@ const formsJson = JSON.stringify(forms).replace(/</g, '\\u003c')
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {localBusinessJsonLd ? (
+      <script type="application/ld+json" set:html={localBusinessJsonLd} />
+    ) : null}
     <link rel="icon" href="/favicon.png" type="image/png" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -35,7 +43,7 @@ const formsJson = JSON.stringify(forms).replace(/</g, '\\u003c')
     />
     <script type="application/json" id="site-forms-config" set:html={formsJson} />
   </head>
-  <body>
+  <body class:list={[{ 'home-reveal-animate': homeRevealAnimations }]}>
     <slot />
     <!-- After bundled styles.css so :root theme tokens override file defaults -->
     <style id="site-theme-vars" set:html={themeCss}></style>

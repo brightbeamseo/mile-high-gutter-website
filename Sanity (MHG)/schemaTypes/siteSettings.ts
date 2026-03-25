@@ -40,6 +40,12 @@ export const siteSettings = defineType({
     }),
     defineField({name: 'statsValues', type: 'statsValues'}),
     defineField({
+      name: 'reviews',
+      type: 'reviews',
+      title: 'Global Reviews',
+      description: 'Review summary/testimonials shared across pages.',
+    }),
+    defineField({
       name: 'header',
       type: 'header',
       title: 'Global Header',
@@ -74,6 +80,13 @@ export const siteSettings = defineType({
       type: 'text',
       title: 'mapEmbedUrl',
       rows: 2,
+    }),
+    defineField({
+      name: 'productsServicesIntro',
+      type: 'text',
+      title: 'Products & Services intro',
+      rows: 3,
+      description: 'Optional short intro shown below the Products & Services page heading.',
     }),
     defineField({
       name: 'blogAuthorBio',

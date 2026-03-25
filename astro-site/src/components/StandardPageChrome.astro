@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import FooterSocialIcon from './FooterSocialIcon.astro'
+import FooterHoursRow from './FooterHoursRow.astro'
+import FooterContactInfo from './FooterContactInfo.astro'
+import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../lib/footer-contact-heading.js'
+import { sanity } from '../lib/sanity.js'
+import { getSiteSettings, mergeHeaderFromSettings } from '../lib/site-settings.js'
+import { asStr, applyTemplate, mediaUrl } from '../lib/sanity-strings.js'
+
+const { title, description, navDdPrefix = 'page' } = Astro.props
+
+let settings = {}
+let homePage = {}
+try {
+  ;[settings, homePage] = await Promise.all([getSiteSettings(), sanity.fetch(`*[_type == "homePage"][0]`)])
+} catch (err) {
+  console.warn('[StandardPageChrome] Sanity fetch failed.', err)
+}
+
+const business = settings?.business ?? {}
+const header = mergeHeaderFromSettings(settings, homePage?.header)
+const footerEstimate = settings?.footerEstimate ?? homePage?.footerEstimate ?? {}
+const footerEstimateFields = footerEstimate?.formFields ?? {}
+const formsCfg = settings?.forms ?? {}
+const footerBrand = settings?.footerBrand ?? homePage?.footerBrand ?? {}
+const footerColumns = settings?.footerColumns ?? homePage?.footerColumns ?? []
+const footerSupport = settings?.footerSupport ?? homePage?.footerSupport ?? {}
+
+const companyName = asStr(business.companyName) || 'Mile High Gutters'
+const phoneDisplay = asStr(business.phoneDisplay) || '(303) 000-0000'
+const phoneTel = asStr(business.phoneTel) || '3030000000'
+const email = asStr(business.email) || 'hello@example.com'
+const address = asStr(business.addressShort) || 'Denver, Colorado'
+const addressHref = googleBusinessProfileUrl(settings)
+const descriptionShort = asStr(business.descriptionShort)
+const logoWhite = asStr(business.logoHorizontalWhite)
+const logoBlack = asStr(business.logoHorizontalBlack)
+const copyrightHref = asStr(business.copyrightSiteUrl) || '#'
+
+const callLabelNav = applyTemplate(asStr(header.callCtaTemplate), { phoneDisplay }) || phoneDisplay
+const logoAriaLabel = applyTemplate(asStr(header.logoAriaLabelTemplate), { companyName }) || companyName
+const navItems = Array.isArray(header.navItems) ? header.navItems : []
+const universalFormAction = asStr(formsCfg?.submitPath) || asStr(footerEstimate?.formAction) || '#'
+const universalFormMethod = asStr(footerEstimate?.formMethod) || 'post'
+const universalRequiredIndicator = asStr(formsCfg?.requiredIndicator) || '*'
+const pageIdPrefix = `std-${String(navDdPrefix).replace(/[^a-z0-9-]/gi, '_')}`
+---
+
+<BaseLayout title={title} description={description} theme={settings?.theme} forms={{ submitPath: asStr(settings?.forms?.submitPath) || '/api/lead' }}>
+  <header class="header">
+    <div class="offer-bar"><div class="offer-bar-inner"><p class="offer-message">{asStr(header?.offerBar?.textBeforeDiscount)}<strong>{asStr(header?.offerBar?.discountLabel)}</strong>{asStr(header?.offerBar?.textAfterDiscount)} <a href={asStr(header?.offerBar?.ctaHref) || '#contact'} class="offer-link"><strong>{asStr(header?.offerBar?.ctaText) || 'Get a Quote Now!'}</strong></a></p></div></div>
+    <div class="header-nav">
+      <div class="header-inner">
+        <a href="/" class="logo" aria-label={logoAriaLabel}>{logoBlack ? <img src={mediaUrl(logoBlack)} alt={companyName} class="logo-img" /> : <span class="section-title" style="margin:0; font-size: 1.25rem;">{companyName}</span>}</a>
+        <button class="nav-toggle" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+        <nav class="nav">
+          {navItems.length > 0 ? (
+            navItems.map((item, i) => {
+              const label = asStr(item.label)
+              const href = asStr(item.href)
+              const dropdown = item.dropdown
+              if (Array.isArray(dropdown) && dropdown.length > 0) {
+                const ddId = `${navDdPrefix}-nav-dd-${i}`
+                return (
+                  <div class="nav-dropdown" data-nav-dropdown>
+                    <button
+                      type="button"
+                      class="nav-dropdown-toggle"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      aria-controls={ddId}
+                      id={`${ddId}-btn`}
+                    >
+                      {label}
+                      <span class="nav-dropdown-chevron" aria-hidden="true"></span>
+                    </button>
+                    <ul class="nav-dropdown-menu" id={ddId} role="menu">
+                      {dropdown.map((link) => (
+                        <li role="none">
+                          <a href={asStr(link.href)} role="menuitem">
+                            {asStr(link.label)}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
+              }
+              return <a href={href || '#'}>{label}</a>
+            })
+          ) : (
+            <>
+              <a href="/">Home</a>
+              <a href="/products-services/">Products & Services</a>
+            </>
+          )}
+          <a href={`tel:${phoneTel}`} class="btn btn-primary btn-lg">{callLabelNav}</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <slot />
+
+  <footer class="footer">
+    <section id="contact" class="section contact footer-estimate">
+      <div class="container">
+        <div class="contact-wrapper">
+          <div class="contact-info">
+            <h2 class="section-title">{asStr(footerEstimate?.headline) || 'Need Gutter Help in Denver?'}</h2>
+            <p>{asStr(footerEstimate?.intro) || 'Contact us for fast service and straightforward estimates.'}</p>
+            <FooterContactInfo variant="estimate" phoneTel={phoneTel} phoneDisplay={phoneDisplay} email={email} address={address} />
+          </div>
+          <form class="contact-form" data-lead-form={`${pageIdPrefix}-footer`} action={universalFormAction} method={universalFormMethod}>
+            <div class="contact-form-grid">
+              <div class="contact-form-field"><label for={`${pageIdPrefix}-contact-name`}>{asStr(footerEstimateFields?.nameLabel) || 'Name'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id={`${pageIdPrefix}-contact-name`} name="name" type="text" required autocomplete="name" /></div>
+              <div class="contact-form-field"><label for={`${pageIdPrefix}-contact-email`}>{asStr(footerEstimateFields?.emailLabel) || 'Email'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id={`${pageIdPrefix}-contact-email`} name="email" type="email" required autocomplete="email" /></div>
+              <div class="contact-form-field"><label for={`${pageIdPrefix}-contact-phone`}>{asStr(footerEstimateFields?.phoneLabel) || 'Phone'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id={`${pageIdPrefix}-contact-phone`} name="phone" type="tel" required autocomplete="tel" /></div>
+              <div class="contact-form-field"><label for={`${pageIdPrefix}-contact-location`}>{asStr(footerEstimateFields?.cityLabel) || 'City'}</label><input id={`${pageIdPrefix}-contact-location`} name="location" type="text" autocomplete="address-level2" /></div>
+              <div class="contact-form-field contact-form-field-full"><label for={`${pageIdPrefix}-contact-message`}>{asStr(footerEstimateFields?.projectDetailsLabel) || 'Project Details'}</label><textarea id={`${pageIdPrefix}-contact-message`} name="message" rows="4"></textarea></div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">{asStr(footerEstimateFields?.submitButton) || 'Request Quote'}</button>
+          </form>
+        </div>
+      </div>
+    </section>
+    <div class="container"><div class="footer-inner"><div class="footer-brand-block footer-col">{logoWhite ? <img src={mediaUrl(logoWhite)} alt={companyName} class="footer-logo" /> : null}<p class="footer-address">{descriptionShort}</p><div class="footer-social" aria-label={asStr(footerBrand?.socialAriaLabel)}>{footerBrand?.socialLinks?.map((s) => (<a href={asStr(s.href)} aria-label={asStr(s.ariaLabel)}><FooterSocialIcon platform={asStr(s.platform)} /></a>))}</div></div>{footerColumns?.map((col) => (<div class="footer-col"><p class="footer-heading">{asStr(col.heading)}</p>{col.links?.length ? (<nav class="footer-links" aria-label={asStr(col.ariaLabel)}>{col.links.map((link) => (<a href={asStr(link.href)}>{asStr(link.label)}</a>))}</nav>) : null}{isContactFooterColumnHeading(col.heading) ? <FooterContactInfo variant="footer-column" phoneTel={phoneTel} phoneDisplay={phoneDisplay} email={email} address={address} addressHref={addressHref} /> : null}{col.hoursHeading ? <p class="footer-heading footer-hours-heading">{asStr(col.hoursHeading)}</p> : null}{col.hoursText ? <FooterHoursRow hoursText={col.hoursText} /> : null}</div>))}</div></div>
+  </footer>
+
+  <div class="footer-support"><div class="container footer-support-inner"><p>© <span id="year"></span> — <a href={copyrightHref}>{companyName}</a></p><nav aria-label={asStr(footerSupport?.ariaLabel)}>{footerSupport?.links?.map((link) => (<a href={asStr(link.href)} target={asStr(link.target) || undefined} rel={asStr(link.rel) || undefined}>{asStr(link.label)}</a>))}</nav></div></div>
+</BaseLayout>

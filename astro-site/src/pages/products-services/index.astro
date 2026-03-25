@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro'
+import StandardPageChrome from '../../components/StandardPageChrome.astro'
 import { sanity } from '../../lib/sanity.js'
 import { getSiteSettings } from '../../lib/site-settings.js'
 import { asStr } from '../../lib/sanity-strings.js'
@@ -20,20 +20,18 @@ try {
 const pageTitle = 'Products & Services | Mile High Gutters'
 const pageDescription = 'Explore gutter products and services in Denver.'
 const items = Array.isArray(pages) ? pages : []
+const productsServicesIntro = asStr(settings?.productsServicesIntro)
 ---
 
-<BaseLayout
+<StandardPageChrome
   title={pageTitle}
   description={pageDescription}
-  theme={settings?.theme}
-  forms={{ submitPath: asStr(settings?.forms?.submitPath) || '/api/lead' }}
+  navDdPrefix="products"
 >
   <main class="section">
     <div class="container">
       <h1 class="section-title section-title-secondary">Products & Services</h1>
-      <p class="section-lead" style="max-width: 70ch;">
-        Service page hub. Each item below is driven by Sanity and renders at `/products-services/[slug]/`.
-      </p>
+      {productsServicesIntro ? <p class="section-lead" style="max-width: 70ch;">{productsServicesIntro}</p> : null}
       <div style="display:grid; gap:1rem; margin-top:1.5rem;">
         {items.length > 0 ? (
           items.map((item) => (
@@ -52,4 +50,4 @@ const items = Array.isArray(pages) ? pages : []
       </div>
     </div>
   </main>
-</BaseLayout>
+</StandardPageChrome>

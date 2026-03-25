@@ -1,21 +1,11 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro'
-import { getSiteSettings } from '../../lib/site-settings.js'
-import { asStr } from '../../lib/sanity-strings.js'
-
-let settings = {}
-try {
-  settings = await getSiteSettings()
-} catch (err) {
-  console.warn('[thank-you] Sanity fetch failed.', err)
-}
+import StandardPageChrome from '../../components/StandardPageChrome.astro'
 ---
 
-<BaseLayout
+<StandardPageChrome
   title="Thank You | Mile High Gutters"
   description="Thank you for contacting Mile High Gutters."
-  theme={settings?.theme}
-  forms={{ submitPath: asStr(settings?.forms?.submitPath) || '/api/lead' }}
+  navDdPrefix="thank-you"
 >
   <main class="section">
     <div class="container" style="max-width: 70ch;">
@@ -25,4 +15,4 @@ try {
       </p>
     </div>
   </main>
-</BaseLayout>
+</StandardPageChrome>

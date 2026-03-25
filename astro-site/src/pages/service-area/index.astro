@@ -19,6 +19,8 @@ try {
 const business = settings?.business ?? {}
 const header = mergeHeaderFromSettings(settings, homePage?.header)
 const footerEstimate = settings?.footerEstimate ?? homePage?.footerEstimate ?? {}
+const footerEstimateFields = footerEstimate?.formFields ?? {}
+const formsCfg = settings?.forms ?? {}
 const footerBrand = settings?.footerBrand ?? homePage?.footerBrand ?? {}
 const footerColumns = settings?.footerColumns ?? homePage?.footerColumns ?? []
 const footerSupport = settings?.footerSupport ?? homePage?.footerSupport ?? {}
@@ -37,6 +39,9 @@ const copyrightHref = asStr(business.copyrightSiteUrl) || '#'
 const callLabelNav = applyTemplate(asStr(header.callCtaTemplate), { phoneDisplay }) || phoneDisplay
 const logoAriaLabel = applyTemplate(asStr(header.logoAriaLabelTemplate), { companyName }) || companyName
 const navItems = Array.isArray(header.navItems) ? header.navItems : []
+const universalFormAction = asStr(formsCfg?.submitPath) || asStr(footerEstimate?.formAction) || '#'
+const universalFormMethod = asStr(footerEstimate?.formMethod) || 'post'
+const universalRequiredIndicator = asStr(formsCfg?.requiredIndicator) || '*'
 
 const serviceArea = homePage?.serviceArea ?? {}
 const pageTitle = 'Service Area | Mile High Gutters'
@@ -229,6 +234,16 @@ const cities = [
               addressHref={addressHref}
             />
           </div>
+          <form class="contact-form" data-lead-form="service-area-footer" action={universalFormAction} method={universalFormMethod}>
+            <div class="contact-form-grid">
+              <div class="contact-form-field"><label for="service-area-contact-name">{asStr(footerEstimateFields?.nameLabel) || 'Name'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id="service-area-contact-name" name="name" type="text" required autocomplete="name" /></div>
+              <div class="contact-form-field"><label for="service-area-contact-email">{asStr(footerEstimateFields?.emailLabel) || 'Email'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id="service-area-contact-email" name="email" type="email" required autocomplete="email" /></div>
+              <div class="contact-form-field"><label for="service-area-contact-phone">{asStr(footerEstimateFields?.phoneLabel) || 'Phone'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id="service-area-contact-phone" name="phone" type="tel" required autocomplete="tel" /></div>
+              <div class="contact-form-field"><label for="service-area-contact-location">{asStr(footerEstimateFields?.cityLabel) || 'City'}</label><input id="service-area-contact-location" name="location" type="text" autocomplete="address-level2" /></div>
+              <div class="contact-form-field contact-form-field-full"><label for="service-area-contact-message">{asStr(footerEstimateFields?.projectDetailsLabel) || 'Project Details'}</label><textarea id="service-area-contact-message" name="message" rows="4"></textarea></div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">{asStr(footerEstimateFields?.submitButton) || 'Request Quote'}</button>
+          </form>
         </div>
       </div>
     </section>

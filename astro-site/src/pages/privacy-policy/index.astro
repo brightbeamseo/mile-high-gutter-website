@@ -1,16 +1,11 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro'
+import StandardPageChrome from '../../components/StandardPageChrome.astro'
 import { sanity } from '../../lib/sanity.js'
-import { getSiteSettings } from '../../lib/site-settings.js'
 import { asStr } from '../../lib/sanity-strings.js'
 
-let settings = {}
 let legal = {}
 try {
-  ;[settings, legal] = await Promise.all([
-    getSiteSettings(),
-    sanity.fetch(`*[_type == "legalPage" && slug.current == "privacy-policy"][0]{title, content}`),
-  ])
+  legal = await sanity.fetch(`*[_type == "legalPage" && slug.current == "privacy-policy"][0]{title, content}`)
 } catch (err) {
   console.warn('[privacy-policy] Sanity fetch failed.', err)
 }
@@ -21,11 +16,10 @@ const legalContent =
   'Add your Privacy Policy legal copy in Sanity under the Legal content type.'
 ---
 
-<BaseLayout
+<StandardPageChrome
   title={`${legalTitle} | Mile High Gutters`}
   description="Privacy Policy for Mile High Gutters."
-  theme={settings?.theme}
-  forms={{ submitPath: asStr(settings?.forms?.submitPath) || '/api/lead' }}
+  navDdPrefix="privacy"
 >
   <main class="section">
     <div class="container" style="max-width: 70ch;">
@@ -33,4 +27,4 @@ const legalContent =
       <p style="white-space: pre-line; line-height: 1.75; margin-top: 1rem;">{legalContent}</p>
     </div>
   </main>
-</BaseLayout>
+</StandardPageChrome>

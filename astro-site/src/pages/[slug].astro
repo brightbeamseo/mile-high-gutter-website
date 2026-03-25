@@ -85,6 +85,8 @@ const heroBgStyle = heroBgSrc
   : undefined
 
 const heroHeadline = asStr(post?.headline) || 'Article'
+const postCategory = asStr(post?.category)
+const postTldr = asStr(post?.tldr) || asStr(post?.lead)
 const contentSections = Array.isArray(post?.contentSections) ? post.contentSections : []
 
 function formatBlogPostDate(iso) {
@@ -184,7 +186,9 @@ const idPrefix = `blog-${slug.replace(/[^a-z0-9-]/gi, '_')}`
       <div class="hero-bg" style={heroBgStyle} />
       <div class="container hero-split-inner">
         <div class="hero-copy">
+          {postCategory ? <p class="hero-eyebrow">{postCategory}</p> : null}
           <h1>{heroHeadline}</h1>
+          {postTldr ? <p class="hero-lead"><strong>TLDR;</strong> {postTldr}</p> : null}
         </div>
         <form
           class="hero-form"

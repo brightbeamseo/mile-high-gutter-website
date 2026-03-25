@@ -123,7 +123,13 @@ export function mergeHeaderFromSettings(settings, fallbackHeader) {
   }
 }
 
+/** In-process cache for one `astro build` / dev session — avoids duplicate fetches from layouts + pages. */
+let siteSettingsCache = null
+
 export async function getSiteSettings() {
+  if (siteSettingsCache) {
+    return siteSettingsCache
+  }
   const docs = await sanity.fetch(`*[_type == "siteSettings"]`)
   const list = Array.isArray(docs) ? docs : []
 
@@ -157,8 +163,9 @@ export async function getSiteSettings() {
       ? singleton.footerColumns
       : (linksSource?.footerColumns ?? singleton?.footerColumns)
 
-  return {
+  siteSettingsCache = {
     ...singleton,
+    reviews: singleton?.reviews ?? linksSource?.reviews,
     header: normalizeHeader(mergedHeader ?? singleton?.header) ?? {},
     footerEstimate: linksSource?.footerEstimate ?? singleton?.footerEstimate,
     footerBrand: linksSource?.footerBrand ?? singleton?.footerBrand,
@@ -166,4 +173,5 @@ export async function getSiteSettings() {
     footerSupport: normalizeFooterSupport(linksSource?.footerSupport ?? singleton?.footerSupport),
     forms: singleton?.forms ?? linksSource?.forms,
   }
+  return siteSettingsCache
 }

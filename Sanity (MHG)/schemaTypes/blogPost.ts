@@ -36,6 +36,8 @@ export const blogPost = defineType({
     }),
     defineField({name: 'eyebrow', type: 'string', title: 'Hero eyebrow'}),
     defineField({name: 'headline', type: 'string', title: 'Hero headline', validation: (rule) => rule.required()}),
+    defineField({name: 'category', type: 'string', title: 'Category'}),
+    defineField({name: 'tldr', type: 'text', rows: 2, title: 'TLDR summary'}),
     defineField({name: 'lead', type: 'text', rows: 4, title: 'Hero lead paragraph'}),
     defineField({
       name: 'layoutBackgrounds',

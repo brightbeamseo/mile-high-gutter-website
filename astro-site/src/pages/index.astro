@@ -59,7 +59,7 @@ const aboutVideo = about?.video
 const uniquePoints = hp.uniquePoints
 const statsBar = hp.statsBar
 const contactBanner = hp.contactBanner
-const reviews = hp.reviews
+const reviews = settings?.reviews ?? hp.reviews
 const reviewsSummary = reviews?.summary
 const reviewValues = reviews?.reviewValues
 const serviceArea = hp.serviceArea
@@ -75,6 +75,7 @@ const formsCfg = settings?.forms ?? {}
 const reviewRating = statLookup(reviewValues, reviewsSummary?.ratingValueKey)
 const reviewCount = statLookup(reviewValues, reviewsSummary?.reviewCountKey)
 const reviewCountDisplay = `${asStr(reviewsSummary?.reviewCountPrefix)}${reviewCount}${asStr(reviewsSummary?.reviewCountSuffix)}`
+const reviewsCtaHref = asStr(reviewsSummary?.ctaHref) || '/reviews/'
 
 const callLabelNav = applyTemplate(asStr(header?.callCtaTemplate), {
   phoneDisplay,
@@ -159,6 +160,7 @@ const serviceHref = (svc) => {
   description={pageDescription}
   theme={settings.theme}
   forms={{ submitPath: asStr(settings.forms?.submitPath) }}
+  homeRevealAnimations
 >
   <header class="header">
     <div class="offer-bar">
@@ -501,7 +503,7 @@ const serviceHref = (svc) => {
               <span>{reviewCountDisplay}</span>
             </p>
           </div>
-          <a href="/reviews/" class="btn btn-primary reviews-summary-cta">
+          <a href={reviewsCtaHref} class="btn btn-primary reviews-summary-cta">
             {asStr(reviewsSummary?.ctaText)}
           </a>
         </div>

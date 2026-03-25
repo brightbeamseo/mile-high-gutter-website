@@ -57,7 +57,7 @@ const heroBgStyle = heroBgSrc
   ? `background-image: linear-gradient(135deg, rgba(56, 69, 85, 0.88) 0%, rgba(56, 69, 85, 0.84) 50%, rgba(56, 69, 85, 0.88) 100%), url("${mediaUrl(heroBgSrc)}"); background-size: cover; background-position: center; background-repeat: no-repeat;`
   : undefined
 
-const reviewsData = reviewsPage?.reviews ?? homePage?.reviews ?? {}
+const reviewsData = settings?.reviews ?? reviewsPage?.reviews ?? homePage?.reviews ?? {}
 const reviewSummary = reviewsData?.summary ?? {}
 const testimonials = Array.isArray(reviewsData?.testimonials) ? reviewsData.testimonials : []
 

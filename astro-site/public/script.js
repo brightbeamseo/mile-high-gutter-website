@@ -64,14 +64,17 @@
     });
   });
 
-  // Section/card entry animations
+  // Section/card entry animations — homepage only (body.home-reveal-animate)
   /* Exclude .stats-thin and .unique-points: transform-based reveal causes 1px white hairlines between full-bleed sections.
      Exclude .projects-gallery-section: it contains position:fixed lightbox; any ancestor transform breaks fixed positioning. */
-  var revealTargets = Array.prototype.slice.call(
-    document.querySelectorAll(
-      'main > section:not(.stats-thin, .unique-points, .projects-gallery-section), footer > section, .service-card, .result-item, .testimonial, .team-card, .faq-item'
-    )
-  );
+  var revealTargets = [];
+  if (document.body && document.body.classList.contains('home-reveal-animate')) {
+    revealTargets = Array.prototype.slice.call(
+      document.querySelectorAll(
+        'main > section:not(.stats-thin, .unique-points, .projects-gallery-section), footer > section, .service-card, .result-item, .testimonial, .team-card, .faq-item'
+      )
+    );
+  }
 
   if (revealTargets.length) {
     revealTargets.forEach(function (el, index) {
@@ -600,6 +603,7 @@
               if (result.ok && result.data && result.data.ok) {
                 setStatus(form, 'Thanks — we received your message and will be in touch soon.', 'success');
                 form.reset();
+                window.location.assign('/thank-you/');
                 return;
               }
               var err = (result.data && result.data.error) || 'submit_failed';

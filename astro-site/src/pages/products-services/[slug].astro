@@ -83,7 +83,7 @@ const heroBgStyle = heroBgSrc
 const servicesBgStyle = servicesBgSrc
   ? `background-color: #143980; background-image: linear-gradient(135deg, rgba(20, 57, 128, 0.94) 0%, rgba(26, 74, 158, 0.94) 100%), url("${mediaUrl(servicesBgSrc)}"); background-size: cover; background-position: center; background-repeat: no-repeat;`
   : undefined
-const sharedReviews = homePage?.reviews ?? {}
+const sharedReviews = settings?.reviews ?? homePage?.reviews ?? {}
 const reviewsToRender = sharedReviews
 const cityContentSections = Array.isArray(cityPage?.contentSections) ? cityPage.contentSections : []
 const mapEmbedUrl = asStr(cityPage?.mapEmbedUrl) || asStr(settings?.mapEmbedUrl)
