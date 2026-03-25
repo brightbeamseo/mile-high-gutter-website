@@ -16,6 +16,7 @@ import {
   statLookup,
 } from '../lib/sanity-strings.js'
 import { assertSanityHomepage } from '../lib/assert-sanity-homepage.js'
+import { sanitizeCmsHtml } from '../lib/sanitize-cms-html.js'
 
 const [settings, homePage] = await Promise.all([
   getSiteSettings(),
@@ -118,9 +119,11 @@ const uniquePointsBgStyle = `background: var(--color-surface); background-image:
 const typedPhrases = asStrArray(hero?.typedPhrases)
 
 const copyrightTemplate = asStr(footerSupport?.copyrightTemplate)
-const copyrightInnerHtml = copyrightTemplate
-  .replace(/\{\{\s*year\s*\}\}/gi, '<span id="year"></span>')
-  .replace(/\{\{\s*companyName\s*\}\}/gi, escapeHtml(companyName))
+const copyrightInnerHtml = sanitizeCmsHtml(
+  copyrightTemplate
+    .replace(/\{\{\s*year\s*\}\}/gi, '<span id="year"></span>')
+    .replace(/\{\{\s*companyName\s*\}\}/gi, escapeHtml(companyName))
+)
 
 const universalFormFields = footerEstimateFields
 const universalFormAction = asStr(formsCfg?.submitPath) || asStr(footerEstimate?.formAction)
@@ -612,7 +615,7 @@ const serviceHref = (svc) => {
                     aria-labelledby={btnId}
                     aria-hidden="true"
                   >
-                    <div class="faq-answer" set:html={asStr(item.answerHtml)} />
+                    <div class="faq-answer" set:html={sanitizeCmsHtml(asStr(item.answerHtml))} />
                   </div>
                 </div>
               )

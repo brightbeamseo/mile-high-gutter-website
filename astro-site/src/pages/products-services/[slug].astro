@@ -7,6 +7,7 @@ import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../../li
 import { sanity } from '../../lib/sanity.js'
 import { getSiteSettings, mergeHeaderFromSettings } from '../../lib/site-settings.js'
 import { heroBackgroundFor } from '../../lib/hero-backgrounds.js'
+import { sanitizeCmsHtml } from '../../lib/sanitize-cms-html.js'
 import { asStr, applyTemplate, mediaUrl } from '../../lib/sanity-strings.js'
 
 export async function getStaticPaths() {
@@ -275,9 +276,11 @@ const serviceHref = (svc) => {
                 />
               ) : null}
               <h2 class="section-title section-title-secondary">{asStr(sec.heading)}</h2>
-              <p class="section-lead" style="max-width:72ch; white-space: pre-line; margin-bottom: 1rem;">
-                {asStr(sec.body)}
-              </p>
+              <div
+                class="section-lead"
+                style="max-width:72ch; white-space: pre-line; margin-bottom: 1rem;"
+                set:html={sanitizeCmsHtml(asStr(sec.body))}
+              />
               <div class="why-choose-actions" style="margin: 0 0 2.25rem;">
                 <a href={`tel:${phoneTel}`} class="btn btn-primary btn-lg">{heroCallLabel}</a>
                 <a href={estimateCtaHref} class="btn btn-outline btn-lg request-estimate">{estimateCtaText}</a>
@@ -350,7 +353,7 @@ const serviceHref = (svc) => {
                     aria-labelledby={btnId}
                     aria-hidden="true"
                   >
-                    <div class="faq-answer" set:html={asStr(item.answerHtml)} />
+                    <div class="faq-answer" set:html={sanitizeCmsHtml(asStr(item.answerHtml))} />
                   </div>
                 </div>
               )

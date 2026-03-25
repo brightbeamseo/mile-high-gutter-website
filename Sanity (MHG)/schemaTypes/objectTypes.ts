@@ -606,7 +606,12 @@ export const faqItem = defineType({
   type: 'object',
   fields: [
     defineField({ name: 'question', type: 'string' }),
-    defineField({ name: 'answerHtml', type: 'text', rows: 5 }),
+    defineField({
+      name: 'answerHtml',
+      type: 'text',
+      rows: 6,
+      description: 'HTML (e.g. <p>, <a href> for links). Sanitized when rendered.',
+    }),
   ],
 })
 
@@ -722,7 +727,13 @@ export const cityContentSection = defineType({
   type: 'object',
   fields: [
     defineField({name: 'heading', type: 'string'}),
-    defineField({name: 'body', type: 'text', rows: 5}),
+    defineField({
+      name: 'body',
+      type: 'text',
+      rows: 8,
+      description:
+        'Body copy (blog posts + city service pages). HTML allowed for links and basic formatting. Example: <p>See <a href="/contact-us/">contact</a>.</p>',
+    }),
     defineField({name: 'imageSrc', type: 'string'}),
     defineField({name: 'imageAlt', type: 'string'}),
   ],

@@ -7,6 +7,7 @@ import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../../li
 import { sanity } from '../../lib/sanity.js'
 import { getSiteSettings, mergeHeaderFromSettings } from '../../lib/site-settings.js'
 import { heroBackgroundFor } from '../../lib/hero-backgrounds.js'
+import { sanitizeCmsHtml } from '../../lib/sanitize-cms-html.js'
 import { asStr, applyTemplate, mediaUrl } from '../../lib/sanity-strings.js'
 
 let settings = {}
@@ -246,7 +247,7 @@ const faqItems = Array.isArray(faqData?.items)
                     aria-labelledby={btnId}
                     aria-hidden="true"
                   >
-                    <div class="faq-answer" set:html={item.answerHtml} />
+                    <div class="faq-answer" set:html={sanitizeCmsHtml(asStr(item.answerHtml))} />
                   </div>
                 </div>
               )

@@ -11,6 +11,7 @@ import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../lib/f
 import { sanity } from '../lib/sanity.js'
 import { getSiteSettings, mergeHeaderFromSettings } from '../lib/site-settings.js'
 import { heroBackgroundFor } from '../lib/hero-backgrounds.js'
+import { sanitizeCmsHtml } from '../lib/sanitize-cms-html.js'
 import { asStr, applyTemplate, mediaUrl } from '../lib/sanity-strings.js'
 
 export async function getStaticPaths() {
@@ -188,7 +189,11 @@ const idPrefix = `blog-${slug.replace(/[^a-z0-9-]/gi, '_')}`
         <div class="hero-copy">
           {postCategory ? <p class="hero-eyebrow">{postCategory}</p> : null}
           <h1>{heroHeadline}</h1>
-          {postTldr ? <p class="hero-lead"><strong>TLDR;</strong> {postTldr}</p> : null}
+          {postTldr ? (
+            <p class="hero-lead">
+              <strong>TLDR;</strong> {postTldr}
+            </p>
+          ) : null}
         </div>
         <form
           class="hero-form"
@@ -254,7 +259,11 @@ const idPrefix = `blog-${slug.replace(/[^a-z0-9-]/gi, '_')}`
                   />
                 ) : null}
                 <h2 class="section-title section-title-secondary">{asStr(sec.heading)}</h2>
-                <div class="blog-post-body prose-plain">{asStr(sec.body)}</div>
+                <div
+                  class="blog-post-body prose-plain"
+                  style="white-space: pre-line;"
+                  set:html={sanitizeCmsHtml(asStr(sec.body))}
+                />
               </div>
             ))}
           </div>
