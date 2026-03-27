@@ -8,6 +8,15 @@
   --color-accent: #527BBD;
   --color-accent-hover: #4369a8;
   --color-dark: #143980;
+  --color-primary-cta-text: #fff;
+  --color-secondary-cta-bg: transparent;
+  --color-secondary-cta-border: var(--color-dark);
+  --color-secondary-cta-text: var(--color-dark);
+  --color-secondary-cta-hover-bg: var(--color-dark);
+  --color-secondary-cta-hover-text: #fff;
+  --color-form-button-bg: var(--color-dark);
+  --color-form-button-hover: #102f6d;
+  --color-form-button-text: #fff;
   --color-border: #e2e6ee;
   --font-heading: "Poppins", system-ui, sans-serif;
   --font-body: "Merriweather", Georgia, serif;
@@ -223,11 +232,11 @@ a:hover {
 }
 
 .nav a.btn-primary {
-  color: #fff;
+  color: var(--color-primary-cta-text);
 }
 
 .nav a.btn-primary:hover {
-  color: #fff;
+  color: var(--color-primary-cta-text);
 }
 
 .nav a.btn-dark,
@@ -505,29 +514,29 @@ button.btn,
 
 .btn-primary {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-primary-cta-text);
   border-color: var(--color-accent);
 }
 
 .btn-primary:hover {
   background: var(--color-accent-hover);
   border-color: var(--color-accent-hover);
-  color: #fff;
+  color: var(--color-primary-cta-text);
 }
 
 a.btn-primary[href^="tel:"] {
-  background: #3EB489;
-  border-color: #3EB489;
+  background: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 a.btn-primary[href^="tel:"]:hover {
-  background: #35a77c;
-  border-color: #35a77c;
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
 }
 
 .btn-dark {
   background: var(--color-accent);
-  color: #fff;
+  color: var(--color-primary-cta-text);
   border-color: rgba(255, 255, 255, 0.5);
   font-weight: 500;
 }
@@ -535,25 +544,25 @@ a.btn-primary[href^="tel:"]:hover {
 .btn-dark:hover {
   background: var(--color-accent-hover);
   border-color: rgba(255, 255, 255, 0.5);
-  color: #fff;
+  color: var(--color-primary-cta-text);
 }
 
 .btn-outline {
-  background: transparent;
-  color: var(--color-dark);
-  border-color: var(--color-dark);
+  background: var(--color-secondary-cta-bg);
+  color: var(--color-secondary-cta-text);
+  border-color: var(--color-secondary-cta-border);
 }
 
 .btn-outline:hover {
-  background: var(--color-dark);
-  color: #fff;
-  border-color: var(--color-dark);
+  background: var(--color-secondary-cta-hover-bg);
+  color: var(--color-secondary-cta-hover-text);
+  border-color: var(--color-secondary-cta-hover-bg);
 }
 
 .request-estimate:hover {
-  background: rgba(82, 123, 189, 0.18);
-  border-color: rgba(82, 123, 189, 0.9);
-  color: var(--color-dark);
+  background: var(--color-secondary-cta-hover-bg);
+  border-color: var(--color-secondary-cta-hover-bg);
+  color: var(--color-secondary-cta-hover-text);
 }
 
 .btn-lg {
@@ -746,36 +755,36 @@ a.btn-primary[href^="tel:"]:hover {
 .hero-actions .btn-primary {
   background: var(--color-accent);
   border-color: var(--color-accent);
-  color: #fff;
+  color: var(--color-primary-cta-text);
 }
 
 .hero-actions .cta1-primary-call {
-  background: #3EB489;
-  border-color: #3EB489;
+  background: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 .hero-actions .btn-primary:hover {
   background: var(--color-accent-hover);
   border-color: var(--color-accent-hover);
-  color: #fff;
+  color: var(--color-primary-cta-text);
 }
 
 .hero-actions .cta1-primary-call:hover {
-  background: #35a77c;
-  border-color: #35a77c;
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
 }
 
 .hero-actions .btn-dark,
 .hero-actions .btn-dark:hover {
   background: var(--color-accent);
   border-color: rgba(255, 255, 255, 0.5);
-  color: #fff;
+  color: var(--color-primary-cta-text);
 }
 
 .hero-actions .btn-dark:hover {
   background: var(--color-accent-hover);
   border-color: rgba(255, 255, 255, 0.5);
-  color: #fff;
+  color: var(--color-primary-cta-text);
 }
 
 .hero-actions .btn-outline {
@@ -1645,16 +1654,17 @@ a.btn-primary[href^="tel:"]:hover {
   min-height: 100px;
 }
 
-.contact-form button[type="submit"].btn-primary {
-  background: var(--color-dark);
-  border-color: var(--color-dark);
-  color: #fff;
+/* Lead forms (hero + footer) — theme: formButton* in Sanity */
+form[data-lead-form] button[type='submit'].btn-primary {
+  background: var(--color-form-button-bg);
+  border-color: var(--color-form-button-bg);
+  color: var(--color-form-button-text);
 }
 
-.contact-form button[type="submit"].btn-primary:hover {
-  background: #102f6d;
-  border-color: #102f6d;
-  color: #fff;
+form[data-lead-form] button[type='submit'].btn-primary:hover {
+  background: var(--color-form-button-hover);
+  border-color: var(--color-form-button-hover);
+  color: var(--color-form-button-text);
 }
 
 /* Lead forms (hero + footer) — Zapier via /api/lead */
@@ -2176,21 +2186,12 @@ form[data-lead-form] button[type="submit"].is-busy {
 }
 
 .hero-form a.btn-primary.btn-lg,
-.hero-form button[type="submit"].btn-primary {
+.hero-form button[type='submit'].btn-primary {
   width: 100%;
   margin-top: 0.15rem;
   justify-content: center;
   text-align: center;
   box-sizing: border-box;
-  background: var(--color-dark);
-  border-color: var(--color-dark);
-}
-
-.hero-form a.btn-primary.btn-lg:hover,
-.hero-form button[type="submit"].btn-primary:hover {
-  background: #102f6d;
-  border-color: #102f6d;
-  color: #fff;
 }
 
 .hero-form-grid {
