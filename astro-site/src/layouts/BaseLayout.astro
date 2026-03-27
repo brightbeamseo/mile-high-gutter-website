@@ -6,7 +6,7 @@ import { buildHomeAndConstructionBusinessJsonLd } from '../lib/local-business-js
 import { getSiteSettings } from '../lib/site-settings.js'
 import { buildThemeCss } from '../lib/theme-css.js'
 
-const { title, description, theme, forms, homeRevealAnimations = false } = Astro.props
+const { title, description, theme, forms, homeRevealAnimations = false, lcpImageSrc = '' } = Astro.props
 
 const settings = await getSiteSettings()
 const localBusinessJsonLd = buildHomeAndConstructionBusinessJsonLd(settings)
@@ -26,17 +26,32 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Google Tag Manager -->
+    <!-- Google Tag Manager (deferred to avoid competing with LCP) -->
     <script is:inline>
       (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
+        var loaded = false;
+        function loadGtm() {
+          if (loaded) return;
+          loaded = true;
+          w[l] = w[l] || [];
+          w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+          var f = d.getElementsByTagName(s)[0];
+          var j = d.createElement(s);
+          var dl = l != 'dataLayer' ? '&l=' + l : '';
+          j.async = true;
+          j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+          if (f && f.parentNode) f.parentNode.insertBefore(j, f);
+        }
+        var trigger = function () {
+          loadGtm();
+          w.removeEventListener('pointerdown', trigger, { passive: true });
+          w.removeEventListener('keydown', trigger, { passive: true });
+          w.removeEventListener('scroll', trigger, { passive: true });
+        };
+        w.addEventListener('pointerdown', trigger, { once: true, passive: true });
+        w.addEventListener('keydown', trigger, { once: true, passive: true });
+        w.addEventListener('scroll', trigger, { once: true, passive: true });
+        w.setTimeout(loadGtm, 5000);
       })(window, document, 'script', 'dataLayer', 'GTM-MVS522LX');
     </script>
     <!-- End Google Tag Manager -->
@@ -51,22 +66,44 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://services.leadconnectorhq.com" crossorigin />
+    <link rel="preconnect" href="https://backend.leadconnectorhq.com" crossorigin />
+    {lcpImageSrc ? <link rel="preload" as="image" href={lcpImageSrc} fetchpriority="high" /> : null}
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=optional"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=optional"
     />
-    <script type="application/json" id="site-forms-config" set:html={formsJson} />
-    {recaptchaSiteKey ? (
-      <script
-        src={`https://www.google.com/recaptcha/api.js?render=${encodeURIComponent(recaptchaSiteKey)}`}
-        async
-        defer
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=optional"
+      media="print"
+      onload="this.media='all'"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=optional"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=optional"
       />
-    ) : null}
+    </noscript>
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=optional"
+      />
+    </noscript>
+    <script type="application/json" id="site-forms-config" set:html={formsJson} />
   </head>
   <body class:list={[{ 'home-reveal-animate': homeRevealAnimations }]}>
     <!-- Google Tag Manager (noscript) -->

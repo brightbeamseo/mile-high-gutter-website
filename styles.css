@@ -575,20 +575,24 @@ a.btn-primary[href^="tel:"]:hover {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(135deg, rgba(56, 69, 85, 0.88) 0%, rgba(56, 69, 85, 0.84) 50%, rgba(56, 69, 85, 0.88) 100%),
-    url("/Media%20(MHG)/Images%20(Mile%20High)/mile-high-gutters-arvada-co-completed-gutter-installation-and-repair-on-finished-home-with-clean-lines-and-overcast-sky.webp");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   z-index: -1;
+}
+
+.hero-bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .hero-bg::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30z' fill='%23527BBD' fill-opacity='0.06'/%3E%3C/svg%3E");
+  background-image:
+    linear-gradient(135deg, rgba(56, 69, 85, 0.88) 0%, rgba(56, 69, 85, 0.84) 50%, rgba(56, 69, 85, 0.88) 100%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30z' fill='%23527BBD' fill-opacity='0.06'/%3E%3C/svg%3E");
   opacity: 0.8;
 }
 
@@ -675,6 +679,10 @@ a.btn-primary[href^="tel:"]:hover {
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.88);
   margin: 0 0 var(--space-2xl);
+  /* Reserve vertical space to prevent wrap-jump during font swap. */
+  min-height: 4.5em;
+  /* Use a metrics-stable fallback stack close to the loaded body font. */
+  font-family: "Merriweather", Georgia, "Times New Roman", serif;
 }
 
 .hero-typed {
@@ -683,6 +691,7 @@ a.btn-primary[href^="tel:"]:hover {
   font-size: clamp(1.1rem, 2.2vw, 1.35rem);
   font-weight: 600;
   color: #fff;
+  white-space: nowrap;
 }
 
 .hero-caret {
@@ -1163,7 +1172,10 @@ a.btn-primary[href^="tel:"]:hover {
   background-color: #143980;
   background-image:
     linear-gradient(135deg, rgba(20, 57, 128, 0.94) 0%, rgba(26, 74, 158, 0.94) 100%),
-    url("/Media%20(MHG)/Images%20(Mile%20High)/mile-high-gutters-thornton-co-drone-overhead-view-complex-roof-gutter-installation-system.webp");
+    image-set(
+      url("/Media%20(MHG)/Images%20(Mile%20High)/responsive/mile-high-gutters-thornton-co-drone-overhead-view-complex-roof-gutter-installation-system-800.webp") 1x,
+      url("/Media%20(MHG)/Images%20(Mile%20High)/responsive/mile-high-gutters-thornton-co-drone-overhead-view-complex-roof-gutter-installation-system-1200.webp") 2x
+    );
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

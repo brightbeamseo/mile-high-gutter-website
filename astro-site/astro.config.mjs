@@ -10,4 +10,12 @@ export default defineConfig({
   site,
   trailingSlash: 'always',
   integrations: [sitemap()],
+  build: {
+    inlineStylesheets: 'always',
+  },
+  vite: {
+    build: {
+      cssCodeSplit: false,
+    },
+  },
 });

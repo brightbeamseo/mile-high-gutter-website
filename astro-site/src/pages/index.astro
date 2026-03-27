@@ -110,9 +110,9 @@ const heroBgSrc = asStr(layoutBg?.hero?.imageSrc)
 const servicesBgSrc = asStr(layoutBg?.services?.imageSrc)
 const uniquePointsBgSrc = asStr(layoutBg?.uniquePoints?.imageSrc)
 
-const heroBgStyle = `background-image: linear-gradient(135deg, rgba(56, 69, 85, 0.88) 0%, rgba(56, 69, 85, 0.84) 50%, rgba(56, 69, 85, 0.88) 100%), url("${mediaUrl(heroBgSrc)}"); background-size: cover; background-position: center; background-repeat: no-repeat;`
+const heroBgUrl = mediaUrl(heroBgSrc)
 
-const servicesBgStyle = `background-color: #143980; background-image: linear-gradient(135deg, rgba(20, 57, 128, 0.94) 0%, rgba(26, 74, 158, 0.94) 100%), url("${mediaUrl(servicesBgSrc)}"); background-size: cover; background-position: center; background-repeat: no-repeat;`
+const servicesBgStyle = `background-color: #143980; background-image: linear-gradient(135deg, rgba(20, 57, 128, 0.94) 0%, rgba(26, 74, 158, 0.94) 100%), image-set(url("${responsiveSrc(servicesBgSrc, 800)}") 1x, url("${responsiveSrc(servicesBgSrc, 1200)}") 2x); background-size: cover; background-position: center; background-repeat: no-repeat;`
 
 const uniquePointsBgStyle = `background: var(--color-surface); background-image: url("${mediaUrl(uniquePointsBgSrc)}"); background-size: cover; background-position: center;`
 
@@ -156,6 +156,31 @@ const serviceHref = (svc) => {
     .replace(/^-+|-+$/g, '')
   return `/products-services/${slug}-denver-co/`
 }
+
+const reviewAvatarSrc = (author, fallbackSrc) => {
+  const name = asStr(author).toLowerCase()
+  if (name.includes('alex witkowicz')) return '/Media%20(MHG)/Reviews%20(MHG)/responsive/alex-witkowicz-84.webp'
+  if (name.includes('maximilian feeney')) return '/Media%20(MHG)/Reviews%20(MHG)/responsive/maximilian-feeney-84.webp'
+  if (name.includes('michael tinker')) return '/Media%20(MHG)/Reviews%20(MHG)/responsive/michael-tinker-84.webp'
+  if (name.includes('michael mccausey')) return '/Media%20(MHG)/Reviews%20(MHG)/responsive/michael-mccausey-84.webp'
+  return mediaUrl(asStr(fallbackSrc))
+}
+
+function responsiveSet(src) {
+  const raw = asStr(src)
+  if (!raw.endsWith('.webp')) return undefined
+  const base = raw.split('/').pop()?.replace('.webp', '')
+  if (!base) return undefined
+  return `/Media%20(MHG)/Images%20(Mile%20High)/responsive/${base}-320.webp 320w, /Media%20(MHG)/Images%20(Mile%20High)/responsive/${base}-480.webp 480w, /Media%20(MHG)/Images%20(Mile%20High)/responsive/${base}-640.webp 640w, /Media%20(MHG)/Images%20(Mile%20High)/responsive/${base}-800.webp 800w, /Media%20(MHG)/Images%20(Mile%20High)/responsive/${base}-1200.webp 1200w`
+}
+
+function responsiveSrc(src, width = 800) {
+  const raw = asStr(src)
+  if (!raw.endsWith('.webp')) return mediaUrl(raw)
+  const base = raw.split('/').pop()?.replace('.webp', '')
+  if (!base) return mediaUrl(raw)
+  return `/Media%20(MHG)/Images%20(Mile%20High)/responsive/${base}-${width}.webp`
+}
 ---
 
 <BaseLayout
@@ -163,6 +188,7 @@ const serviceHref = (svc) => {
   description={pageDescription}
   theme={settings.theme}
   forms={{ submitPath: asStr(settings.forms?.submitPath) }}
+  lcpImageSrc={heroBgUrl}
   homeRevealAnimations
 >
   <header class="header">
@@ -182,7 +208,7 @@ const serviceHref = (svc) => {
     <div class="header-nav">
       <div class="header-inner">
         <a href="/" class="logo" aria-label={logoAriaLabel}>
-          <img src={mediaUrl(logoBlack)} alt={companyName} class="logo-img" />
+          <img src="/Media%20(MHG)/Logo%20Suite%20(MHG)/Mile%20High%20(Denver%20Colorado)/Horizontal/responsive/logo-black-198.webp" srcset="/Media%20(MHG)/Logo%20Suite%20(MHG)/Mile%20High%20(Denver%20Colorado)/Horizontal/responsive/logo-black-198.webp 198w, /Media%20(MHG)/Logo%20Suite%20(MHG)/Mile%20High%20(Denver%20Colorado)/Horizontal/responsive/logo-black-396.webp 396w" sizes="198px" alt={companyName} class="logo-img" width="396" height="96" fetchpriority="high" decoding="async" />
         </a>
         <button class="nav-toggle" aria-label="Open menu">
           <span></span><span></span><span></span>
@@ -230,7 +256,9 @@ const serviceHref = (svc) => {
 
   <main>
     <section class="hero hero-split">
-      <div class="hero-bg" style={heroBgStyle}></div>
+      <div class="hero-bg">
+        <img src={responsiveSrc(heroBgSrc, 1200)} srcset={responsiveSet(heroBgSrc)} sizes="100vw" alt="" class="hero-bg-image" width="1500" height="1000" fetchpriority="high" loading="eager" decoding="async" />
+      </div>
       <div class="container hero-split-inner">
         <div class="hero-copy">
           <div class="hero-eyebrow">{asStr(hero?.eyebrow)}</div>
@@ -329,9 +357,13 @@ const serviceHref = (svc) => {
         {projects?.slides?.map((slide) => {
           const loc = asStr(slide.location)
           const label = `${asStr(slide.imageAlt)} — ${loc}`
+          const imgSrc = asStr(slide.imageSrc)
+          const base = imgSrc.split('/').pop()?.replace('.webp', '')
+          const srcset = responsiveSet(imgSrc)
+          const src = base && srcset ? `/Media%20(MHG)/Images%20(Mile%20High)/responsive/${base}-800.webp` : mediaUrl(imgSrc)
           return (
             <article class="project-slide" data-location={loc} aria-label={label}>
-              <img src={mediaUrl(asStr(slide.imageSrc))} alt={asStr(slide.imageAlt)} />
+              <img src={src} srcset={srcset} sizes="(max-width: 1200px) 92vw, (max-width: 1600px) 377px, 760px" alt={asStr(slide.imageAlt)} width="800" height="560" loading="lazy" decoding="async" />
               <div class="project-meta">
                 <span class="project-pin" aria-hidden="true">📍</span>{' '}
                 <span class="project-location-label">{loc}</span>
@@ -353,11 +385,25 @@ const serviceHref = (svc) => {
     <section class="section why-simple">
       <div class="container why-choose-layout">
         <div class="why-choose-image-wrap">
+          {(() => {
+            const whyImgSrc = asStr(whyChoose?.imageSrc)
+            const base = whyImgSrc.split('/').pop()?.replace('.webp', '')
+            const srcset = responsiveSet(whyImgSrc)
+            const src = base && srcset ? `/Media%20(MHG)/Images%20(Mile%20High)/responsive/${base}-800.webp` : mediaUrl(whyImgSrc)
+            return (
           <img
-            src={mediaUrl(asStr(whyChoose?.imageSrc))}
+            src={src}
+            srcset={srcset}
+            sizes="(max-width: 900px) 100vw, 420px"
             alt={asStr(whyChoose?.imageAlt)}
             class="why-choose-image"
+            width="800"
+            height="923"
+            loading="lazy"
+            decoding="async"
           />
+            )
+          })()}
           <div class="why-choose-stamp">
             <strong>{homesCountDisplay}</strong>
             <span>{asStr(whyStamp?.line2)}</span>
@@ -423,7 +469,7 @@ const serviceHref = (svc) => {
         </div>
         <div class="about-visual">
           <div class="media-card media-video">
-            <video controls playsinline preload="metadata" poster={mediaUrl(asStr(aboutVideo?.posterSrc))}>
+            <video controls playsinline preload="metadata" poster={responsiveSrc(aboutVideo?.posterSrc, 480)} width="800" height="614">
               <source src={asStr(aboutVideo?.sourceSrc)} type={asStr(aboutVideo?.sourceType)} />
             </video>
           </div>
@@ -475,7 +521,7 @@ const serviceHref = (svc) => {
           <p class="section-lead">{asStr(contactBanner?.paragraph2)}</p>
           <div class="contact-banner-actions">
             <a href={telLink} class="contact-banner-phone">
-              <img src={mediaUrl(asStr(contactBanner?.phoneIconSrc))} alt="" aria-hidden="true" />
+              <img src="/Media%20(MHG)/Icons%20(MHG)/responsive/phone-white-70.webp" alt="" aria-hidden="true" width="70" height="70" loading="lazy" decoding="async" />
               <span class="contact-banner-phone-number">{phoneDisplay}</span>
             </a>
           </div>
@@ -490,18 +536,26 @@ const serviceHref = (svc) => {
           <div class="reviews-summary-left">
             <p class="reviews-summary-brand">
               <img
-                src={mediaUrl(asStr(reviewsSummary?.googleIconSrc))}
+                src="/Media%20(MHG)/Reviews%20(MHG)/responsive/google-icon-44.webp"
                 alt={asStr(reviewsSummary?.brandLabel)}
                 class="google-logo"
+                width="44"
+                height="44"
+                loading="lazy"
+                decoding="async"
               />
               <span>{asStr(reviewsSummary?.brandLabel)}</span>
             </p>
             <p class="reviews-summary-rating">
               <strong>{reviewRating}</strong>
               <img
-                src={mediaUrl(asStr(reviewsSummary?.starsImageSrc))}
+                src="/Media%20(MHG)/Reviews%20(MHG)/responsive/stars-236.webp"
                 alt={asStr(reviewsSummary?.starsImageAlt)}
                 class="review-stars review-stars-inline"
+                width="236"
+                height="59"
+                loading="lazy"
+                decoding="async"
               />
               <span>{reviewCountDisplay}</span>
             </p>
@@ -514,23 +568,31 @@ const serviceHref = (svc) => {
           {reviews?.testimonials?.map((t) => (
             <blockquote class="testimonial">
               <div class="review-brand review-brand-top">
-                <img src={mediaUrl(asStr(t.avatarSrc))} alt={asStr(t.author)} class="review-avatar" />
+                <img src={reviewAvatarSrc(t.author, t.avatarSrc)} alt={asStr(t.author)} class="review-avatar" width="84" height="84" loading="lazy" decoding="async" />
                 <div class="review-meta">
                   <strong>{asStr(t.author)}</strong>
                   <span class="review-time">{asStr(t.timeAgo)}</span>
                 </div>
               </div>
               <img
-                src={mediaUrl(asStr(reviewsSummary?.starsImageSrc))}
+                src="/Media%20(MHG)/Reviews%20(MHG)/responsive/stars-236.webp"
                 alt={asStr(reviewsSummary?.starsImageAlt)}
                 class="review-stars"
+                width="236"
+                height="59"
+                loading="lazy"
+                decoding="async"
               />
               <p>&quot;{asStr(t.quote)}&quot;</p>
               <div class="review-posted-on">
                 <img
-                  src={mediaUrl(asStr(reviewsSummary?.googleIconSrc))}
+                  src="/Media%20(MHG)/Reviews%20(MHG)/responsive/google-icon-44.webp"
                   alt={asStr(reviewsSummary?.brandLabel)}
                   class="google-logo"
+                  width="44"
+                  height="44"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <span>{asStr(reviews?.postedOnLabel)}</span>
               </div>
@@ -574,13 +636,19 @@ const serviceHref = (svc) => {
       <div class="container">
         <h2 class="section-title">{asStr(team?.headline)}</h2>
         <div class="team-grid">
-          {team?.members?.map((m) => (
+          {team?.members?.map((m) => {
+            const imgSrc = asStr(m.imageSrc)
+            const base = imgSrc.split('/').pop()?.replace('.webp', '')
+            const srcset = responsiveSet(imgSrc)
+            const src = base && srcset ? `/Media%20(MHG)/Images%20(Mile%20High)/responsive/${base}-800.webp` : mediaUrl(imgSrc)
+            return (
             <article class="team-card">
-              <img src={mediaUrl(asStr(m.imageSrc))} alt={asStr(m.imageAlt)} />
+              <img src={src} srcset={srcset} sizes="(max-width: 900px) 100vw, 362px" alt={asStr(m.imageAlt)} width="800" height="600" loading="lazy" decoding="async" />
               <h3>{asStr(m.name)}</h3>
               <p>{asStr(m.bio)}</p>
             </article>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>
@@ -702,7 +770,7 @@ const serviceHref = (svc) => {
     <div class="container">
       <div class="footer-inner">
         <div class="footer-brand-block footer-col">
-          <img src={mediaUrl(logoWhite)} alt={companyName} class="footer-logo" />
+          <img src="/Media%20(MHG)/Logo%20Suite%20(MHG)/Mile%20High%20(Denver%20Colorado)/Horizontal/responsive/logo-white-360.webp" alt={companyName} class="footer-logo" width="360" height="87" loading="lazy" decoding="async" />
           <p class="footer-address">{descriptionShort}</p>
           <div class="footer-social" aria-label={asStr(footerBrand?.socialAriaLabel)}>
             {footerBrand?.socialLinks?.map((s) => (

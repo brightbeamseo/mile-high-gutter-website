@@ -541,6 +541,29 @@
     if (kind === 'success') el.classList.add('is-success');
   }
 
+  function loadRecaptchaApi(siteKey) {
+    if (!siteKey) return Promise.resolve();
+    if (window.grecaptcha && typeof window.grecaptcha.execute === 'function') return Promise.resolve();
+    if (window.__mhgRecaptchaPromise) return window.__mhgRecaptchaPromise;
+    window.__mhgRecaptchaPromise = new Promise(function (resolve, reject) {
+      var existing = document.querySelector('script[data-recaptcha-api="true"]');
+      if (existing) {
+        existing.addEventListener('load', function () { resolve(); }, { once: true });
+        existing.addEventListener('error', function () { reject(new Error('recaptcha_load_failed')); }, { once: true });
+        return;
+      }
+      var script = document.createElement('script');
+      script.src = 'https://www.google.com/recaptcha/api.js?render=' + encodeURIComponent(siteKey);
+      script.async = true;
+      script.defer = true;
+      script.setAttribute('data-recaptcha-api', 'true');
+      script.onload = function () { resolve(); };
+      script.onerror = function () { reject(new Error('recaptcha_load_failed')); };
+      document.head.appendChild(script);
+    });
+    return window.__mhgRecaptchaPromise;
+  }
+
   if (leadForms.length) {
     var cfg = readFormsConfig();
     var endpoint = cfg.submitPath.indexOf('/') === 0 ? cfg.submitPath : '/' + cfg.submitPath;
@@ -649,23 +672,28 @@
             runSend();
             return;
           }
-          if (typeof window.grecaptcha === 'undefined' || !window.grecaptcha.execute) {
-            if (submitBtn) submitBtn.classList.remove('is-busy');
-            setStatus(form, 'Security check failed to load. Please refresh the page and try again.', 'error');
-            return;
-          }
-          window.grecaptcha.ready(function () {
-            window.grecaptcha
-              .execute(recaptchaSiteKey, { action: 'lead_form' })
-              .then(function (token) {
-                payload.recaptchaToken = token;
-                runSend();
-              })
-              .catch(function () {
-                if (submitBtn) submitBtn.classList.remove('is-busy');
-                setStatus(form, 'Security check failed. Please try again.', 'error');
+          loadRecaptchaApi(recaptchaSiteKey)
+            .then(function () {
+              if (typeof window.grecaptcha === 'undefined' || !window.grecaptcha.execute) {
+                throw new Error('recaptcha_unavailable');
+              }
+              window.grecaptcha.ready(function () {
+                window.grecaptcha
+                  .execute(recaptchaSiteKey, { action: 'lead_form' })
+                  .then(function (token) {
+                    payload.recaptchaToken = token;
+                    runSend();
+                  })
+                  .catch(function () {
+                    if (submitBtn) submitBtn.classList.remove('is-busy');
+                    setStatus(form, 'Security check failed. Please try again.', 'error');
+                  });
               });
-          });
+            })
+            .catch(function () {
+              if (submitBtn) submitBtn.classList.remove('is-busy');
+              setStatus(form, 'Security check failed to load. Please refresh the page and try again.', 'error');
+            });
         };
 
         startSend();
