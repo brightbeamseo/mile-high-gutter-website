@@ -348,8 +348,9 @@
       }
 
       outer.style.maxHeight = '0px';
-      void outer.offsetHeight;
-      outer.style.maxHeight = inner.scrollHeight + 'px';
+      requestAnimationFrame(function () {
+        outer.style.maxHeight = inner.scrollHeight + 'px';
+      });
 
       outer.addEventListener(
         'transitionend',
@@ -383,11 +384,10 @@
 
       var h = inner.scrollHeight;
       outer.style.maxHeight = h + 'px';
-      void outer.offsetHeight;
-      item.classList.remove('is-open');
-      btn.setAttribute('aria-expanded', 'false');
-      outer.setAttribute('aria-hidden', 'true');
       requestAnimationFrame(function () {
+        item.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        outer.setAttribute('aria-hidden', 'true');
         outer.style.maxHeight = '0px';
       });
     }
@@ -421,8 +421,9 @@
           var inner = faqInner(item);
           if (outer.style.maxHeight === 'none') {
             outer.style.maxHeight = inner.scrollHeight + 'px';
-            void outer.offsetHeight;
-            outer.style.maxHeight = 'none';
+            requestAnimationFrame(function () {
+              outer.style.maxHeight = 'none';
+            });
           }
         });
       }, 150);
