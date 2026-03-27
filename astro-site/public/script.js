@@ -65,13 +65,14 @@
   });
 
   // Section/card entry animations — homepage only (body.home-reveal-animate)
-  /* Exclude .stats-thin and .unique-points: transform-based reveal causes 1px white hairlines between full-bleed sections.
+  /* Exclude .hero: applying reveal classes after first paint can trigger CLS on above-the-fold text.
+     Exclude .stats-thin and .unique-points: transform-based reveal causes 1px white hairlines between full-bleed sections.
      Exclude .projects-gallery-section: it contains position:fixed lightbox; any ancestor transform breaks fixed positioning. */
   var revealTargets = [];
   if (document.body && document.body.classList.contains('home-reveal-animate')) {
     revealTargets = Array.prototype.slice.call(
       document.querySelectorAll(
-        'main > section:not(.stats-thin, .unique-points, .projects-gallery-section), footer > section, .service-card, .result-item, .testimonial, .team-card, .faq-item'
+        'main > section:not(.hero, .stats-thin, .unique-points, .projects-gallery-section), footer > section, .service-card, .result-item, .testimonial, .team-card, .faq-item'
       )
     );
   }
