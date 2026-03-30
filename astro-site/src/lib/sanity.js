@@ -8,3 +8,6 @@ export const sanity = createClient({
   // edits in Studio can look "stuck" on old copy (e.g. 10% vs 20%) until cache expires.
   useCdn: false,
 })
+
+/** Canonical homepage document (`homePageSingleton` — see `scripts/import-content.js`). */
+export const GROQ_HOME_PAGE = `*[_type == "homePage" && _id == "homePageSingleton"][0]`

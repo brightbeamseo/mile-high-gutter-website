@@ -9,6 +9,15 @@ import json
 import re
 from html import escape as esc
 from typing import Any
+from urllib.parse import quote
+
+
+def public_media_url(rel_path: str) -> str:
+    """Path relative to site root → URL path (encode each segment, e.g. spaces as %20)."""
+    if not rel_path or not str(rel_path).strip():
+        return ""
+    parts = [p for p in str(rel_path).strip().strip("/").split("/") if p]
+    return "/" + "/".join(quote(p, safe="") for p in parts)
 
 # JSON theme.colors keys → CSS custom properties (see styles.css :root)
 _THEME_COLOR_VARS: dict[str, str] = {
@@ -209,10 +218,10 @@ def render_header(home: dict[str, Any], ctx: dict[str, str]) -> str:
 
     <div class="header-nav">
       <div class="header-inner">
-        <a href="/" class="logo" aria-label="{esc(ctx["companyName"])} home">
+        <a href="/" class="logo" aria-label="{esc(ctx["companyName"])} Home">
           <img src="{esc(ctx["logoHorizontalBlack"], quote=True)}" alt="{esc(ctx["companyName"], quote=True)}" class="logo-img">
         </a>
-        <button class="nav-toggle" aria-label="Open menu">
+        <button class="nav-toggle" aria-label="Open Menu">
           <span></span><span></span><span></span>
         </button>
         <nav class="nav">
@@ -310,7 +319,7 @@ def render_projects(home: dict[str, Any], _ctx: dict[str, str]) -> str:
     for slide in p["slides"]:
         # Pin text on the slide comes from JSON `location` (see shared/homepage-content.json).
         loc = (slide.get("location") or slide.get("locationLabel") or "").strip()
-        aria = f"Gutter project photo — {loc}" if loc else "Gutter project photo"
+        aria = f"Gutter Project Photo — {loc}" if loc else "Gutter Project Photo"
         slides.append(
             f"""        <article class="project-slide" data-location="{esc(loc, quote=True)}" aria-label="{esc(aria, quote=True)}">
           <img src="{esc(slide["imageSrc"], quote=True)}" alt="{esc(slide["imageAlt"], quote=True)}">
@@ -394,12 +403,31 @@ def render_services(home: dict[str, Any], _ctx: dict[str, str]) -> str:
 """
 
 
+def _about_badge_html(b) -> str:
+    """Badge row item: `{ imageSrc, alt? }` from JSON."""
+    src = public_media_url(b.get("imageSrc", "") or "")
+    alt = esc(b.get("alt") or "", quote=True)
+    return f'            <div class="about-badge"><img src="{esc(src, quote=True)}" alt="{alt}" loading="lazy" decoding="async" /></div>'
+
+
+def _about_media_inner_html(v: dict[str, Any]) -> str:
+    """When sourceSrc is `poster-only` or `none`, show static poster image (no video file yet)."""
+    mode = (v.get("sourceSrc") or "").strip().lower()
+    if mode in ("poster-only", "none"):
+        poster = public_media_url(v.get("posterSrc") or "")
+        return f'            <img src="{esc(poster, quote=True)}" alt="" loading="lazy" decoding="async" width="800" height="450">'
+    return f"""            <video controls playsinline preload="metadata" poster="{esc(v["posterSrc"], quote=True)}" width="800" height="450">
+              <source src="{esc(public_media_url(v["sourceSrc"]), quote=True)}" type="{esc(v["sourceType"], quote=True)}">
+            </video>"""
+
+
 def render_about(home: dict[str, Any], ctx: dict[str, str]) -> str:
     a = home["about"]
     v = a["video"]
     bl = "\n".join(f"            <li>{esc(x)}</li>" for x in a["bullets"])
-    badges = "\n".join(f'            <div class="about-badge">{esc(b)}</div>' for b in a["badges"])
+    badges = "\n".join(_about_badge_html(b) for b in a["badges"])
     call = sub_ctx(a["ctas"].get("callTemplate", "Call: {{phoneDisplay}}"), ctx)
+    media_inner = _about_media_inner_html(v)
     return f"""    <section class="section about about-video">
       <div class="container about-grid">
         <div class="about-content">
@@ -419,9 +447,7 @@ def render_about(home: dict[str, Any], ctx: dict[str, str]) -> str:
 
         <div class="about-visual">
           <div class="media-card media-video">
-            <video controls playsinline preload="metadata" poster="{esc(v["posterSrc"], quote=True)}">
-              <source src="{esc(v["sourceSrc"], quote=True)}" type="{esc(v["sourceType"], quote=True)}">
-            </video>
+{media_inner}
           </div>
 
           <div class="about-badges" aria-label="{esc(a["badgesAriaLabel"], quote=True)}">
@@ -488,7 +514,7 @@ def render_contact_banner(home: dict[str, Any], ctx: dict[str, str]) -> str:
           <p class="section-lead">{esc(c["paragraph2"])}</p>
           <div class="contact-banner-actions">
             <a href="tel:{esc(ctx["phoneTel"], quote=True)}" class="contact-banner-phone">
-              <img src="{esc(c["phoneIconSrc"], quote=True)}" alt="" aria-hidden="true">
+              <img src="{esc(public_media_url(c["phoneIconSrc"]), quote=True)}" alt="" aria-hidden="true">
               <span class="contact-banner-phone-number">{esc(ctx["phoneDisplay"])}</span>
             </a>
           </div>

@@ -114,7 +114,7 @@
 
     function closeMobileNav() {
       nav.classList.remove('is-open');
-      navToggle.setAttribute('aria-label', 'Open menu');
+      navToggle.setAttribute('aria-label', 'Open Menu');
       navToggle.setAttribute('aria-expanded', 'false');
       nav.querySelectorAll('[data-nav-dropdown]').forEach(function (dd) {
         dd.classList.remove('is-open');
@@ -128,7 +128,7 @@
     navToggle.addEventListener('click', function () {
       nav.classList.toggle('is-open');
       var isOpen = nav.classList.contains('is-open');
-      navToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+      navToggle.setAttribute('aria-label', isOpen ? 'Close Menu' : 'Open Menu');
       navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
 

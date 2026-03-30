@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 import { addKeysToSanityArrays } from '../lib/sanity-array-keys.js';
-import { upsertDocument } from '../lib/sanity-write.js';
+import { getSanityWriteClient, stripSanitySystemFields, upsertDocument } from '../lib/sanity-write.js';
 
 /** Fixed _id values (writable singletons; avoids read-only draft/system ids). */
 export const SITE_SETTINGS_DOCUMENT_ID = 'siteSettingsSingleton';
@@ -45,7 +45,12 @@ function buildSiteSettingsData(json) {
     keywords: stringListFromJson(json.keywords),
     businessListings: json.businessListings,
     forms: json.forms
-      ? { submitPath: json.forms.submitPath }
+      ? {
+          submitPath: json.forms.submitPath,
+          formKicker: json.forms.formKicker,
+          formAriaLabel: json.forms.formAriaLabel,
+          requiredIndicator: json.forms.requiredIndicator,
+        }
       : undefined,
     meta: json.meta,
     theme: json.theme,
@@ -95,18 +100,24 @@ async function main() {
   const raw = readFileSync(CONTENT_PATH, 'utf8');
   const json = JSON.parse(raw);
 
+  const client = getSanityWriteClient();
+  const [existingSettings, existingHome] = await Promise.all([
+    client.getDocument(SITE_SETTINGS_DOCUMENT_ID).catch(() => null),
+    client.getDocument(HOME_PAGE_DOCUMENT_ID).catch(() => null),
+  ]);
+
   const settingsData = addKeysToSanityArrays(buildSiteSettingsData(json));
   const homePageData = addKeysToSanityArrays(buildHomePageData(json));
 
   const siteDoc = await upsertDocument(
     SITE_SETTINGS_DOCUMENT_ID,
     'siteSettings',
-    settingsData,
+    { ...stripSanitySystemFields(existingSettings), ...settingsData },
   );
   const homeDoc = await upsertDocument(
     HOME_PAGE_DOCUMENT_ID,
     'homePage',
-    homePageData,
+    { ...stripSanitySystemFields(existingHome), ...homePageData },
   );
 
   console.log('Sanity import OK (createOrReplace)');

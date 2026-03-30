@@ -4,7 +4,7 @@ import FooterSocialIcon from '../../components/FooterSocialIcon.astro'
 import FooterHoursRow from '../../components/FooterHoursRow.astro'
 import FooterContactInfo from '../../components/FooterContactInfo.astro'
 import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../../lib/footer-contact-heading.js'
-import { sanity } from '../../lib/sanity.js'
+import { GROQ_HOME_PAGE, sanity } from '../../lib/sanity.js'
 import { getSiteSettings, mergeHeaderFromSettings } from '../../lib/site-settings.js'
 import { heroBackgroundFor } from '../../lib/hero-backgrounds.js'
 import { asStr, applyTemplate, asStrArray, mediaUrl } from '../../lib/sanity-strings.js'
@@ -12,7 +12,7 @@ import { asStr, applyTemplate, asStrArray, mediaUrl } from '../../lib/sanity-str
 let settings = {}
 let homePage = {}
 try {
-  ;[settings, homePage] = await Promise.all([getSiteSettings(), sanity.fetch(`*[_type == "homePage"][0]`)])
+  ;[settings, homePage] = await Promise.all([getSiteSettings(), sanity.fetch(GROQ_HOME_PAGE)])
 } catch (err) {
   console.warn('[about-us] Sanity fetch failed; using fallback placeholders.', err)
 }
@@ -72,7 +72,7 @@ const universalRequiredIndicator = asStr(formsCfg?.requiredIndicator) || '*'
         <a href="/" class="logo" aria-label={logoAriaLabel}>
           {logoBlack ? <img src={mediaUrl(logoBlack)} alt={companyName} class="logo-img" /> : <span class="section-title" style="margin:0; font-size: 1.25rem;">{companyName}</span>}
         </a>
-        <button class="nav-toggle" aria-label="Open menu">
+        <button class="nav-toggle" aria-label="Open Menu">
           <span></span><span></span><span></span>
         </button>
         <nav class="nav">

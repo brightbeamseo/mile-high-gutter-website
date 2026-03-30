@@ -4,7 +4,7 @@ import FooterSocialIcon from '../../components/FooterSocialIcon.astro'
 import FooterHoursRow from '../../components/FooterHoursRow.astro'
 import FooterContactInfo from '../../components/FooterContactInfo.astro'
 import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../../lib/footer-contact-heading.js'
-import { sanity } from '../../lib/sanity.js'
+import { GROQ_HOME_PAGE, sanity } from '../../lib/sanity.js'
 import { getSiteSettings, mergeHeaderFromSettings } from '../../lib/site-settings.js'
 import { heroBackgroundFor } from '../../lib/hero-backgrounds.js'
 import { asStr, applyTemplate, mediaUrl } from '../../lib/sanity-strings.js'
@@ -15,7 +15,7 @@ let galleryPage = {}
 try {
   ;[settings, homePage, galleryPage] = await Promise.all([
     getSiteSettings(),
-    sanity.fetch(`*[_type == "homePage"][0]`),
+    sanity.fetch(GROQ_HOME_PAGE),
     sanity.fetch(`*[_type == "galleryPage" && slug.current == "gallery"][0]`),
   ])
 } catch (err) {
@@ -80,7 +80,7 @@ const universalRequiredIndicator = asStr(formsCfg?.requiredIndicator) || '*'
     <div class="header-nav">
       <div class="header-inner">
         <a href="/" class="logo" aria-label={logoAriaLabel}>{logoBlack ? <img src={mediaUrl(logoBlack)} alt={companyName} class="logo-img" /> : <span class="section-title" style="margin:0; font-size: 1.25rem;">{companyName}</span>}</a>
-        <button class="nav-toggle" aria-label="Open menu">
+        <button class="nav-toggle" aria-label="Open Menu">
           <span></span><span></span><span></span>
         </button>
         <nav class="nav">

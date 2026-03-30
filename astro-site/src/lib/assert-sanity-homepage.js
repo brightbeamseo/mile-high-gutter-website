@@ -242,7 +242,10 @@ export function assertSanityHomepage(settings, homePage) {
   const abBullets = reqArr('homePage.about.bullets', about.bullets)
   abBullets.forEach((b, i) => reqStr(`homePage.about.bullets[${i}]`, b))
   const abBadges = reqArr('homePage.about.badges', about.badges)
-  abBadges.forEach((b, i) => reqStr(`homePage.about.badges[${i}]`, b))
+  abBadges.forEach((b, i) => {
+    const bl = reqObj(`homePage.about.badges[${i}]`, b)
+    reqStr(`homePage.about.badges[${i}].imageSrc`, bl.imageSrc)
+  })
   const abCtas = reqObj('homePage.about.ctas', about.ctas)
   ;['callTemplate', 'estimate', 'estimateHref'].forEach((k) =>
     reqStr(`homePage.about.ctas.${k}`, abCtas[k]),

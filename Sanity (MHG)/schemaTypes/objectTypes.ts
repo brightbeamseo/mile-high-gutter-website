@@ -442,9 +442,32 @@ export const aboutVideo = defineType({
   type: 'object',
   fields: [
     defineField({ name: 'posterSrc', type: 'string' }),
-    defineField({ name: 'posterLocation', type: 'string' }),
-    defineField({ name: 'sourceSrc', type: 'string' }),
-    defineField({ name: 'sourceType', type: 'string' }),
+    defineField({
+      name: 'posterLocation',
+      type: 'string',
+      title: 'Poster image location',
+      description: 'Caption for the poster frame (e.g. city or job site).',
+    }),
+    defineField({
+      name: 'sourceSrc',
+      type: 'string',
+      title: 'Video file path',
+      description:
+        'MP4 path under public (e.g. Media (MHG)/…/file.mp4). Use **poster-only** until a real file exists — the site shows the poster image only, no player.',
+    }),
+    defineField({
+      name: 'sourceType',
+      type: 'string',
+      title: 'Video MIME type',
+      initialValue: 'video/mp4',
+    }),
+    defineField({
+      name: 'sourceLocation',
+      type: 'string',
+      title: 'Video location caption',
+      description:
+        'Optional label for the footage (e.g. project or area), similar to poster location. Not required for playback.',
+    }),
   ],
 })
 
@@ -459,6 +482,27 @@ export const aboutCtas = defineType({
   ],
 })
 
+export const aboutBadge = defineType({
+  name: 'aboutBadge',
+  title: 'About badge image',
+  type: 'object',
+  fields: [
+    defineField({
+      name: 'imageSrc',
+      type: 'string',
+      title: 'Image path',
+      description:
+        'Relative to site public, e.g. Media (MHG)/Badges (MHG)/your-badge.webp',
+    }),
+    defineField({
+      name: 'alt',
+      type: 'string',
+      title: 'Alt text',
+      description: 'Optional. Leave empty if the image is decorative.',
+    }),
+  ],
+})
+
 export const about = defineType({
   name: 'about',
   title: 'About',
@@ -470,7 +514,13 @@ export const about = defineType({
     defineField({ name: 'bullets', type: 'array', of: [{ type: 'string' }] }),
     defineField({ name: 'video', type: 'aboutVideo' }),
     defineField({ name: 'badgesAriaLabel', type: 'string' }),
-    defineField({ name: 'badges', type: 'array', of: [{ type: 'string' }] }),
+    defineField({
+      name: 'badges',
+      type: 'array',
+      title: 'Badges under video',
+      of: [{ type: 'aboutBadge' }],
+      description: 'Three trust / certification images shown below the about video.',
+    }),
     defineField({ name: 'ctas', type: 'aboutCtas' }),
   ],
 })
@@ -817,6 +867,7 @@ export const homepageObjectTypes = [
   services,
   aboutVideo,
   aboutCtas,
+  aboutBadge,
   about,
   uniquePointItem,
   uniquePoints,

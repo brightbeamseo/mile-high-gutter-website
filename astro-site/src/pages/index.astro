@@ -5,7 +5,7 @@ import FooterSocialIcon from '../components/FooterSocialIcon.astro'
 import FooterContactInfo from '../components/FooterContactInfo.astro'
 import FooterHoursRow from '../components/FooterHoursRow.astro'
 import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../lib/footer-contact-heading.js'
-import { sanity } from '../lib/sanity.js'
+import { GROQ_HOME_PAGE, sanity } from '../lib/sanity.js'
 import { getSiteSettings, mergeHeaderFromSettings } from '../lib/site-settings.js'
 import {
   asStr,
@@ -20,7 +20,7 @@ import { sanitizeCmsHtml } from '../lib/sanitize-cms-html.js'
 
 const [settings, homePage] = await Promise.all([
   getSiteSettings(),
-  sanity.fetch(`*[_type == "homePage"][0]`),
+  sanity.fetch(GROQ_HOME_PAGE),
 ])
 
 assertSanityHomepage(settings, homePage)
@@ -57,6 +57,9 @@ const whyCtas = whyChoose?.ctas
 const services = hp.services
 const about = hp.about
 const aboutVideo = about?.video
+const aboutVideoSource = asStr(aboutVideo?.sourceSrc).trim().toLowerCase()
+const aboutVideoPosterOnly =
+  aboutVideoSource === 'poster-only' || aboutVideoSource === 'none'
 const uniquePoints = hp.uniquePoints
 const statsBar = hp.statsBar
 const contactBanner = hp.contactBanner
@@ -210,7 +213,7 @@ function responsiveSrc(src, width = 800) {
         <a href="/" class="logo" aria-label={logoAriaLabel}>
           <img src="/Media%20(MHG)/Logo%20Suite%20(MHG)/Mile%20High%20(Denver%20Colorado)/Horizontal/responsive/logo-black-198.webp" srcset="/Media%20(MHG)/Logo%20Suite%20(MHG)/Mile%20High%20(Denver%20Colorado)/Horizontal/responsive/logo-black-198.webp 198w, /Media%20(MHG)/Logo%20Suite%20(MHG)/Mile%20High%20(Denver%20Colorado)/Horizontal/responsive/logo-black-396.webp 396w" sizes="198px" alt={companyName} class="logo-img" width="396" height="96" fetchpriority="high" decoding="async" />
         </a>
-        <button class="nav-toggle" aria-label="Open menu">
+        <button class="nav-toggle" aria-label="Open Menu">
           <span></span><span></span><span></span>
         </button>
         <nav class="nav">
@@ -469,14 +472,33 @@ function responsiveSrc(src, width = 800) {
         </div>
         <div class="about-visual">
           <div class="media-card media-video">
-            <video controls playsinline preload="metadata" poster={responsiveSrc(aboutVideo?.posterSrc, 480)} width="800" height="614">
-              <source src={asStr(aboutVideo?.sourceSrc)} type={asStr(aboutVideo?.sourceType)} />
-            </video>
+            {aboutVideoPosterOnly ? (
+              <img
+                src={responsiveSrc(aboutVideo?.posterSrc, 800)}
+                alt=""
+                width="800"
+                height="450"
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <video controls playsinline preload="metadata" poster={responsiveSrc(aboutVideo?.posterSrc, 480)} width="800" height="450">
+                <source src={mediaUrl(asStr(aboutVideo?.sourceSrc).replace(/^\/+/, ''))} type={asStr(aboutVideo?.sourceType)} />
+              </video>
+            )}
           </div>
           <div class="about-badges" aria-label={asStr(about?.badgesAriaLabel)}>
-            {asStrArray(about?.badges).map((badge) => (
-              <div class="about-badge">{badge}</div>
-            ))}
+            {Array.isArray(about?.badges)
+              ? about.badges.map((b) => {
+                  const src = mediaUrl(asStr(b?.imageSrc).replace(/^\/+/, ''))
+                  const alt = asStr(b?.alt)
+                  return (
+                    <div class="about-badge">
+                      {src ? <img src={src} alt={alt} loading="lazy" decoding="async" /> : null}
+                    </div>
+                  )
+                })
+              : null}
           </div>
         </div>
       </div>
@@ -521,7 +543,15 @@ function responsiveSrc(src, width = 800) {
           <p class="section-lead">{asStr(contactBanner?.paragraph2)}</p>
           <div class="contact-banner-actions">
             <a href={telLink} class="contact-banner-phone">
-              <img src="/Media%20(MHG)/Icons%20(MHG)/responsive/phone-white-70.webp" alt="" aria-hidden="true" width="70" height="70" loading="lazy" decoding="async" />
+              <img
+                src="/icons/phone-white.png"
+                alt=""
+                aria-hidden="true"
+                width="44"
+                height="44"
+                loading="lazy"
+                decoding="async"
+              />
               <span class="contact-banner-phone-number">{phoneDisplay}</span>
             </a>
           </div>
