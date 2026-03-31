@@ -667,30 +667,19 @@
 
     function closeMenu() {
       menu.hidden = true;
+      menu.style.maxHeight = '';
       addressInput.setAttribute('aria-expanded', 'false');
       activeIndex = -1;
     }
 
-    // Close suggestions before normal click handling so submit works on first click.
-    document.addEventListener(
-      'pointerdown',
-      function (e) {
-        var t = e.target;
-        if (!t) return;
-        if (t === addressInput) return;
-        if (menu.contains(t)) return;
-        closeMenu();
-      },
-      true
-    );
-
+    // One listener per form (not document): avoid N duplicate global handlers when multiple forms exist.
     form.addEventListener(
       'pointerdown',
       function (e) {
         var t = e.target;
-        if (t && t.closest && t.closest('button[type="submit"]')) {
-          closeMenu();
-        }
+        if (!t) return;
+        if (fieldWrap.contains(t)) return;
+        closeMenu();
       },
       true
     );
@@ -699,6 +688,19 @@
       if (!suggestions.length) return closeMenu();
       menu.hidden = false;
       addressInput.setAttribute('aria-expanded', 'true');
+      menu.style.maxHeight = '';
+      var submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        window.requestAnimationFrame(function () {
+          if (menu.hidden) return;
+          var rM = menu.getBoundingClientRect();
+          var rB = submitBtn.getBoundingClientRect();
+          var gap = Math.floor(rB.top - rM.top - 8);
+          if (gap > 40 && gap < 400) {
+            menu.style.maxHeight = gap + 'px';
+          }
+        });
+      }
     }
 
     function applySelection(value) {
@@ -1016,10 +1018,19 @@
   bindLeadForms();
   syncUtmToAllLeadForms();
 
+  var cfgPreload = readFormsConfig();
+  if (cfgPreload.recaptchaSiteKey) {
+    loadRecaptchaApi(cfgPreload.recaptchaSiteKey);
+  }
+
   /** bfcache / soft navigation: run bind again; already-bound forms skip via data-mhg-lead-bound. */
   window.addEventListener('pageshow', function () {
     getPersistedUtmParams();
     syncUtmToAllLeadForms();
     bindLeadForms();
+    var cfg = readFormsConfig();
+    if (cfg.recaptchaSiteKey) {
+      loadRecaptchaApi(cfg.recaptchaSiteKey);
+    }
   });
 })();
