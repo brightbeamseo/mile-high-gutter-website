@@ -20,7 +20,10 @@ const themeCss = buildThemeCss(theme)
 const recaptchaSiteKey =
   (import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '').trim() ||
   '6LdBAJgsAAAAAEEaAljBBQUMkyJaEfhw0Bas6ZKL'
-const mapboxToken = (import.meta.env.PUBLIC_MAPBOX_TOKEN || '').trim()
+const mapboxTokenFromEnv = (import.meta.env.PUBLIC_MAPBOX_TOKEN || '').trim()
+const mapboxTokenFromCms =
+  typeof settings?.forms?.mapboxPublicToken === 'string' ? settings.forms.mapboxPublicToken.trim() : ''
+const mapboxToken = mapboxTokenFromEnv || mapboxTokenFromCms
 const formsForClient = { ...forms, recaptchaSiteKey, mapboxToken }
 const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
 ---

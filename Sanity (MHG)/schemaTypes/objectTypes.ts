@@ -213,6 +213,14 @@ export const siteForms = defineType({
       title: 'Required indicator',
       description: 'Symbol shown for required fields (example: *).',
     }),
+    defineField({
+      name: 'mapboxPublicToken',
+      type: 'string',
+      title: 'Mapbox public token (address autocomplete)',
+      description:
+        'Optional. Default token comes from Vercel env PUBLIC_MAPBOX_TOKEN at build time. Paste your pk.… token here to enable US address suggestions without redeploying env (rebuild site after saving). Restrict the token by URL in Mapbox account settings.',
+      rows: 2,
+    }),
   ],
 })
 

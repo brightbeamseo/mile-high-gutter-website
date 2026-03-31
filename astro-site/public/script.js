@@ -606,7 +606,10 @@
             var features = Array.isArray(data && data.features) ? data.features : [];
             var options = features
               .map(function (f) {
-                return (f && (f.full_address || f.place_formatted || f.name)) ? String(f.full_address || f.place_formatted || f.name) : '';
+                // Geocoding v6 returns labels on GeoJSON feature.properties (not the feature root).
+                var p = f && f.properties ? f.properties : {};
+                var label = p.full_address || p.place_formatted || p.name_preferred || p.name || '';
+                return label ? String(label).trim() : '';
               })
               .filter(Boolean);
             setSuggestions(options);
