@@ -18,6 +18,58 @@ function formatUsPhoneDashes(value) {
   return String(value || '').trim();
 }
 
+/** Zapier / CRM often expect a single `querystring`; also used when mapping UTMs from the landing URL. */
+const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+
+function trimUtm(value) {
+  return String(value ?? '').trim().slice(0, 200);
+}
+
+function utmFromBody(body) {
+  const out = {};
+  for (const key of UTM_KEYS) {
+    out[key] = trimUtm(body[key]);
+  }
+  return out;
+}
+
+function utmFromPageUrl(pageUrl) {
+  const out = {};
+  for (const key of UTM_KEYS) {
+    out[key] = '';
+  }
+  try {
+    const u = new URL(pageUrl);
+    for (const key of UTM_KEYS) {
+      const v = u.searchParams.get(key);
+      if (v) out[key] = trimUtm(v);
+    }
+  } catch {
+    /* invalid URL */
+  }
+  return out;
+}
+
+/** Prefer JSON body from the browser; fall back to `pageUrl` query (e.g. if cookies/JS missed). */
+function mergeUtm(body, pageUrl) {
+  const fromBody = utmFromBody(body);
+  const fromUrl = utmFromPageUrl(pageUrl);
+  const merged = {};
+  for (const key of UTM_KEYS) {
+    merged[key] = fromBody[key] || fromUrl[key] || '';
+  }
+  return merged;
+}
+
+function buildUtmQueryString(utm) {
+  const params = new URLSearchParams();
+  for (const key of UTM_KEYS) {
+    const v = utm[key];
+    if (v) params.set(key, v);
+  }
+  return params.toString();
+}
+
 const RECAPTCHA_ACTION = 'lead_form';
 
 function jsonResponse(data, status, extraHeaders = {}) {
@@ -134,6 +186,8 @@ export default {
     const message = String(body.message || '').trim().slice(0, 5000);
     const formSource = String(body.formSource || 'unknown').trim().slice(0, 80);
     const pageUrl = String(body.pageUrl || '').trim().slice(0, 2000);
+    const utm = mergeUtm(body, pageUrl);
+    const querystring = buildUtmQueryString(utm);
 
     if (!name || !email || !phone) {
       return jsonResponse({ ok: false, error: 'missing_fields' }, 400);
@@ -154,6 +208,12 @@ export default {
       message,
       submittedAt: new Date().toISOString(),
       pageUrl,
+      utm_source: utm.utm_source,
+      utm_medium: utm.utm_medium,
+      utm_campaign: utm.utm_campaign,
+      utm_term: utm.utm_term,
+      utm_content: utm.utm_content,
+      querystring,
     };
 
     let zRes;

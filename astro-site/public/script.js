@@ -543,6 +543,94 @@
     if (kind === 'success') el.classList.add('is-success');
   }
 
+  function parseDocumentCookies() {
+    var out = {};
+    var raw = String(document.cookie || '');
+    if (!raw) return out;
+    raw.split(';').forEach(function (part) {
+      var seg = String(part || '').trim();
+      if (!seg) return;
+      var eq = seg.indexOf('=');
+      if (eq <= 0) return;
+      var key = decodeURIComponent(seg.slice(0, eq).trim());
+      var val = decodeURIComponent(seg.slice(eq + 1).trim());
+      out[key] = val;
+    });
+    return out;
+  }
+
+  function setCookie(name, value, days) {
+    if (!name) return;
+    var maxAge = Math.max(0, Math.floor(Number(days || 90) * 24 * 60 * 60));
+    document.cookie =
+      encodeURIComponent(name) +
+      '=' +
+      encodeURIComponent(String(value || '')) +
+      '; path=/; max-age=' +
+      String(maxAge) +
+      '; samesite=lax';
+  }
+
+  function getCookie(name) {
+    var all = parseDocumentCookies();
+    return all[name] || '';
+  }
+
+  /** Same UTM keys as SunLife Gutters (sgt_* cookies there); here mhg_* — 90d, survives internal navigation until submit. */
+  function getPersistedUtmParams() {
+    var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+    var qs = new URLSearchParams(window.location.search || '');
+    var persisted = {
+      utm_source: '',
+      utm_medium: '',
+      utm_campaign: '',
+      utm_term: '',
+      utm_content: ''
+    };
+
+    keys.forEach(function (key) {
+      var fromQuery = (qs.get(key) || '').trim();
+      if (fromQuery) {
+        persisted[key] = fromQuery.slice(0, 200);
+        setCookie('mhg_' + key, persisted[key], 90);
+        return;
+      }
+      var fromCookie = getCookie('mhg_' + key).trim();
+      if (fromCookie) {
+        persisted[key] = fromCookie.slice(0, 200);
+      }
+    });
+
+    return persisted;
+  }
+
+  /** Write current UTMs into hidden fields on lead forms so hero + footer (and every page) share the same values. */
+  function applyUtmHiddenToForm(form, utm) {
+    if (!form) return;
+    utm = utm || getPersistedUtmParams();
+    var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+    keys.forEach(function (key) {
+      var el = form.querySelector('input[type="hidden"][name="' + key + '"]');
+      if (!el) {
+        el = document.createElement('input');
+        el.type = 'hidden';
+        el.name = key;
+        form.appendChild(el);
+      }
+      el.value = String(utm[key] || '').slice(0, 200);
+    });
+  }
+
+  function syncUtmToAllLeadForms() {
+    var utm = getPersistedUtmParams();
+    var forms = document.querySelectorAll('form[data-lead-form]');
+    for (var i = 0; i < forms.length; i++) {
+      applyUtmHiddenToForm(forms[i], utm);
+    }
+  }
+
+  syncUtmToAllLeadForms();
+
   function attachUsAddressLookup(form, mapboxToken) {
     if (!mapboxToken) return;
     var addressInput = form.querySelector('input[name="address"], input[name="location"]');
@@ -582,6 +670,17 @@
       addressInput.setAttribute('aria-expanded', 'false');
       activeIndex = -1;
     }
+
+    form.addEventListener(
+      'mousedown',
+      function (e) {
+        var t = e.target;
+        if (t && t.closest && t.closest('button[type="submit"]')) {
+          closeMenu();
+        }
+      },
+      true
+    );
 
     function openMenu() {
       if (!suggestions.length) return closeMenu();
@@ -774,12 +873,20 @@
 
         setStatus(form, 'Sending…', null);
 
+        getPersistedUtmParams();
+        applyUtmHiddenToForm(form);
         var fd = new FormData(form);
         var firstName = (fd.get('firstName') || '').toString().trim();
         var lastName = (fd.get('lastName') || '').toString().trim();
         var fullName = (firstName + ' ' + lastName).trim();
         var address = (fd.get('address') || fd.get('location') || '').toString().trim();
+        var utm = getPersistedUtmParams();
         var payload = {
+          utm_source: (fd.get('utm_source') || utm.utm_source || '').toString().trim().slice(0, 200),
+          utm_medium: (fd.get('utm_medium') || utm.utm_medium || '').toString().trim().slice(0, 200),
+          utm_campaign: (fd.get('utm_campaign') || utm.utm_campaign || '').toString().trim().slice(0, 200),
+          utm_term: (fd.get('utm_term') || utm.utm_term || '').toString().trim().slice(0, 200),
+          utm_content: (fd.get('utm_content') || utm.utm_content || '').toString().trim().slice(0, 200),
           formSource: form.getAttribute('data-lead-form') || 'unknown',
           firstName: firstName,
           lastName: lastName,
@@ -889,9 +996,12 @@
   }
 
   bindLeadForms();
+  syncUtmToAllLeadForms();
 
   /** bfcache / soft navigation: run bind again; already-bound forms skip via data-mhg-lead-bound. */
   window.addEventListener('pageshow', function () {
+    getPersistedUtmParams();
+    syncUtmToAllLeadForms();
     bindLeadForms();
   });
 })();

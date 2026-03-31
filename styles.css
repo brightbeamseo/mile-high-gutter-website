@@ -1667,6 +1667,8 @@ a.btn-primary[href^="tel:"]:hover {
 
 /* Lead forms (hero + footer) — theme: formButton* in Sanity */
 form[data-lead-form] button[type='submit'].btn-primary {
+  position: relative;
+  z-index: 100;
   background: var(--color-form-button-bg);
   border-color: var(--color-form-button-bg);
   color: var(--color-form-button-text);
