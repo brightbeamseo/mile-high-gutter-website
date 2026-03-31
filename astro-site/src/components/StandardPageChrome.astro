@@ -136,7 +136,7 @@ const pageIdPrefix = `std-${String(navDdPrefix).replace(/[^a-z0-9-]/gi, '_')}`
                   title="10-digit phone, e.g. 303-762-9841"
                 />
               </div>
-              <div class="contact-form-field contact-form-field-full"><label for={`${pageIdPrefix}-contact-address`}>Address <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id={`${pageIdPrefix}-contact-address`} name="address" type="text" required autocomplete="street-address" spellcheck="false" /></div>
+              <div class="contact-form-field contact-form-field-full"><label for={`${pageIdPrefix}-contact-address`}>Address</label><input id={`${pageIdPrefix}-contact-address`} name="address" type="text" autocomplete="street-address" spellcheck="false" /></div>
               <div class="contact-form-field contact-form-field-full"><label for={`${pageIdPrefix}-contact-message`}>{asStr(footerEstimateFields?.projectDetailsLabel) || 'Project Details'}</label><textarea id={`${pageIdPrefix}-contact-message`} name="message" rows="4"></textarea></div>
             </div>
             <button type="submit" class="btn btn-primary btn-lg">{asStr(footerEstimateFields?.submitButton) || 'Request Quote'}</button>

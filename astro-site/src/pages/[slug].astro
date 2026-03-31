@@ -247,15 +247,11 @@ const idPrefix = `blog-${slug.replace(/[^a-z0-9-]/gi, '_')}`
               />
             </div>
             <div class="hero-form-field hero-form-field-full">
-              <label for={`${idPrefix}-address`}>
-                Address{' '}
-                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
-              </label>
+              <label for={`${idPrefix}-address`}>Address</label>
               <input
                 id={`${idPrefix}-address`}
                 name="address"
                 type="text"
-                required
                 autocomplete="street-address"
                 spellcheck="false"
               />
@@ -366,15 +362,11 @@ const idPrefix = `blog-${slug.replace(/[^a-z0-9-]/gi, '_')}`
                 />
               </div>
               <div class="contact-form-field contact-form-field-full">
-                <label for={`${idPrefix}-contact-address`}>
-                  Address{' '}
-                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
-                </label>
+                <label for={`${idPrefix}-contact-address`}>Address</label>
                 <input
                   id={`${idPrefix}-contact-address`}
                   name="address"
                   type="text"
-                  required
                   autocomplete="street-address"
                   spellcheck="false"
                 />

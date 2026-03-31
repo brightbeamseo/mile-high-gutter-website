@@ -513,7 +513,6 @@
 
   // Lead forms → POST /api/lead (Zapier on server)
   var formsCfgEl = document.getElementById('site-forms-config');
-  var leadForms = Array.prototype.slice.call(document.querySelectorAll('form[data-lead-form]'));
 
   function readFormsConfig() {
     var defaults = { submitPath: '/api/lead', recaptchaSiteKey: '', mapboxToken: '' };
@@ -548,6 +547,8 @@
     if (!mapboxToken) return;
     var addressInput = form.querySelector('input[name="address"], input[name="location"]');
     if (!addressInput) return;
+    if (addressInput.getAttribute('data-mhg-address-lookup') === '1') return;
+    addressInput.setAttribute('data-mhg-address-lookup', '1');
 
     var fieldWrap =
       addressInput.closest('.hero-form-field, .contact-form-field') ||
@@ -735,13 +736,19 @@
     return window.__mhgRecaptchaPromise;
   }
 
-  if (leadForms.length) {
+  function bindLeadForms() {
+    var leadFormsNow = Array.prototype.slice.call(document.querySelectorAll('form[data-lead-form]'));
+    if (!leadFormsNow.length) return;
+
     var cfg = readFormsConfig();
     var endpoint = cfg.submitPath.indexOf('/') === 0 ? cfg.submitPath : '/' + cfg.submitPath;
     var recaptchaSiteKey = cfg.recaptchaSiteKey || '';
     var mapboxToken = cfg.mapboxToken || '';
 
-    leadForms.forEach(function (form) {
+    leadFormsNow.forEach(function (form) {
+      if (form.getAttribute('data-mhg-lead-bound') === '1') return;
+      form.setAttribute('data-mhg-lead-bound', '1');
+
       attachUsAddressLookup(form, mapboxToken);
       var phoneInput = form.querySelector('input[name="phone"]');
       if (phoneInput) {
@@ -880,4 +887,11 @@
       });
     });
   }
+
+  bindLeadForms();
+
+  /** bfcache / soft navigation: run bind again; already-bound forms skip via data-mhg-lead-bound. */
+  window.addEventListener('pageshow', function () {
+    bindLeadForms();
+  });
 })();
