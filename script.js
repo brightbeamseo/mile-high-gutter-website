@@ -647,6 +647,11 @@
 
       form.addEventListener('submit', function (event) {
         event.preventDefault();
+        // Normalize phone before native validity checks (autofill/paste may skip input events).
+        var submitPhoneInput = form.querySelector('input[name="phone"]');
+        if (submitPhoneInput) {
+          formatPhoneInputLive(submitPhoneInput);
+        }
         if (!form.checkValidity()) {
           form.reportValidity();
           return;
