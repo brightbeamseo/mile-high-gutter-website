@@ -516,7 +516,7 @@
   var leadForms = Array.prototype.slice.call(document.querySelectorAll('form[data-lead-form]'));
 
   function readFormsConfig() {
-    var defaults = { submitPath: '/api/lead', recaptchaSiteKey: '' };
+    var defaults = { submitPath: '/api/lead', recaptchaSiteKey: '', mapboxToken: '' };
     if (!formsCfgEl || !formsCfgEl.textContent) {
       return defaults;
     }
@@ -525,7 +525,8 @@
       if (parsed && typeof parsed === 'object') {
         return {
           submitPath: typeof parsed.submitPath === 'string' && parsed.submitPath ? parsed.submitPath : defaults.submitPath,
-          recaptchaSiteKey: typeof parsed.recaptchaSiteKey === 'string' ? parsed.recaptchaSiteKey : ''
+          recaptchaSiteKey: typeof parsed.recaptchaSiteKey === 'string' ? parsed.recaptchaSiteKey : '',
+          mapboxToken: typeof parsed.mapboxToken === 'string' ? parsed.mapboxToken : ''
         };
       }
     } catch (e) {
@@ -541,6 +542,81 @@
     el.classList.remove('is-error', 'is-success');
     if (kind === 'error') el.classList.add('is-error');
     if (kind === 'success') el.classList.add('is-success');
+  }
+
+  function attachUsAddressLookup(form, mapboxToken) {
+    if (!mapboxToken) return;
+    var addressInput = form.querySelector('input[name="address"], input[name="location"]');
+    if (!addressInput) return;
+
+    if (!addressInput.id) {
+      addressInput.id = 'addr-' + Math.random().toString(36).slice(2, 9);
+    }
+    var datalistId = addressInput.id + '-suggestions';
+    var datalist = document.getElementById(datalistId);
+    if (!datalist) {
+      datalist = document.createElement('datalist');
+      datalist.id = datalistId;
+      addressInput.insertAdjacentElement('afterend', datalist);
+    }
+    addressInput.setAttribute('list', datalistId);
+
+    var pendingController = null;
+    var debounceTimer = null;
+
+    function setSuggestions(values) {
+      datalist.innerHTML = '';
+      values.forEach(function (v) {
+        var option = document.createElement('option');
+        option.value = v;
+        datalist.appendChild(option);
+      });
+    }
+
+    addressInput.addEventListener('input', function () {
+      var query = addressInput.value.trim();
+      if (query.length < 3) {
+        setSuggestions([]);
+        if (pendingController) pendingController.abort();
+        return;
+      }
+
+      if (debounceTimer) clearTimeout(debounceTimer);
+      debounceTimer = window.setTimeout(function () {
+        if (pendingController) pendingController.abort();
+        pendingController = new AbortController();
+
+        var params = new URLSearchParams({
+          q: query,
+          country: 'US',
+          types: 'address',
+          limit: '6',
+          autocomplete: 'true',
+          access_token: mapboxToken
+        });
+
+        fetch('https://api.mapbox.com/search/geocode/v6/forward?' + params.toString(), {
+          signal: pendingController.signal
+        })
+          .then(function (res) {
+            if (!res.ok) throw new Error('mapbox_lookup_failed');
+            return res.json();
+          })
+          .then(function (data) {
+            var features = Array.isArray(data && data.features) ? data.features : [];
+            var options = features
+              .map(function (f) {
+                return (f && (f.full_address || f.place_formatted || f.name)) ? String(f.full_address || f.place_formatted || f.name) : '';
+              })
+              .filter(Boolean);
+            setSuggestions(options);
+          })
+          .catch(function (err) {
+            if (err && err.name === 'AbortError') return;
+            setSuggestions([]);
+          });
+      }, 180);
+    });
   }
 
   function loadRecaptchaApi(siteKey) {
@@ -570,8 +646,10 @@
     var cfg = readFormsConfig();
     var endpoint = cfg.submitPath.indexOf('/') === 0 ? cfg.submitPath : '/' + cfg.submitPath;
     var recaptchaSiteKey = cfg.recaptchaSiteKey || '';
+    var mapboxToken = cfg.mapboxToken || '';
 
     leadForms.forEach(function (form) {
+      attachUsAddressLookup(form, mapboxToken);
       var phoneInput = form.querySelector('input[name="phone"]');
       if (phoneInput) {
         phoneInput.setAttribute('maxlength', '12');
@@ -597,12 +675,19 @@
         setStatus(form, 'Sending…', null);
 
         var fd = new FormData(form);
+        var firstName = (fd.get('firstName') || '').toString().trim();
+        var lastName = (fd.get('lastName') || '').toString().trim();
+        var fullName = (firstName + ' ' + lastName).trim();
+        var address = (fd.get('address') || fd.get('location') || '').toString().trim();
         var payload = {
           formSource: form.getAttribute('data-lead-form') || 'unknown',
-          name: (fd.get('name') || '').toString().trim(),
+          firstName: firstName,
+          lastName: lastName,
+          name: fullName,
           email: (fd.get('email') || '').toString().trim(),
           phone: formatUsPhoneDashes((fd.get('phone') || '').toString()),
-          location: (fd.get('location') || '').toString().trim(),
+          address: address,
+          location: address,
           message: (fd.get('message') || '').toString().trim(),
           website: (fd.get('website') || '').toString().trim(),
           pageUrl: typeof window.location.href === 'string' ? window.location.href : ''

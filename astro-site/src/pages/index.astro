@@ -288,11 +288,18 @@ function responsiveSrc(src, width = 800) {
           <p class="hero-form-sub">{universalFormIntro}</p>
           <div class="hero-form-grid">
             <div class="hero-form-field">
-              <label for="hero-name">
-                {asStr(universalFormFields?.nameLabel)}{' '}
+              <label for="hero-first-name">
+                First Name{' '}
                 <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
               </label>
-              <input id="hero-name" name="name" type="text" required autocomplete="name" />
+              <input id="hero-first-name" name="firstName" type="text" required autocomplete="given-name" />
+            </div>
+            <div class="hero-form-field">
+              <label for="hero-last-name">
+                Last Name{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+              </label>
+              <input id="hero-last-name" name="lastName" type="text" required autocomplete="family-name" />
             </div>
             <div class="hero-form-field">
               <label for="hero-email">
@@ -318,9 +325,19 @@ function responsiveSrc(src, width = 800) {
                 title="10-digit phone, e.g. 303-762-9841"
               />
             </div>
-            <div class="hero-form-field">
-              <label for="hero-location">{asStr(universalFormFields?.cityLabel)}</label>
-              <input id="hero-location" name="location" type="text" autocomplete="address-level2" />
+            <div class="hero-form-field hero-form-field-full">
+              <label for="hero-address">
+                Address{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+              </label>
+              <input
+                id="hero-address"
+                name="address"
+                type="text"
+                required
+                autocomplete="street-address"
+                spellcheck="false"
+              />
             </div>
             <div class="hero-form-field hero-form-field-full">
               <label for="hero-message">
@@ -748,11 +765,18 @@ function responsiveSrc(src, width = 800) {
           >
             <div class="contact-form-grid">
               <div class="contact-form-field">
-                <label for="contact-name">
-                  {asStr(universalFormFields?.nameLabel)}{' '}
+                <label for="contact-first-name">
+                  First Name{' '}
                   <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
                 </label>
-                <input type="text" id="contact-name" name="name" required autocomplete="name" />
+                <input type="text" id="contact-first-name" name="firstName" required autocomplete="given-name" />
+              </div>
+              <div class="contact-form-field">
+                <label for="contact-last-name">
+                  Last Name{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input type="text" id="contact-last-name" name="lastName" required autocomplete="family-name" />
               </div>
               <div class="contact-form-field">
                 <label for="contact-email">
@@ -778,9 +802,19 @@ function responsiveSrc(src, width = 800) {
                   title="10-digit phone, e.g. 303-762-9841"
                 />
               </div>
-              <div class="contact-form-field">
-                <label for="contact-location">{asStr(universalFormFields?.cityLabel)}</label>
-                <input type="text" id="contact-location" name="location" autocomplete="address-level2" />
+              <div class="contact-form-field contact-form-field-full">
+                <label for="contact-address">
+                  Address{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input
+                  type="text"
+                  id="contact-address"
+                  name="address"
+                  required
+                  autocomplete="street-address"
+                  spellcheck="false"
+                />
               </div>
               <div class="contact-form-field contact-form-field-full">
                 <label for="contact-message">{asStr(universalFormFields?.projectDetailsLabel)}</label>

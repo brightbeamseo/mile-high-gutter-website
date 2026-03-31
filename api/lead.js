@@ -124,10 +124,13 @@ export default {
       return jsonResponse({ ok: false, error: err }, 400);
     }
 
-    const name = String(body.name || '').trim().slice(0, 500);
+    const firstName = String(body.firstName || '').trim().slice(0, 200);
+    const lastName = String(body.lastName || '').trim().slice(0, 200);
+    const fallbackName = String(body.name || '').trim();
+    const name = `${firstName} ${lastName}`.trim() || fallbackName.slice(0, 500);
     const email = String(body.email || '').trim().slice(0, 320);
     const phone = formatUsPhoneDashes(body.phone || '').slice(0, 80);
-    const location = String(body.location || '').trim().slice(0, 200);
+    const address = String(body.address || body.location || '').trim().slice(0, 250);
     const message = String(body.message || '').trim().slice(0, 5000);
     const formSource = String(body.formSource || 'unknown').trim().slice(0, 80);
     const pageUrl = String(body.pageUrl || '').trim().slice(0, 2000);
@@ -142,9 +145,12 @@ export default {
     const payload = {
       formSource,
       name,
+      firstName,
+      lastName,
       email,
       phone,
-      location,
+      address,
+      location: address,
       message,
       submittedAt: new Date().toISOString(),
       pageUrl,

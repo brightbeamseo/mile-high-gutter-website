@@ -20,7 +20,8 @@ const themeCss = buildThemeCss(theme)
 const recaptchaSiteKey =
   (import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY || '').trim() ||
   '6LdBAJgsAAAAAEEaAljBBQUMkyJaEfhw0Bas6ZKL'
-const formsForClient = { ...forms, recaptchaSiteKey }
+const mapboxToken = (import.meta.env.PUBLIC_MAPBOX_TOKEN || '').trim()
+const formsForClient = { ...forms, recaptchaSiteKey, mapboxToken }
 const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
 ---
 <!DOCTYPE html>
