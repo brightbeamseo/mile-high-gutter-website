@@ -236,11 +236,62 @@ const cities = [
           </div>
           <form class="contact-form" data-lead-form="service-area-footer" action={universalFormAction} method={universalFormMethod}>
             <div class="contact-form-grid">
-              <div class="contact-form-field"><label for="service-area-contact-name">{asStr(footerEstimateFields?.nameLabel) || 'Name'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id="service-area-contact-name" name="name" type="text" required autocomplete="name" /></div>
-              <div class="contact-form-field"><label for="service-area-contact-email">{asStr(footerEstimateFields?.emailLabel) || 'Email'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id="service-area-contact-email" name="email" type="email" required autocomplete="email" /></div>
-              <div class="contact-form-field"><label for="service-area-contact-phone">{asStr(footerEstimateFields?.phoneLabel) || 'Phone'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id="service-area-contact-phone" name="phone" type="tel" required autocomplete="tel" /></div>
-              <div class="contact-form-field"><label for="service-area-contact-location">{asStr(footerEstimateFields?.cityLabel) || 'City'}</label><input id="service-area-contact-location" name="location" type="text" autocomplete="address-level2" /></div>
-              <div class="contact-form-field contact-form-field-full"><label for="service-area-contact-message">{asStr(footerEstimateFields?.projectDetailsLabel) || 'Project Details'}</label><textarea id="service-area-contact-message" name="message" rows="4"></textarea></div>
+              <div class="contact-form-field">
+                <label for="service-area-contact-first-name">
+                  First Name{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input id="service-area-contact-first-name" name="firstName" type="text" required autocomplete="given-name" />
+              </div>
+              <div class="contact-form-field">
+                <label for="service-area-contact-last-name">
+                  Last Name{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input id="service-area-contact-last-name" name="lastName" type="text" required autocomplete="family-name" />
+              </div>
+              <div class="contact-form-field">
+                <label for="service-area-contact-email">
+                  {asStr(footerEstimateFields?.emailLabel) || 'Email'}{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input id="service-area-contact-email" name="email" type="email" required autocomplete="email" />
+              </div>
+              <div class="contact-form-field">
+                <label for="service-area-contact-phone">
+                  {asStr(footerEstimateFields?.phoneLabel) || 'Phone'}{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input
+                  id="service-area-contact-phone"
+                  name="phone"
+                  type="tel"
+                  required
+                  autocomplete="tel"
+                  maxlength="12"
+                  inputmode="numeric"
+                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                  title="10-digit phone, e.g. 303-762-9841"
+                />
+              </div>
+              <div class="contact-form-field contact-form-field-full">
+                <label for="service-area-contact-address">
+                  Address{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input
+                  id="service-area-contact-address"
+                  name="address"
+                  type="text"
+                  required
+                  autocomplete="street-address"
+                  spellcheck="false"
+                />
+              </div>
+              <div class="contact-form-field contact-form-field-full">
+                <label for="service-area-contact-message">{asStr(footerEstimateFields?.projectDetailsLabel) || 'Project Details'}</label>
+                <textarea id="service-area-contact-message" name="message" rows="4"></textarea>
+              </div>
             </div>
             <button type="submit" class="btn btn-primary btn-lg">{asStr(footerEstimateFields?.submitButton) || 'Request Quote'}</button>
           </form>

@@ -139,11 +139,62 @@ const universalFormIntro = asStr(footerEstimate?.intro) || 'Short placeholder fo
           <div class="hero-form-heading"><div class="hero-form-kicker">{universalFormKicker}</div><h2>{universalFormHeading}</h2></div>
           <p class="hero-form-sub">{universalFormIntro}</p>
           <div class="hero-form-grid">
-            <div class="hero-form-field"><label for="contact-hero-name">{asStr(universalFormFields?.nameLabel) || 'Name'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id="contact-hero-name" name="name" type="text" required autocomplete="name" /></div>
-            <div class="hero-form-field"><label for="contact-hero-email">{asStr(universalFormFields?.emailLabel) || 'Email'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id="contact-hero-email" name="email" type="email" required autocomplete="email" /></div>
-            <div class="hero-form-field"><label for="contact-hero-phone">{asStr(universalFormFields?.phoneLabel) || 'Phone'} <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span></label><input id="contact-hero-phone" name="phone" type="tel" required autocomplete="tel" /></div>
-            <div class="hero-form-field"><label for="contact-hero-location">{asStr(universalFormFields?.cityLabel) || 'City'}</label><input id="contact-hero-location" name="location" type="text" autocomplete="address-level2" /></div>
-            <div class="hero-form-field hero-form-field-full"><label for="contact-hero-message">{asStr(universalFormFields?.projectDetailsLabel) || 'Project Details'}</label><textarea id="contact-hero-message" name="message" rows="3"></textarea></div>
+            <div class="hero-form-field">
+              <label for="contact-hero-first-name">
+                First Name{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+              </label>
+              <input id="contact-hero-first-name" name="firstName" type="text" required autocomplete="given-name" />
+            </div>
+            <div class="hero-form-field">
+              <label for="contact-hero-last-name">
+                Last Name{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+              </label>
+              <input id="contact-hero-last-name" name="lastName" type="text" required autocomplete="family-name" />
+            </div>
+            <div class="hero-form-field">
+              <label for="contact-hero-email">
+                {asStr(universalFormFields?.emailLabel) || 'Email'}{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+              </label>
+              <input id="contact-hero-email" name="email" type="email" required autocomplete="email" />
+            </div>
+            <div class="hero-form-field">
+              <label for="contact-hero-phone">
+                {asStr(universalFormFields?.phoneLabel) || 'Phone'}{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+              </label>
+              <input
+                id="contact-hero-phone"
+                name="phone"
+                type="tel"
+                required
+                autocomplete="tel"
+                maxlength="12"
+                inputmode="numeric"
+                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                title="10-digit phone, e.g. 303-762-9841"
+              />
+            </div>
+            <div class="hero-form-field hero-form-field-full">
+              <label for="contact-hero-address">
+                Address{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+              </label>
+              <input
+                id="contact-hero-address"
+                name="address"
+                type="text"
+                required
+                autocomplete="street-address"
+                spellcheck="false"
+              />
+            </div>
+            <div class="hero-form-field hero-form-field-full">
+              <label for="contact-hero-message">{asStr(universalFormFields?.projectDetailsLabel) || 'Project Details'}</label>
+              <textarea id="contact-hero-message" name="message" rows="3"></textarea>
+            </div>
           </div>
           <button type="submit" class="btn btn-primary btn-lg">{asStr(universalFormFields?.submitButton) || 'Send'}</button>
         </form>
@@ -171,11 +222,18 @@ const universalFormIntro = asStr(footerEstimate?.intro) || 'Short placeholder fo
           >
             <div class="contact-form-grid">
               <div class="contact-form-field">
-                <label for="contact-footer-name">
-                  {asStr(universalFormFields?.nameLabel) || 'Name'}{' '}
+                <label for="contact-footer-first-name">
+                  First Name{' '}
                   <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
                 </label>
-                <input id="contact-footer-name" name="name" type="text" required autocomplete="name" />
+                <input id="contact-footer-first-name" name="firstName" type="text" required autocomplete="given-name" />
+              </div>
+              <div class="contact-form-field">
+                <label for="contact-footer-last-name">
+                  Last Name{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input id="contact-footer-last-name" name="lastName" type="text" required autocomplete="family-name" />
               </div>
               <div class="contact-form-field">
                 <label for="contact-footer-email">
@@ -189,11 +247,31 @@ const universalFormIntro = asStr(footerEstimate?.intro) || 'Short placeholder fo
                   {asStr(universalFormFields?.phoneLabel) || 'Phone'}{' '}
                   <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
                 </label>
-                <input id="contact-footer-phone" name="phone" type="tel" required autocomplete="tel" />
+                <input
+                  id="contact-footer-phone"
+                  name="phone"
+                  type="tel"
+                  required
+                  autocomplete="tel"
+                  maxlength="12"
+                  inputmode="numeric"
+                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                  title="10-digit phone, e.g. 303-762-9841"
+                />
               </div>
-              <div class="contact-form-field">
-                <label for="contact-footer-location">{asStr(universalFormFields?.cityLabel) || 'City'}</label>
-                <input id="contact-footer-location" name="location" type="text" autocomplete="address-level2" />
+              <div class="contact-form-field contact-form-field-full">
+                <label for="contact-footer-address">
+                  Address{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input
+                  id="contact-footer-address"
+                  name="address"
+                  type="text"
+                  required
+                  autocomplete="street-address"
+                  spellcheck="false"
+                />
               </div>
               <div class="contact-form-field contact-form-field-full">
                 <label for="contact-footer-message">{asStr(universalFormFields?.projectDetailsLabel) || 'Project Details'}</label>

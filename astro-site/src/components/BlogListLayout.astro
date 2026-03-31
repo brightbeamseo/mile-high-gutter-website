@@ -151,11 +151,18 @@ const {
           <p class="hero-form-sub">{universalFormIntro}</p>
           <div class="hero-form-grid">
             <div class="hero-form-field">
-              <label for={`${formIdPrefix}-name`}>
-                {asStr(universalFormFields?.nameLabel) || 'Name'}{' '}
+              <label for={`${formIdPrefix}-first-name`}>
+                First Name{' '}
                 <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
               </label>
-              <input id={`${formIdPrefix}-name`} name="name" type="text" required autocomplete="name" />
+              <input id={`${formIdPrefix}-first-name`} name="firstName" type="text" required autocomplete="given-name" />
+            </div>
+            <div class="hero-form-field">
+              <label for={`${formIdPrefix}-last-name`}>
+                Last Name{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+              </label>
+              <input id={`${formIdPrefix}-last-name`} name="lastName" type="text" required autocomplete="family-name" />
             </div>
             <div class="hero-form-field">
               <label for={`${formIdPrefix}-email`}>
@@ -169,11 +176,31 @@ const {
                 {asStr(universalFormFields?.phoneLabel) || 'Phone'}{' '}
                 <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
               </label>
-              <input id={`${formIdPrefix}-phone`} name="phone" type="tel" required autocomplete="tel" />
+              <input
+                id={`${formIdPrefix}-phone`}
+                name="phone"
+                type="tel"
+                required
+                autocomplete="tel"
+                maxlength="12"
+                inputmode="numeric"
+                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                title="10-digit phone, e.g. 303-762-9841"
+              />
             </div>
-            <div class="hero-form-field">
-              <label for={`${formIdPrefix}-location`}>{asStr(universalFormFields?.cityLabel) || 'City'}</label>
-              <input id={`${formIdPrefix}-location`} name="location" type="text" autocomplete="address-level2" />
+            <div class="hero-form-field hero-form-field-full">
+              <label for={`${formIdPrefix}-address`}>
+                Address{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+              </label>
+              <input
+                id={`${formIdPrefix}-address`}
+                name="address"
+                type="text"
+                required
+                autocomplete="street-address"
+                spellcheck="false"
+              />
             </div>
             <div class="hero-form-field hero-form-field-full">
               <label for={`${formIdPrefix}-message`}>{asStr(universalFormFields?.projectDetailsLabel) || 'Project Details'}</label>
@@ -200,11 +227,18 @@ const {
           <form class="contact-form" data-lead-form={`${formIdPrefix}-footer`} action={universalFormAction} method={universalFormMethod}>
             <div class="contact-form-grid">
               <div class="contact-form-field">
-                <label for={`${formIdPrefix}-contact-name`}>
-                  {asStr(universalFormFields?.nameLabel) || 'Name'}{' '}
+                <label for={`${formIdPrefix}-contact-first-name`}>
+                  First Name{' '}
                   <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
                 </label>
-                <input id={`${formIdPrefix}-contact-name`} name="name" type="text" required autocomplete="name" />
+                <input id={`${formIdPrefix}-contact-first-name`} name="firstName" type="text" required autocomplete="given-name" />
+              </div>
+              <div class="contact-form-field">
+                <label for={`${formIdPrefix}-contact-last-name`}>
+                  Last Name{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input id={`${formIdPrefix}-contact-last-name`} name="lastName" type="text" required autocomplete="family-name" />
               </div>
               <div class="contact-form-field">
                 <label for={`${formIdPrefix}-contact-email`}>
@@ -218,11 +252,31 @@ const {
                   {asStr(universalFormFields?.phoneLabel) || 'Phone'}{' '}
                   <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
                 </label>
-                <input id={`${formIdPrefix}-contact-phone`} name="phone" type="tel" required autocomplete="tel" />
+                <input
+                  id={`${formIdPrefix}-contact-phone`}
+                  name="phone"
+                  type="tel"
+                  required
+                  autocomplete="tel"
+                  maxlength="12"
+                  inputmode="numeric"
+                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                  title="10-digit phone, e.g. 303-762-9841"
+                />
               </div>
-              <div class="contact-form-field">
-                <label for={`${formIdPrefix}-contact-location`}>{asStr(universalFormFields?.cityLabel) || 'City'}</label>
-                <input id={`${formIdPrefix}-contact-location`} name="location" type="text" autocomplete="address-level2" />
+              <div class="contact-form-field contact-form-field-full">
+                <label for={`${formIdPrefix}-contact-address`}>
+                  Address{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input
+                  id={`${formIdPrefix}-contact-address`}
+                  name="address"
+                  type="text"
+                  required
+                  autocomplete="street-address"
+                  spellcheck="false"
+                />
               </div>
               <div class="contact-form-field contact-form-field-full">
                 <label for={`${formIdPrefix}-contact-message`}>{asStr(universalFormFields?.projectDetailsLabel) || 'Project Details'}</label>

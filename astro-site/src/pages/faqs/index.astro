@@ -185,11 +185,18 @@ const faqItems = Array.isArray(faqData?.items)
           <p class="hero-form-sub">{universalFormIntro}</p>
           <div class="hero-form-grid">
             <div class="hero-form-field">
-              <label for="faq-name">
-                {asStr(universalFormFields?.nameLabel) || 'Name'}{' '}
+              <label for="faq-first-name">
+                First Name{' '}
                 <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
               </label>
-              <input id="faq-name" name="name" type="text" required autocomplete="name" />
+              <input id="faq-first-name" name="firstName" type="text" required autocomplete="given-name" />
+            </div>
+            <div class="hero-form-field">
+              <label for="faq-last-name">
+                Last Name{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+              </label>
+              <input id="faq-last-name" name="lastName" type="text" required autocomplete="family-name" />
             </div>
             <div class="hero-form-field">
               <label for="faq-email">
@@ -203,11 +210,31 @@ const faqItems = Array.isArray(faqData?.items)
                 {asStr(universalFormFields?.phoneLabel) || 'Phone'}{' '}
                 <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
               </label>
-              <input id="faq-phone" name="phone" type="tel" required autocomplete="tel" />
+              <input
+                id="faq-phone"
+                name="phone"
+                type="tel"
+                required
+                autocomplete="tel"
+                maxlength="12"
+                inputmode="numeric"
+                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                title="10-digit phone, e.g. 303-762-9841"
+              />
             </div>
-            <div class="hero-form-field">
-              <label for="faq-location">{asStr(universalFormFields?.cityLabel) || 'City'}</label>
-              <input id="faq-location" name="location" type="text" autocomplete="address-level2" />
+            <div class="hero-form-field hero-form-field-full">
+              <label for="faq-address">
+                Address{' '}
+                <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+              </label>
+              <input
+                id="faq-address"
+                name="address"
+                type="text"
+                required
+                autocomplete="street-address"
+                spellcheck="false"
+              />
             </div>
             <div class="hero-form-field hero-form-field-full">
               <label for="faq-message">{asStr(universalFormFields?.projectDetailsLabel) || 'Project Details'}</label>
@@ -282,33 +309,60 @@ const faqItems = Array.isArray(faqData?.items)
           >
             <div class="contact-form-grid">
               <div class="contact-form-field">
-                <label for="contact-name">
-                  {asStr(universalFormFields?.nameLabel) || 'Name'}{' '}
+                <label for="faq-contact-first-name">
+                  First Name{' '}
                   <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
                 </label>
-                <input id="contact-name" name="name" type="text" required autocomplete="name" />
+                <input id="faq-contact-first-name" name="firstName" type="text" required autocomplete="given-name" />
               </div>
               <div class="contact-form-field">
-                <label for="contact-email">
+                <label for="faq-contact-last-name">
+                  Last Name{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input id="faq-contact-last-name" name="lastName" type="text" required autocomplete="family-name" />
+              </div>
+              <div class="contact-form-field">
+                <label for="faq-contact-email">
                   {asStr(universalFormFields?.emailLabel) || 'Email'}{' '}
                   <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
                 </label>
-                <input id="contact-email" name="email" type="email" required autocomplete="email" />
+                <input id="faq-contact-email" name="email" type="email" required autocomplete="email" />
               </div>
               <div class="contact-form-field">
-                <label for="contact-phone">
+                <label for="faq-contact-phone">
                   {asStr(universalFormFields?.phoneLabel) || 'Phone'}{' '}
                   <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
                 </label>
-                <input id="contact-phone" name="phone" type="tel" required autocomplete="tel" />
-              </div>
-              <div class="contact-form-field">
-                <label for="contact-location">{asStr(universalFormFields?.cityLabel) || 'City'}</label>
-                <input id="contact-location" name="location" type="text" autocomplete="address-level2" />
+                <input
+                  id="faq-contact-phone"
+                  name="phone"
+                  type="tel"
+                  required
+                  autocomplete="tel"
+                  maxlength="12"
+                  inputmode="numeric"
+                  pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                  title="10-digit phone, e.g. 303-762-9841"
+                />
               </div>
               <div class="contact-form-field contact-form-field-full">
-                <label for="contact-message">{asStr(universalFormFields?.projectDetailsLabel) || 'Project Details'}</label>
-                <textarea id="contact-message" name="message" rows="4"></textarea>
+                <label for="faq-contact-address">
+                  Address{' '}
+                  <span class="required-mark" aria-hidden="true">{universalRequiredIndicator}</span>
+                </label>
+                <input
+                  id="faq-contact-address"
+                  name="address"
+                  type="text"
+                  required
+                  autocomplete="street-address"
+                  spellcheck="false"
+                />
+              </div>
+              <div class="contact-form-field contact-form-field-full">
+                <label for="faq-contact-message">{asStr(universalFormFields?.projectDetailsLabel) || 'Project Details'}</label>
+                <textarea id="faq-contact-message" name="message" rows="4"></textarea>
               </div>
             </div>
             <button type="submit" class="btn btn-primary btn-lg">{asStr(footerEstimateFields?.submitButton) || 'Request Quote'}</button>
