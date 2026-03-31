@@ -549,29 +549,120 @@
     var addressInput = form.querySelector('input[name="address"], input[name="location"]');
     if (!addressInput) return;
 
+    var fieldWrap =
+      addressInput.closest('.hero-form-field, .contact-form-field') ||
+      addressInput.parentElement ||
+      form;
+    fieldWrap.classList.add('address-autocomplete-wrap');
+
     if (!addressInput.id) {
       addressInput.id = 'addr-' + Math.random().toString(36).slice(2, 9);
     }
-    var datalistId = addressInput.id + '-suggestions';
-    var datalist = document.getElementById(datalistId);
-    if (!datalist) {
-      datalist = document.createElement('datalist');
-      datalist.id = datalistId;
-      addressInput.insertAdjacentElement('afterend', datalist);
-    }
-    addressInput.setAttribute('list', datalistId);
+
+    var menu = document.createElement('div');
+    menu.className = 'address-suggest-menu';
+    menu.setAttribute('role', 'listbox');
+    menu.id = addressInput.id + '-menu';
+    menu.hidden = true;
+    fieldWrap.appendChild(menu);
+
+    addressInput.setAttribute('autocomplete', 'off');
+    addressInput.setAttribute('aria-autocomplete', 'list');
+    addressInput.setAttribute('aria-controls', menu.id);
+    addressInput.setAttribute('aria-expanded', 'false');
 
     var pendingController = null;
     var debounceTimer = null;
+    var suggestions = [];
+    var activeIndex = -1;
+
+    function closeMenu() {
+      menu.hidden = true;
+      addressInput.setAttribute('aria-expanded', 'false');
+      activeIndex = -1;
+    }
+
+    function openMenu() {
+      if (!suggestions.length) return closeMenu();
+      menu.hidden = false;
+      addressInput.setAttribute('aria-expanded', 'true');
+    }
+
+    function applySelection(value) {
+      addressInput.value = value || '';
+      closeMenu();
+    }
+
+    function renderMenu() {
+      menu.innerHTML = '';
+      if (!suggestions.length) {
+        closeMenu();
+        return;
+      }
+
+      suggestions.forEach(function (value, idx) {
+        var item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'address-suggest-item';
+        item.setAttribute('role', 'option');
+        item.setAttribute('aria-selected', idx === activeIndex ? 'true' : 'false');
+        if (idx === activeIndex) item.classList.add('is-active');
+        item.textContent = value;
+        item.addEventListener('mousedown', function (e) {
+          e.preventDefault();
+        });
+        item.addEventListener('click', function () {
+          applySelection(value);
+        });
+        menu.appendChild(item);
+      });
+
+      openMenu();
+    }
 
     function setSuggestions(values) {
-      datalist.innerHTML = '';
-      values.forEach(function (v) {
-        var option = document.createElement('option');
-        option.value = v;
-        datalist.appendChild(option);
-      });
+      suggestions = Array.isArray(values) ? values.slice(0, 6) : [];
+      activeIndex = -1;
+      renderMenu();
     }
+
+    addressInput.addEventListener('keydown', function (event) {
+      if (menu.hidden || !suggestions.length) return;
+
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        activeIndex = Math.min(activeIndex + 1, suggestions.length - 1);
+        renderMenu();
+        return;
+      }
+
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        activeIndex = Math.max(activeIndex - 1, 0);
+        renderMenu();
+        return;
+      }
+
+      if (event.key === 'Enter') {
+        if (activeIndex >= 0 && activeIndex < suggestions.length) {
+          event.preventDefault();
+          applySelection(suggestions[activeIndex]);
+        }
+        return;
+      }
+
+      if (event.key === 'Escape') {
+        closeMenu();
+      }
+    });
+
+    addressInput.addEventListener('blur', function () {
+      window.setTimeout(closeMenu, 120);
+    });
+
+    addressInput.addEventListener('focus', function () {
+      if (suggestions.length) openMenu();
+    });
 
     addressInput.addEventListener('input', function () {
       var query = addressInput.value.trim();
@@ -606,7 +697,6 @@
             var features = Array.isArray(data && data.features) ? data.features : [];
             var options = features
               .map(function (f) {
-                // Geocoding v6 returns labels on GeoJSON feature.properties (not the feature root).
                 var p = f && f.properties ? f.properties : {};
                 var label = p.full_address || p.place_formatted || p.name_preferred || p.name || '';
                 return label ? String(label).trim() : '';
