@@ -671,8 +671,21 @@
       activeIndex = -1;
     }
 
+    // Close suggestions before normal click handling so submit works on first click.
+    document.addEventListener(
+      'pointerdown',
+      function (e) {
+        var t = e.target;
+        if (!t) return;
+        if (t === addressInput) return;
+        if (menu.contains(t)) return;
+        closeMenu();
+      },
+      true
+    );
+
     form.addEventListener(
-      'mousedown',
+      'pointerdown',
       function (e) {
         var t = e.target;
         if (t && t.closest && t.closest('button[type="submit"]')) {
