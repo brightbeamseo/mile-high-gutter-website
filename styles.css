@@ -1716,6 +1716,49 @@ form[data-lead-form] button[type="submit"].is-busy {
   pointer-events: none;
 }
 
+/* Custom Mapbox address autocomplete menu (replaces native datalist UI) */
+.address-autocomplete-wrap {
+  position: relative;
+}
+
+.address-suggest-menu {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  z-index: 80;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: auto;
+  max-height: 18rem;
+}
+
+.address-suggest-item {
+  appearance: none;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  background: #fff;
+  color: var(--color-text);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.address-suggest-item:last-child {
+  border-bottom: 0;
+}
+
+.address-suggest-item:hover,
+.address-suggest-item.is-active {
+  background: rgba(82, 123, 189, 0.1);
+}
+
 /* Footer */
 .footer {
   background: #384555;
@@ -2119,7 +2162,7 @@ form[data-lead-form] button[type="submit"].is-busy {
   box-shadow: 0 18px 46px rgba(20, 57, 128, 0.14);
   display: grid;
   gap: 0.8rem;
-  overflow: hidden;
+  overflow: visible;
   transform: translateY(-44px);
 }
 
