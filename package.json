@@ -7,6 +7,9 @@
   },
   "scripts": {
     "sync-api": "mkdir -p astro-site/api && cp api/lead.js astro-site/api/lead.js",
+    "ship": "bash scripts/ship.sh",
+    "git:hooks": "git config core.hooksPath .githooks && chmod +x .githooks/post-commit && echo 'Hooks enabled: each git commit will auto-push to origin.'",
+    "git:hooks:off": "git config --unset core.hooksPath && echo 'Auto-push hook disabled (default Git hooks path).'",
     "build": "npm run sync-api && python3 scripts/build-html.py",
     "watch": "python3 scripts/watch-html.py",
     "import:content": "node scripts/import-content.js",

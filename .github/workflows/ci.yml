@@ -1,0 +1,27 @@
+# Verifies the Astro site builds on every push/PR. Hosting (e.g. Vercel) should deploy from the same Git events.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: astro-site/package-lock.json
+
+      - name: Sync API into astro-site
+        run: npm run sync-api
+
+      - name: Install and build Astro
+        working-directory: astro-site
+        run: npm ci && npm run build

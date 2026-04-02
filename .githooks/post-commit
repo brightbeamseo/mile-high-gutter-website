@@ -1,0 +1,13 @@
+#!/bin/sh
+# After every successful local commit, push the current branch to origin.
+# Enable once: npm run git:hooks
+# Disable: npm run git:hooks:off
+# Skip for one commit: AUTO_PUSH=0 git commit ...
+
+[ -n "$CI" ] && exit 0
+[ "$AUTO_PUSH" = "0" ] && exit 0
+
+branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
+[ "$branch" = "HEAD" ] && exit 0
+
+git push origin "$branch"
