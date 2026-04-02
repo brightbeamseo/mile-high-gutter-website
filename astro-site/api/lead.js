@@ -186,6 +186,9 @@ export default {
     const message = String(body.message || '').trim().slice(0, 5000);
     const formSource = String(body.formSource || 'unknown').trim().slice(0, 80);
     const pageUrl = String(body.pageUrl || '').trim().slice(0, 2000);
+    const firstLandingUrl = String(body.firstLandingUrl || '').trim().slice(0, 2000);
+    const firstReferrer = String(body.firstReferrer || '').trim().slice(0, 2000);
+    const firstLandingAt = String(body.firstLandingAt || '').trim().slice(0, 40);
     const utm = mergeUtm(body, pageUrl);
     const querystring = buildUtmQueryString(utm);
 
@@ -208,6 +211,9 @@ export default {
       message,
       submittedAt: new Date().toISOString(),
       pageUrl,
+      firstLandingUrl,
+      firstReferrer,
+      firstLandingAt,
       utm_source: utm.utm_source,
       utm_medium: utm.utm_medium,
       utm_campaign: utm.utm_campaign,

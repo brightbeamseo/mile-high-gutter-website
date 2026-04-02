@@ -574,6 +574,26 @@
     return all[name] || '';
   }
 
+  /** First page in a 90d window: full URL, referrer at that moment, ISO time — first-party signal for Zapier/CRM. */
+  function persistFirstTouchIfNeeded() {
+    var existing = getCookie('mhg_first_landing_url').trim();
+    if (existing) return;
+    var href = typeof window.location.href === 'string' ? window.location.href : '';
+    if (!href) return;
+    setCookie('mhg_first_landing_url', href.slice(0, 2000), 90);
+    var ref = typeof document.referrer === 'string' ? document.referrer : '';
+    setCookie('mhg_first_referrer', ref.slice(0, 2000), 90);
+    setCookie('mhg_first_landing_at', new Date().toISOString(), 90);
+  }
+
+  function getPersistedFirstTouch() {
+    return {
+      firstLandingUrl: getCookie('mhg_first_landing_url').trim().slice(0, 2000),
+      firstReferrer: getCookie('mhg_first_referrer').trim().slice(0, 2000),
+      firstLandingAt: getCookie('mhg_first_landing_at').trim().slice(0, 40)
+    };
+  }
+
   function getPersistedUtmParams() {
     var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
     var qs = new URLSearchParams(window.location.search || '');
@@ -626,6 +646,7 @@
   }
 
   syncUtmToAllLeadForms();
+  persistFirstTouchIfNeeded();
 
   if (leadForms.length) {
     var cfg = readFormsConfig();
@@ -664,6 +685,8 @@
 
         getPersistedUtmParams();
         applyUtmHiddenToForm(form);
+        persistFirstTouchIfNeeded();
+        var firstTouch = getPersistedFirstTouch();
         var fd = new FormData(form);
         var utm = getPersistedUtmParams();
         var payload = {
@@ -679,7 +702,10 @@
           location: (fd.get('location') || '').toString().trim(),
           message: (fd.get('message') || '').toString().trim(),
           website: (fd.get('website') || '').toString().trim(),
-          pageUrl: typeof window.location.href === 'string' ? window.location.href : ''
+          pageUrl: typeof window.location.href === 'string' ? window.location.href : '',
+          firstLandingUrl: firstTouch.firstLandingUrl,
+          firstReferrer: firstTouch.firstReferrer,
+          firstLandingAt: firstTouch.firstLandingAt
         };
 
         var runSend = function () {
@@ -777,5 +803,6 @@
   window.addEventListener('pageshow', function () {
     getPersistedUtmParams();
     syncUtmToAllLeadForms();
+    persistFirstTouchIfNeeded();
   });
 })();
