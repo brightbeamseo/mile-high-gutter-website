@@ -7,6 +7,7 @@
   <meta name="description" content="Family-owned. 40+ years. Seamless gutters, repair, cleaning, and guards across the Denver metro. Free estimates.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.callrail.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
@@ -104,12 +105,8 @@
           <p class="hero-form-sub">Send a few details—we will follow up shortly.</p>
           <div class="hero-form-grid">
             <div class="hero-form-field">
-              <label for="hero-first-name">First Name <span class="required-mark" aria-hidden="true">*</span></label>
-              <input id="hero-first-name" name="firstName" type="text" required autocomplete="given-name">
-            </div>
-            <div class="hero-form-field">
-              <label for="hero-last-name">Last Name <span class="required-mark" aria-hidden="true">*</span></label>
-              <input id="hero-last-name" name="lastName" type="text" required autocomplete="family-name">
+              <label for="hero-name">Name <span class="required-mark" aria-hidden="true">*</span></label>
+              <input id="hero-name" name="name" type="text" required autocomplete="name">
             </div>
             <div class="hero-form-field">
               <label for="hero-email">Email <span class="required-mark" aria-hidden="true">*</span></label>
@@ -119,9 +116,9 @@
               <label for="hero-phone">Phone <span class="required-mark" aria-hidden="true">*</span></label>
               <input id="hero-phone" name="phone" type="tel" required autocomplete="tel" maxlength="12" inputmode="numeric" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" title="10-digit phone, e.g. 303-762-9841">
             </div>
-            <div class="hero-form-field hero-form-field-full">
-              <label for="hero-address">Address</label>
-              <input id="hero-address" name="address" type="text" autocomplete="street-address" spellcheck="false">
+            <div class="hero-form-field">
+              <label for="hero-location">City</label>
+              <input id="hero-location" name="location" type="text" autocomplete="address-level2">
             </div>
             <div class="hero-form-field hero-form-field-full">
               <label for="hero-message">Project Details</label>
@@ -596,12 +593,8 @@
           <form class="contact-form" data-lead-form="footer" action="#" method="post">
             <div class="contact-form-grid">
               <div class="contact-form-field">
-                <label for="contact-first-name">First Name <span class="required-mark" aria-hidden="true">*</span></label>
-                <input type="text" id="contact-first-name" name="firstName" required autocomplete="given-name">
-              </div>
-              <div class="contact-form-field">
-                <label for="contact-last-name">Last Name <span class="required-mark" aria-hidden="true">*</span></label>
-                <input type="text" id="contact-last-name" name="lastName" required autocomplete="family-name">
+                <label for="contact-name">Name <span class="required-mark" aria-hidden="true">*</span></label>
+                <input type="text" id="contact-name" name="name" required autocomplete="name">
               </div>
               <div class="contact-form-field">
                 <label for="contact-email">Email <span class="required-mark" aria-hidden="true">*</span></label>
@@ -611,9 +604,9 @@
                 <label for="contact-phone">Phone <span class="required-mark" aria-hidden="true">*</span></label>
                 <input type="tel" id="contact-phone" name="phone" required autocomplete="tel" maxlength="12" inputmode="numeric" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" title="10-digit phone, e.g. 303-762-9841">
               </div>
-              <div class="contact-form-field contact-form-field-full">
-                <label for="contact-address">Address</label>
-                <input type="text" id="contact-address" name="address" autocomplete="street-address" spellcheck="false">
+              <div class="contact-form-field">
+                <label for="contact-location">City</label>
+                <input type="text" id="contact-location" name="location" autocomplete="address-level2">
               </div>
               <div class="contact-form-field contact-form-field-full">
                 <label for="contact-message">Project Details</label>
@@ -703,6 +696,7 @@
   </div>
 
 
+  <script type="text/javascript" src="https://cdn.callrail.com/companies/604562685/1a8bc4c0916c3877f4ed/12/swap.js"></script>
     <script type="application/json" id="homepage-typed-phrases">["Gutter Installation", "Gutter Repair", "Gutter Cleaning", "Gutter Guards", "Heated Gutters", "Soffit & Fascia"]</script>
 
   <script src="script.js"></script>

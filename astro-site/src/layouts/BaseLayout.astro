@@ -73,6 +73,7 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
     <link rel="preconnect" href="https://services.leadconnectorhq.com" crossorigin />
     <link rel="preconnect" href="https://backend.leadconnectorhq.com" crossorigin />
     <link rel="preconnect" href="https://widgets.leadconnectorhq.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.callrail.com" />
     {lcpImageSrc ? <link rel="preload" as="image" href={lcpImageSrc} fetchpriority="high" /> : null}
     <link
       rel="preload"
@@ -121,6 +122,10 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
     </noscript>
     <!-- End Google Tag Manager (noscript) -->
     <slot />
+    <!-- CallRail — after main HTML so numbers are in DOM; blocking load for quick swap -->
+    <script
+      type="text/javascript"
+      src="https://cdn.callrail.com/companies/604562685/1a8bc4c0916c3877f4ed/12/swap.js"></script>
     <!-- After bundled styles.css so :root theme tokens override file defaults -->
     <style id="site-theme-vars" set:html={themeCss}></style>
     <Analytics />
@@ -132,5 +137,32 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
       src="https://widgets.leadconnectorhq.com/loader.js"
       data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js"
       data-widget-id="69ce8d738cea9df43402e96e"></script>
+    <script is:inline>
+      (function () {
+        var STYLE_ID = 'mhg-lc-chat-recaptcha-offset';
+        function applyChatOffset() {
+          var host = document.querySelector('chat-widget');
+          if (!host || !host.shadowRoot) return false;
+          if (host.shadowRoot.getElementById(STYLE_ID)) return true;
+          var el = document.createElement('style');
+          el.id = STYLE_ID;
+          el.textContent =
+            '.lc_text-widget:not(.lc_text-widget--embedded-live-chat){padding-bottom:140px !important;}';
+          host.shadowRoot.appendChild(el);
+          return true;
+        }
+        function tryApply() {
+          if (applyChatOffset()) return;
+          var n = 0;
+          var tick = window.setInterval(function () {
+            n += 1;
+            if (applyChatOffset() || n >= 50) window.clearInterval(tick);
+          }, 100);
+        }
+        window.addEventListener('LC_chatWidgetLoaded', tryApply, false);
+        if (document.readyState === 'complete') tryApply();
+        else window.addEventListener('load', tryApply);
+      })();
+    </script>
   </body>
 </html>
