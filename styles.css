@@ -1646,7 +1646,7 @@ a.btn-primary[href^="tel:"]:hover {
   color: var(--color-text);
 }
 
-.contact-form input,
+.contact-form input:not([type='checkbox']):not([type='radio']),
 .contact-form textarea {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -2285,7 +2285,7 @@ form[data-lead-form] button[type="submit"].is-busy {
   color: var(--color-text-muted);
 }
 
-.hero-form input,
+.hero-form input:not([type='checkbox']):not([type='radio']),
 .hero-form textarea {
   width: 100%;
   max-width: 100%;
