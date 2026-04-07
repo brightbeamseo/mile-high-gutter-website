@@ -1768,18 +1768,6 @@ form[data-lead-form] button[type="submit"].is-busy {
 
 .lead-form-sms-consent-text {
   display: block;
-  font-weight: 400;
-  color: var(--color-text-muted);
-}
-
-.lead-form-sms-consent-text a {
-  color: var(--color-accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.lead-form-sms-consent-text a:hover {
-  text-decoration-thickness: 2px;
 }
 
 /* Custom Mapbox address autocomplete menu (replaces native datalist UI) */
