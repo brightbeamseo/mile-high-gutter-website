@@ -1720,6 +1720,52 @@ form[data-lead-form] button[type="submit"].is-busy {
   pointer-events: none;
 }
 
+/* SMS marketing consent (TCPA-style) — all lead forms */
+.lead-form-sms-consent {
+  margin-top: 0.15rem;
+}
+
+.lead-form-sms-consent-inner {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+}
+
+.lead-form-sms-consent-checkbox {
+  flex-shrink: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.2rem;
+  accent-color: var(--color-accent, #3a5f9e);
+  cursor: pointer;
+}
+
+.lead-form-sms-consent-label {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.lead-form-sms-consent-kicker {
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 0.875rem;
+}
+
+.lead-form-sms-consent-text a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.lead-form-sms-consent-text a:hover {
+  text-decoration-thickness: 2px;
+}
+
 /* Custom Mapbox address autocomplete menu (replaces native datalist UI) */
 .address-autocomplete-wrap {
   position: relative;

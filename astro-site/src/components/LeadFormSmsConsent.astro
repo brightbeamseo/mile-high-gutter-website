@@ -1,0 +1,42 @@
+---
+/**
+ * TCPA-style SMS marketing consent — include on every lead form.
+ * Props: unique idPrefix per form (for input id / label for).
+ */
+interface Props {
+  idPrefix: string
+  variant?: 'hero' | 'contact'
+}
+const { idPrefix, variant = 'hero' } = Astro.props
+const wrapClass =
+  variant === 'contact'
+    ? 'contact-form-field contact-form-field-full lead-form-sms-consent'
+    : 'hero-form-field hero-form-field-full lead-form-sms-consent'
+const cbId = `${idPrefix}-sms-marketing-opt-in`
+---
+
+<div class={wrapClass}>
+  <div class="lead-form-sms-consent-inner">
+    <input
+      type="checkbox"
+      id={cbId}
+      name="smsMarketingOptIn"
+      value="yes"
+      required
+      class="lead-form-sms-consent-checkbox"
+    />
+    <label for={cbId} class="lead-form-sms-consent-label">
+      <span class="lead-form-sms-consent-kicker">
+        Text message consent <span class="required-mark" aria-hidden="true">*</span>
+      </span>
+      <span class="lead-form-sms-consent-text">
+        I agree to receive recurring promotional and informational text messages from <strong>Mile High Gutter</strong> at
+        the phone number I provide. Message frequency varies. Message and data rates may apply. Reply <strong>STOP</strong> to
+        opt out at any time, or <strong>HELP</strong> for help. I have read and agree to the{' '}
+        <a href="/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+        {' '}and{' '}
+        <a href="/terms-of-service/" target="_blank" rel="noopener noreferrer">Terms of Service</a>.
+      </span>
+    </label>
+  </div>
+</div>

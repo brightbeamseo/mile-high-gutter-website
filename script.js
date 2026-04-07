@@ -705,7 +705,8 @@
           pageUrl: typeof window.location.href === 'string' ? window.location.href : '',
           firstLandingUrl: firstTouch.firstLandingUrl,
           firstReferrer: firstTouch.firstReferrer,
-          firstLandingAt: firstTouch.firstLandingAt
+          firstLandingAt: firstTouch.firstLandingAt,
+          smsMarketingOptIn: fd.get('smsMarketingOptIn') === 'yes'
         };
 
         var runSend = function () {
@@ -748,10 +749,12 @@
                           ? 'Security check mismatch. Please refresh and try again.'
                           : err === 'recaptcha_unreachable'
                             ? 'Could not verify security. Please try again in a moment.'
-                            : err === 'missing_fields'
-                              ? 'Please fill in all required fields.'
-                              : err === 'invalid_email'
-                                ? 'Please enter a valid email address.'
+                            : err === 'missing_sms_consent'
+                              ? 'Please confirm text message consent to submit this form.'
+                              : err === 'missing_fields'
+                                ? 'Please fill in all required fields.'
+                                : err === 'invalid_email'
+                                  ? 'Please enter a valid email address.'
                                 : err === 'upstream_unreachable'
                                   ? 'Could not reach the form service. Please try again or call us.'
                                   : err === 'upstream_error'
