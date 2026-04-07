@@ -295,13 +295,13 @@ def render_hero(home: dict[str, Any], ctx: dict[str, str]) -> str:
             </div>
           </div>
           <div class="hero-form-field hero-form-field-full lead-form-sms-consent">
-            <div class="lead-form-sms-consent-inner">
+            <label for="py-hero-sms-marketing-opt-in" class="lead-form-sms-consent-label">
               <input type="checkbox" id="py-hero-sms-marketing-opt-in" name="smsMarketingOptIn" value="yes" required class="lead-form-sms-consent-checkbox" />
-              <label for="py-hero-sms-marketing-opt-in" class="lead-form-sms-consent-label">
+              <span class="lead-form-sms-consent-copy">
                 <span class="lead-form-sms-consent-kicker">Text message consent <span class="required-mark" aria-hidden="true">*</span></span>
                 <span class="lead-form-sms-consent-text">I agree to receive recurring promotional and informational text messages from <strong>Mile High Gutter</strong> at the phone number I provide. Message frequency varies. Message and data rates may apply. Reply <strong>STOP</strong> to opt out at any time, or <strong>HELP</strong> for help. I have read and agree to the <a href="/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="/terms-of-service/" target="_blank" rel="noopener noreferrer">Terms of Service</a>.</span>
-              </label>
-            </div>
+              </span>
+            </label>
           </div>
           <div class="lead-form-honeypot-wrap" aria-hidden="true">
             <label for="hero-website">Leave blank</label>
@@ -762,13 +762,13 @@ def render_footer(home: dict[str, Any], ctx: dict[str, str]) -> str:
               </div>
             </div>
             <div class="contact-form-field contact-form-field-full lead-form-sms-consent">
-              <div class="lead-form-sms-consent-inner">
+              <label for="py-footer-sms-marketing-opt-in" class="lead-form-sms-consent-label">
                 <input type="checkbox" id="py-footer-sms-marketing-opt-in" name="smsMarketingOptIn" value="yes" required class="lead-form-sms-consent-checkbox" />
-                <label for="py-footer-sms-marketing-opt-in" class="lead-form-sms-consent-label">
+                <span class="lead-form-sms-consent-copy">
                   <span class="lead-form-sms-consent-kicker">Text message consent <span class="required-mark" aria-hidden="true">*</span></span>
                   <span class="lead-form-sms-consent-text">I agree to receive recurring promotional and informational text messages from <strong>Mile High Gutter</strong> at the phone number I provide. Message frequency varies. Message and data rates may apply. Reply <strong>STOP</strong> to opt out at any time, or <strong>HELP</strong> for help. I have read and agree to the <a href="/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="/terms-of-service/" target="_blank" rel="noopener noreferrer">Terms of Service</a>.</span>
-                </label>
-              </div>
+                </span>
+              </label>
             </div>
             <div class="lead-form-honeypot-wrap" aria-hidden="true">
               <label for="contact-website">Leave blank</label>

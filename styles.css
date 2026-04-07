@@ -1774,6 +1774,10 @@ form[data-lead-form] button[type="submit"].is-busy {
   font-size: 0.875rem;
 }
 
+.lead-form-sms-consent-text {
+  display: block;
+}
+
 .lead-form-sms-consent-text a {
   color: var(--color-accent);
   text-decoration: underline;
