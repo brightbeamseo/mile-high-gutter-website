@@ -4073,3 +4073,9 @@ form[data-lead-form] button[type="submit"].is-busy {
     transform: translateY(-2px);
   }
 }
+
+/* LeadConnector `chat-widget`: lift the whole stack (prompt + launcher + panel) above reCAPTCHA v3.
+   Transform on the host makes fixed-position UI inside the shadow root move as one unit. */
+chat-widget {
+  transform: translateY(calc(-108px - env(safe-area-inset-bottom, 0px)));
+}
