@@ -66,8 +66,9 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
     {localBusinessJsonLd ? (
       <script type="application/ld+json" set:html={localBusinessJsonLd} />
     ) : null}
-    <link rel="icon" href="/favicon.png" type="image/png" sizes="any" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://services.leadconnectorhq.com" crossorigin />
