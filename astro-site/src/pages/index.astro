@@ -91,6 +91,24 @@ const logoAriaLabel = applyTemplate(asStr(header?.logoAriaLabelTemplate), {
   companyName,
 })
 
+/** Responsive WebPs under Horizontal/responsive/; 1000w PNG fallback. Wrong `sizes` (was 198px) forced a tiny bitmap on retina. */
+const logoHorizontalRespBase =
+  '/Media%20(MHG)/Logo%20Suite%20(MHG)/Mile%20High%20(Denver%20Colorado)/Horizontal/responsive'
+const logoBlackUrl = mediaUrl(logoBlack)
+const logoWhiteUrl = mediaUrl(logoWhite)
+const useDenverHorizontalLogos =
+  logoBlack.includes('Mile High (Denver Colorado)/Horizontal') &&
+  logoBlack.includes('Black Font Transparent')
+const logoBlackSrcSet = useDenverHorizontalLogos
+  ? `${logoHorizontalRespBase}/logo-black-198.webp 198w, ${logoHorizontalRespBase}/logo-black-396.webp 396w, ${logoHorizontalRespBase}/logo-black-960.webp 960w, ${logoBlackUrl} 1000w`
+  : ''
+const logoWhiteSrcSet = useDenverHorizontalLogos
+  ? `${logoHorizontalRespBase}/logo-white-360.webp 360w, ${logoHorizontalRespBase}/logo-white-960.webp 960w, ${logoWhiteUrl} 1000w`
+  : ''
+const logoHeaderSizes =
+  '(max-width: 480px) min(360px, calc(100vw - 96px)), (max-width: 768px) min(420px, calc(100vw - 120px)), 347px'
+const logoFooterSizes = '(max-width: 768px) min(300px, 72vw), 270px'
+
 const telLink = `tel:${tel}`
 
 const homesCountDisplay = applyTemplate(asStr(whyStamp?.homesCountTemplate), {
@@ -211,7 +229,21 @@ function responsiveSrc(src, width = 800) {
     <div class="header-nav">
       <div class="header-inner">
         <a href="/" class="logo" aria-label={logoAriaLabel}>
-          <img src="/Media%20(MHG)/Logo%20Suite%20(MHG)/Mile%20High%20(Denver%20Colorado)/Horizontal/responsive/logo-black-198.webp" srcset="/Media%20(MHG)/Logo%20Suite%20(MHG)/Mile%20High%20(Denver%20Colorado)/Horizontal/responsive/logo-black-198.webp 198w, /Media%20(MHG)/Logo%20Suite%20(MHG)/Mile%20High%20(Denver%20Colorado)/Horizontal/responsive/logo-black-396.webp 396w" sizes="198px" alt={companyName} class="logo-img" width="396" height="96" fetchpriority="high" decoding="async" />
+          {useDenverHorizontalLogos ? (
+            <img
+              src={logoBlackUrl}
+              srcset={logoBlackSrcSet}
+              sizes={logoHeaderSizes}
+              alt={companyName}
+              class="logo-img"
+              width="1000"
+              height="242"
+              fetchpriority="high"
+              decoding="async"
+            />
+          ) : (
+            <img src={logoBlackUrl} alt={companyName} class="logo-img" width="1000" height="242" fetchpriority="high" decoding="async" />
+          )}
         </a>
         <button class="nav-toggle" aria-label="Open Menu">
           <span></span><span></span><span></span>
@@ -826,7 +858,21 @@ function responsiveSrc(src, width = 800) {
     <div class="container">
       <div class="footer-inner">
         <div class="footer-brand-block footer-col">
-          <img src="/Media%20(MHG)/Logo%20Suite%20(MHG)/Mile%20High%20(Denver%20Colorado)/Horizontal/responsive/logo-white-360.webp" alt={companyName} class="footer-logo" width="360" height="87" loading="lazy" decoding="async" />
+          {useDenverHorizontalLogos ? (
+            <img
+              src={logoWhiteUrl}
+              srcset={logoWhiteSrcSet}
+              sizes={logoFooterSizes}
+              alt={companyName}
+              class="footer-logo"
+              width="1000"
+              height="242"
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <img src={logoWhiteUrl} alt={companyName} class="footer-logo" width="1000" height="242" loading="lazy" decoding="async" />
+          )}
           <p class="footer-address">{descriptionShort}</p>
           <div class="footer-social" aria-label={asStr(footerBrand?.socialAriaLabel)}>
             {footerBrand?.socialLinks?.map((s) => (
