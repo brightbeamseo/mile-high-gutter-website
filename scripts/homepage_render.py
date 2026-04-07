@@ -298,8 +298,7 @@ def render_hero(home: dict[str, Any], ctx: dict[str, str]) -> str:
             <label for="py-hero-sms-marketing-opt-in" class="lead-form-sms-consent-label">
               <input type="checkbox" id="py-hero-sms-marketing-opt-in" name="smsMarketingOptIn" value="yes" required class="lead-form-sms-consent-checkbox" />
               <span class="lead-form-sms-consent-copy">
-                <span class="lead-form-sms-consent-kicker">SMS <span class="required-mark" aria-hidden="true">*</span></span>
-                <span class="lead-form-sms-consent-text">Recurring texts from <strong>Mile High Gutter</strong> at my number. Msg/data rates may apply. Reply <strong>STOP</strong> to opt out, <strong>HELP</strong> for help. Agree to the <a href="/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a> & <a href="/terms-of-service/" target="_blank" rel="noopener noreferrer">Terms</a>.</span>
+                <span class="lead-form-sms-consent-text">SMS <span class="required-mark" aria-hidden="true">*</span> I agree to recurring texts from <strong>Mile High Gutter</strong> at my number. Msg/data rates may apply. Reply <strong>STOP</strong> to opt out, <strong>HELP</strong> for help.</span>
               </span>
             </label>
           </div>
@@ -765,8 +764,7 @@ def render_footer(home: dict[str, Any], ctx: dict[str, str]) -> str:
               <label for="py-footer-sms-marketing-opt-in" class="lead-form-sms-consent-label">
                 <input type="checkbox" id="py-footer-sms-marketing-opt-in" name="smsMarketingOptIn" value="yes" required class="lead-form-sms-consent-checkbox" />
                 <span class="lead-form-sms-consent-copy">
-                  <span class="lead-form-sms-consent-kicker">SMS <span class="required-mark" aria-hidden="true">*</span></span>
-                  <span class="lead-form-sms-consent-text">Recurring texts from <strong>Mile High Gutter</strong> at my number. Msg/data rates may apply. Reply <strong>STOP</strong> to opt out, <strong>HELP</strong> for help. Agree to the <a href="/privacy-policy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a> & <a href="/terms-of-service/" target="_blank" rel="noopener noreferrer">Terms</a>.</span>
+                  <span class="lead-form-sms-consent-text">SMS <span class="required-mark" aria-hidden="true">*</span> I agree to recurring texts from <strong>Mile High Gutter</strong> at my number. Msg/data rates may apply. Reply <strong>STOP</strong> to opt out, <strong>HELP</strong> for help.</span>
                 </span>
               </label>
             </div>

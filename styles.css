@@ -1766,16 +1766,10 @@ form[data-lead-form] button[type="submit"].is-busy {
   display: block;
 }
 
-.lead-form-sms-consent-kicker {
-  display: block;
-  margin-bottom: 0.12rem;
-  font-weight: 600;
-  color: var(--color-text);
-  font-size: 0.8125rem;
-}
-
 .lead-form-sms-consent-text {
   display: block;
+  font-weight: 400;
+  color: var(--color-text-muted);
 }
 
 .lead-form-sms-consent-text a {
