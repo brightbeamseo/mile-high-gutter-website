@@ -140,21 +140,34 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
     <script is:inline>
       (function () {
         var STYLE_ID = 'mhg-ghl-above-recaptcha';
-        var GAP = 10;
-        /** Pixels to translate up: distance from viewport bottom to badge top, plus gap (sits just above reCAPTCHA). */
+        var GAP = 14;
+        var BOOST = 36;
+        var MIN_LIFT = 96;
+        /**
+         * Distance from viewport bottom to sit the launcher above the reCAPTCHA badge.
+         * The blue bubble uses its own position:fixed, so parent translateY often does not move it — we set bottom on .lc_text-widget--bubble and nudge the whole column with transform.
+         */
         function liftPx() {
-          var badge = document.querySelector('.grecaptcha-badge');
-          if (!badge) return 0;
-          var r = badge.getBoundingClientRect();
-          if (r.width < 4 || r.height < 4) return 0;
-          return Math.ceil(window.innerHeight - r.top + GAP);
+          var badges = document.querySelectorAll('.grecaptcha-badge');
+          var best = 0;
+          for (var i = 0; i < badges.length; i++) {
+            var r = badges[i].getBoundingClientRect();
+            if (r.width < 4 || r.height < 4) continue;
+            var raw = Math.ceil(window.innerHeight - r.top + GAP + BOOST);
+            if (raw > best) best = raw;
+          }
+          if (best <= 0) return 0;
+          return Math.max(MIN_LIFT, best);
         }
         function paint(host, px) {
           if (!host || px <= 0) return;
           var css =
             '.lc_text-widget:not(.lc_text-widget--embedded-live-chat){transform:translateY(-' +
             px +
-            'px)!important;transform-origin:right bottom;}';
+            'px)!important;transform-origin:right bottom;}' +
+            '.lc_text-widget--bubble:not(.inline){bottom:' +
+            px +
+            'px!important;right:max(16px,env(safe-area-inset-right,0px))!important;}';
           if (host.shadowRoot) {
             host.style.transform = '';
             var el = host.shadowRoot.getElementById(STYLE_ID);
