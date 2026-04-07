@@ -750,7 +750,7 @@
                           : err === 'recaptcha_unreachable'
                             ? 'Could not verify security. Please try again in a moment.'
                             : err === 'missing_sms_consent'
-                              ? 'Please confirm text message consent to submit this form.'
+                              ? 'Please confirm SMS consent to submit this form.'
                               : err === 'missing_fields'
                                 ? 'Please fill in all required fields.'
                                 : err === 'invalid_email'
