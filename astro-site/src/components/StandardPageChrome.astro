@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import FooterSocialIcon from './FooterSocialIcon.astro'
 import FooterHoursRow from './FooterHoursRow.astro'
 import FooterContactInfo from './FooterContactInfo.astro'
+import LeadFormSmsConsent from './LeadFormSmsConsent.astro'
 import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../lib/footer-contact-heading.js'
 import { GROQ_HOME_PAGE, sanity } from '../lib/sanity.js'
 import { getSiteSettings, mergeHeaderFromSettings } from '../lib/site-settings.js'
@@ -139,6 +140,7 @@ const pageIdPrefix = `std-${String(navDdPrefix).replace(/[^a-z0-9-]/gi, '_')}`
               <div class="contact-form-field contact-form-field-full"><label for={`${pageIdPrefix}-contact-address`}>Address</label><input id={`${pageIdPrefix}-contact-address`} name="address" type="text" autocomplete="street-address" spellcheck="false" /></div>
               <div class="contact-form-field contact-form-field-full"><label for={`${pageIdPrefix}-contact-message`}>{asStr(footerEstimateFields?.projectDetailsLabel) || 'Project Details'}</label><textarea id={`${pageIdPrefix}-contact-message`} name="message" rows="4"></textarea></div>
             </div>
+            <LeadFormSmsConsent idPrefix={`${pageIdPrefix}-footer`} variant="contact" />
             <button type="submit" class="btn btn-primary btn-lg">{asStr(footerEstimateFields?.submitButton) || 'Request Quote'}</button>
           </form>
         </div>

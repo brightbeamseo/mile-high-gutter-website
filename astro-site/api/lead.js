@@ -192,6 +192,16 @@ export default {
     const utm = mergeUtm(body, pageUrl);
     const querystring = buildUtmQueryString(utm);
 
+    const rawSms = body.smsMarketingOptIn;
+    const smsMarketingOptIn =
+      rawSms === true ||
+      rawSms === 'yes' ||
+      rawSms === 'true' ||
+      (typeof rawSms === 'string' && rawSms.toLowerCase() === 'on');
+    if (!smsMarketingOptIn) {
+      return jsonResponse({ ok: false, error: 'missing_sms_consent' }, 400);
+    }
+
     if (!name || !email || !phone) {
       return jsonResponse({ ok: false, error: 'missing_fields' }, 400);
     }
@@ -220,6 +230,7 @@ export default {
       utm_term: utm.utm_term,
       utm_content: utm.utm_content,
       querystring,
+      smsMarketingOptIn: true,
     };
 
     let zRes;

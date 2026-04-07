@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import FooterSocialIcon from '../../components/FooterSocialIcon.astro'
 import FooterContactInfo from '../../components/FooterContactInfo.astro'
+import LeadFormSmsConsent from '../../components/LeadFormSmsConsent.astro'
 import FooterHoursRow from '../../components/FooterHoursRow.astro'
 import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../../lib/footer-contact-heading.js'
 import { GROQ_HOME_PAGE, sanity } from '../../lib/sanity.js'
@@ -273,6 +274,7 @@ const serviceHref = (svc) => {
               <textarea id="city-hero-message" name="message" rows="3"></textarea>
             </div>
           </div>
+          <LeadFormSmsConsent idPrefix="city-hero" variant="hero" />
           <button type="submit" class="btn btn-primary btn-lg">{asStr(universalFormFields?.submitButton) || 'Send'}</button>
         </form>
       </div>
@@ -518,6 +520,7 @@ const serviceHref = (svc) => {
                 <textarea id="city-footer-message" name="message" rows="4"></textarea>
               </div>
             </div>
+            <LeadFormSmsConsent idPrefix="city-footer" variant="contact" />
             <button type="submit" class="btn btn-primary btn-lg">{asStr(footerEstimateFields?.submitButton) || 'Request Quote'}</button>
           </form>
         </div>

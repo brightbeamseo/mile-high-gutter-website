@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro'
 import FooterSocialIcon from '../../components/FooterSocialIcon.astro'
 import FooterHoursRow from '../../components/FooterHoursRow.astro'
 import FooterContactInfo from '../../components/FooterContactInfo.astro'
+import LeadFormSmsConsent from '../../components/LeadFormSmsConsent.astro'
 import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../../lib/footer-contact-heading.js'
 import { GROQ_HOME_PAGE, sanity } from '../../lib/sanity.js'
 import { getSiteSettings, mergeHeaderFromSettings } from '../../lib/site-settings.js'
@@ -192,6 +193,7 @@ const universalFormIntro = asStr(footerEstimate?.intro) || 'Short placeholder fo
               <textarea id="contact-hero-message" name="message" rows="3"></textarea>
             </div>
           </div>
+          <LeadFormSmsConsent idPrefix="contact-hero" variant="hero" />
           <button type="submit" class="btn btn-primary btn-lg">{asStr(universalFormFields?.submitButton) || 'Send'}</button>
         </form>
       </div>
@@ -270,6 +272,7 @@ const universalFormIntro = asStr(footerEstimate?.intro) || 'Short placeholder fo
                 <textarea id="contact-footer-message" name="message" rows="4"></textarea>
               </div>
             </div>
+            <LeadFormSmsConsent idPrefix="contact-footer" variant="contact" />
             <div class="lead-form-honeypot-wrap" aria-hidden="true">
               <label for="contact-footer-website">Leave blank</label>
               <input type="text" id="contact-footer-website" name="website" tabindex="-1" autocomplete="off" />

@@ -4,6 +4,7 @@ import UniquePointIcon from '../components/UniquePointIcon.astro'
 import FooterSocialIcon from '../components/FooterSocialIcon.astro'
 import FooterContactInfo from '../components/FooterContactInfo.astro'
 import FooterHoursRow from '../components/FooterHoursRow.astro'
+import LeadFormSmsConsent from '../components/LeadFormSmsConsent.astro'
 import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../lib/footer-contact-heading.js'
 import { GROQ_HOME_PAGE, sanity } from '../lib/sanity.js'
 import { getSiteSettings, mergeHeaderFromSettings } from '../lib/site-settings.js'
@@ -374,6 +375,7 @@ function responsiveSrc(src, width = 800) {
               <textarea id="hero-message" name="message" rows="3"></textarea>
             </div>
           </div>
+          <LeadFormSmsConsent idPrefix="hero" variant="hero" />
           <div class="lead-form-honeypot-wrap" aria-hidden="true">
             <label for="hero-website">Leave blank</label>
             <input type="text" id="hero-website" name="website" tabindex="-1" autocomplete="off" />
@@ -845,6 +847,7 @@ function responsiveSrc(src, width = 800) {
                 <textarea id="contact-message" name="message" rows="4"></textarea>
               </div>
             </div>
+            <LeadFormSmsConsent idPrefix="footer" variant="contact" />
             <div class="lead-form-honeypot-wrap" aria-hidden="true">
               <label for="contact-website">Leave blank</label>
               <input type="text" id="contact-website" name="website" tabindex="-1" autocomplete="off" />
