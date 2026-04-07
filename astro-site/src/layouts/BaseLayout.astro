@@ -139,46 +139,64 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
       data-widget-id="69ce8d738cea9df43402e96e"></script>
     <script is:inline>
       (function () {
-        var STYLE_ID = 'mhg-ghl-lift-100';
-        var LIFT = '100px';
-        function injectShadow(host) {
-          if (!host.shadowRoot) return false;
-          if (host.shadowRoot.getElementById(STYLE_ID)) return true;
-          var s = document.createElement('style');
-          s.id = STYLE_ID;
-          s.textContent =
+        var STYLE_ID = 'mhg-ghl-above-recaptcha';
+        var GAP = 10;
+        /** Pixels to translate up: distance from viewport bottom to badge top, plus gap (sits just above reCAPTCHA). */
+        function liftPx() {
+          var badge = document.querySelector('.grecaptcha-badge');
+          if (!badge) return 0;
+          var r = badge.getBoundingClientRect();
+          if (r.width < 4 || r.height < 4) return 0;
+          return Math.ceil(window.innerHeight - r.top + GAP);
+        }
+        function paint(host, px) {
+          if (!host || px <= 0) return;
+          var css =
             '.lc_text-widget:not(.lc_text-widget--embedded-live-chat){transform:translateY(-' +
-            LIFT +
-            ') !important;transform-origin:right bottom;}';
-          host.shadowRoot.appendChild(s);
-          return true;
+            px +
+            'px)!important;transform-origin:right bottom;}';
+          if (host.shadowRoot) {
+            host.style.transform = '';
+            var el = host.shadowRoot.getElementById(STYLE_ID);
+            if (!el) {
+              el = document.createElement('style');
+              el.id = STYLE_ID;
+              host.shadowRoot.appendChild(el);
+            }
+            el.textContent = css;
+          } else {
+            host.style.display = 'block';
+            host.style.transform = 'translateY(-' + px + 'px)';
+          }
         }
-        function apply() {
+        function sync() {
           var host = document.querySelector('chat-widget');
-          if (!host) return false;
-          if (injectShadow(host)) return true;
-          host.style.display = 'block';
-          host.style.transform = 'translateY(-' + LIFT + ')';
-          return true;
+          var px = liftPx();
+          if (host && px > 0) paint(host, px);
         }
-        function tryApply() {
-          if (apply()) return;
+        function poll() {
+          if (window.__mhgGhlPoll) return;
+          window.__mhgGhlPoll = true;
           var n = 0;
-          var tick = window.setInterval(function () {
+          var id = window.setInterval(function () {
             n += 1;
-            if (apply() || n >= 80) window.clearInterval(tick);
-          }, 125);
-          var mo = new MutationObserver(function () {
-            if (apply()) mo.disconnect();
-          });
-          mo.observe(document.body, { childList: true, subtree: true });
-          window.setTimeout(function () {
-            mo.disconnect();
-          }, 12000);
+            sync();
+            if (n >= 100) window.clearInterval(id);
+          }, 150);
         }
-        window.addEventListener('LC_chatWidgetLoaded', tryApply, false);
-        if (document.readyState === 'complete') tryApply();
-        else window.addEventListener('load', tryApply);
+        function onResize() {
+          clearTimeout(window.__mhgGhlLiftT);
+          window.__mhgGhlLiftT = window.setTimeout(sync, 80);
+        }
+        window.addEventListener('resize', onResize, { passive: true });
+        window.addEventListener('LC_chatWidgetLoaded', poll, false);
+        if (document.readyState === 'complete') poll();
+        else window.addEventListener('load', poll);
+        var mo = new MutationObserver(sync);
+        mo.observe(document.documentElement, { childList: true, subtree: true });
+        window.setTimeout(function () {
+          mo.disconnect();
+        }, 30000);
       })();
     </script>
   </body>
