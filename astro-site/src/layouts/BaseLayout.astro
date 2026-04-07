@@ -140,12 +140,12 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
     <script is:inline>
       (function () {
         var STYLE_ID = 'mhg-ghl-above-recaptcha';
-        var GAP = 14;
-        var BOOST = 36;
-        var MIN_LIFT = 96;
+        var GAP = 12;
+        var BOOST = 28;
+        var MIN_LIFT = 80;
         /**
-         * Distance from viewport bottom to sit the launcher above the reCAPTCHA badge.
-         * The blue bubble uses its own position:fixed, so parent translateY often does not move it — we set bottom on .lc_text-widget--bubble and nudge the whole column with transform.
+         * Lift the launcher above the reCAPTCHA badge (viewport bottom offset).
+         * Avoid transform on .lc_text-widget — it breaks fixed-position children (greeting vs bubble misaligned, overlap with page content).
          */
         function liftPx() {
           var badges = document.querySelectorAll('.grecaptcha-badge');
@@ -159,15 +159,44 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
           if (best <= 0) return 0;
           return Math.max(MIN_LIFT, best);
         }
+        function tightenGreetingCallout(host) {
+          var sr = host && host.shadowRoot;
+          if (!sr) return;
+          var root = sr.querySelector('.lc_text-widget:not(.lc_text-widget--embedded-live-chat)');
+          if (!root) return;
+          var els = root.getElementsByTagName('*');
+          for (var i = 0; i < els.length; i++) {
+            var el = els[i];
+            if (el.closest && el.closest('.lc_text-widget--bubble')) continue;
+            var cs = window.getComputedStyle(el);
+            if (cs.position !== 'fixed') continue;
+            var r = el.getBoundingClientRect();
+            if (r.width < 140 || r.height < 32 || r.height > 280) continue;
+            el.style.setProperty('max-width', 'min(340px, calc(100vw - 28px))', 'important');
+            el.style.setProperty('right', 'max(16px, env(safe-area-inset-right, 0px))', 'important');
+            el.style.setProperty('left', 'auto', 'important');
+            el.style.setProperty('box-sizing', 'border-box', 'important');
+          }
+        }
         function paint(host, px) {
           if (!host || px <= 0) return;
           var css =
-            '.lc_text-widget:not(.lc_text-widget--embedded-live-chat){transform:translateY(-' +
+            '.lc_text-widget:not(.lc_text-widget--embedded-live-chat){' +
+            'transform:none!important;' +
+            'transform-origin:initial!important;' +
+            'right:max(16px,env(safe-area-inset-right,0px))!important;' +
+            'left:auto!important;' +
+            'max-width:min(360px,calc(100vw - 24px))!important;' +
+            'width:auto!important;' +
+            'box-sizing:border-box!important;' +
+            '}' +
+            '.lc_text-widget--bubble:not(.inline){' +
+            'bottom:' +
             px +
-            'px)!important;transform-origin:right bottom;}' +
-            '.lc_text-widget--bubble:not(.inline){bottom:' +
-            px +
-            'px!important;right:max(16px,env(safe-area-inset-right,0px))!important;}';
+            'px!important;' +
+            'right:max(16px,env(safe-area-inset-right,0px))!important;' +
+            'left:auto!important;' +
+            '}';
           if (host.shadowRoot) {
             host.style.transform = '';
             var el = host.shadowRoot.getElementById(STYLE_ID);
@@ -177,9 +206,14 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
               host.shadowRoot.appendChild(el);
             }
             el.textContent = css;
+            window.requestAnimationFrame(function () {
+              window.requestAnimationFrame(function () {
+                tightenGreetingCallout(host);
+              });
+            });
           } else {
             host.style.display = 'block';
-            host.style.transform = 'translateY(-' + px + 'px)';
+            host.style.transform = '';
           }
         }
         function sync() {
