@@ -137,50 +137,5 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
       src="https://widgets.leadconnectorhq.com/loader.js"
       data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js"
       data-widget-id="69ce8d738cea9df43402e96e"></script>
-    <script is:inline>
-      (function () {
-        var STYLE_ID = 'mhg-ghl-lift-above-recaptcha';
-        var LIFT = '100px';
-        function injectShadow(host) {
-          if (!host.shadowRoot) return false;
-          if (host.shadowRoot.getElementById(STYLE_ID)) return true;
-          var s = document.createElement('style');
-          s.id = STYLE_ID;
-          s.textContent =
-            '.lc_text-widget:not(.lc_text-widget--embedded-live-chat){transform:translateY(-' +
-            LIFT +
-            ') !important;transform-origin:right bottom;}';
-          host.shadowRoot.appendChild(s);
-          return true;
-        }
-        function apply() {
-          var host = document.querySelector('chat-widget');
-          if (!host) return false;
-          if (injectShadow(host)) return true;
-          /* Closed shadow or late mount: move host (fixed UI re-parents to transformed box in supporting browsers). */
-          host.style.display = 'block';
-          host.style.transform = 'translateY(-' + LIFT + ')';
-          return true;
-        }
-        function tryApply() {
-          if (apply()) return;
-          var n = 0;
-          var tick = window.setInterval(function () {
-            n += 1;
-            if (apply() || n >= 80) window.clearInterval(tick);
-          }, 125);
-          var mo = new MutationObserver(function () {
-            if (apply()) mo.disconnect();
-          });
-          mo.observe(document.body, { childList: true, subtree: true });
-          window.setTimeout(function () {
-            mo.disconnect();
-          }, 12000);
-        }
-        window.addEventListener('LC_chatWidgetLoaded', tryApply, false);
-        if (document.readyState === 'complete') tryApply();
-        else window.addEventListener('load', tryApply);
-      })();
-    </script>
   </body>
 </html>
