@@ -1723,12 +1723,31 @@ form[data-lead-form] button[type="submit"].is-busy {
 /* SMS marketing consent (TCPA-style) — all lead forms */
 .lead-form-sms-consent {
   margin-top: 0.15rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
-.lead-form-sms-consent-inner {
+.lead-form-sms-consent-label {
   display: flex;
-  gap: 0.6rem;
   align-items: flex-start;
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-text-muted);
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.hero-form .lead-form-sms-consent-label,
+.contact-form .lead-form-sms-consent-label {
+  font-weight: 400;
+  color: var(--color-text-muted);
 }
 
 .lead-form-sms-consent-checkbox {
@@ -1740,17 +1759,16 @@ form[data-lead-form] button[type="submit"].is-busy {
   cursor: pointer;
 }
 
-.lead-form-sms-consent-label {
-  display: grid;
-  gap: 0.25rem;
-  font-size: 0.8125rem;
-  line-height: 1.45;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  font-weight: 400;
+.lead-form-sms-consent-copy {
+  flex: 1 1 0%;
+  min-width: 0;
+  max-width: 100%;
+  display: block;
 }
 
 .lead-form-sms-consent-kicker {
+  display: block;
+  margin-bottom: 0.25rem;
   font-weight: 600;
   color: var(--color-text);
   font-size: 0.875rem;

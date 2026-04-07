@@ -16,7 +16,7 @@ const cbId = `${idPrefix}-sms-marketing-opt-in`
 ---
 
 <div class={wrapClass}>
-  <div class="lead-form-sms-consent-inner">
+  <label for={cbId} class="lead-form-sms-consent-label">
     <input
       type="checkbox"
       id={cbId}
@@ -25,7 +25,7 @@ const cbId = `${idPrefix}-sms-marketing-opt-in`
       required
       class="lead-form-sms-consent-checkbox"
     />
-    <label for={cbId} class="lead-form-sms-consent-label">
+    <span class="lead-form-sms-consent-copy">
       <span class="lead-form-sms-consent-kicker">
         Text message consent <span class="required-mark" aria-hidden="true">*</span>
       </span>
@@ -37,6 +37,6 @@ const cbId = `${idPrefix}-sms-marketing-opt-in`
         {' '}and{' '}
         <a href="/terms-of-service/" target="_blank" rel="noopener noreferrer">Terms of Service</a>.
       </span>
-    </label>
-  </div>
+    </span>
+  </label>
 </div>
