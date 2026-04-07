@@ -4080,8 +4080,3 @@ form[data-lead-form] button[type="submit"].is-busy {
   }
 }
 
-/* reCAPTCHA v3 badge lives in the light DOM; LeadConnector’s chat (shadow + its own fixed layers)
-   ignores `chat-widget { transform }` in practice. Moving the badge up keeps it visible next to the launcher + prompt. */
-.grecaptcha-badge {
-  bottom: calc(152px + env(safe-area-inset-bottom, 0px)) !important;
-}
