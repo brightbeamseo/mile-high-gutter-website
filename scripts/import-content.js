@@ -40,6 +40,7 @@ function stringListFromJson(arr) {
 /** Document fields for siteSettings (Sanity schema: siteSettings.ts) */
 function buildSiteSettingsData(json) {
   return {
+    ...(json.header ? { header: json.header } : {}),
     business: json.business,
     businessCategories: stringListFromJson(json.businessCategories),
     keywords: stringListFromJson(json.keywords),

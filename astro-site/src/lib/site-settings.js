@@ -116,10 +116,10 @@ export function mergeHeaderFromSettings(settings, fallbackHeader) {
     ...base,
     // Merge field-by-field so a partial `header.offerBar` on site settings still wins
     // (Sanity often sends only changed fields; `??` replaced the whole block with homePage's 10%).
-    offerBar: {
-      ...fallbackHeader?.offerBar,
-      ...settings?.header?.offerBar,
-    },
+    offerBar:
+      settings?.header?.offerBar != null
+        ? { ...settings.header.offerBar }
+        : fallbackHeader?.offerBar,
   }
 }
 
@@ -145,11 +145,12 @@ export async function getSiteSettings() {
   // **siteSettingsSingleton** only — never list[0]'s offerBar when that isn't the singleton.
   const rawHeader = linksSource?.header ?? singleton?.header
   const singletonOffer = singletonDoc?.header?.offerBar
+  // Use singleton offer bar as the whole object so unset Studio fields do not linger from homePage.
   const mergedHeader =
     rawHeader && singletonOffer != null
       ? {
           ...rawHeader,
-          offerBar: { ...rawHeader?.offerBar, ...singletonOffer },
+          offerBar: { ...singletonOffer },
         }
       : rawHeader
 
