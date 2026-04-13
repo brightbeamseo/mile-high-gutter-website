@@ -102,11 +102,11 @@
   },
   "header": {
     "offerBar": {
-      "textBeforeDiscount": "Spring special — Get discounts on your gutter services! Schedule your estimate today.",
+      "textBeforeDiscount": "Spring special — Get discounts on your gutter services! ",
       "discountLabel": "",
       "textAfterDiscount": "",
-      "ctaText": "",
-      "ctaHref": ""
+      "ctaText": "Schedule your estimate today.",
+      "ctaHref": "#contact"
     },
     "navItems": [
       {
