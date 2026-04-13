@@ -206,12 +206,20 @@ def render_header(home: dict[str, Any], ctx: dict[str, str]) -> str:
     ob = hdr["offerBar"]
     nav = _render_nav_items(hdr)
     call = sub_ctx(hdr.get("callCtaTemplate", "Call: {{phoneDisplay}}"), ctx)
+    discount = (ob.get("discountLabel") or "").strip()
+    strong_html = f"<strong>{esc(discount)}</strong>" if discount else ""
+    cta_text = (ob.get("ctaText") or "").strip()
+    cta_href = ob.get("ctaHref") or "#contact"
+    link_html = (
+        f' <a href="{esc(cta_href, quote=True)}" class="offer-link"><strong>{esc(cta_text)}</strong></a>'
+        if cta_text
+        else ""
+    )
     return f"""  <header class="header">
     <div class="offer-bar">
       <div class="offer-bar-inner">
         <p class="offer-message">
-          {esc(ob["textBeforeDiscount"])}<strong>{esc(ob["discountLabel"])}</strong>{esc(ob["textAfterDiscount"])}
-          <a href="{esc(ob["ctaHref"], quote=True)}" class="offer-link"><strong>{esc(ob["ctaText"])}</strong></a>
+          {esc(ob["textBeforeDiscount"])}{strong_html}{esc(ob.get("textAfterDiscount") or "")}{link_html}
         </p>
       </div>
     </div>

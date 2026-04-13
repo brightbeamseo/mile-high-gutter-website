@@ -1,0 +1,33 @@
+---
+import { asStr } from '../lib/sanity-strings.js'
+
+interface OfferBarFields {
+  textBeforeDiscount?: string | null
+  discountLabel?: string | null
+  textAfterDiscount?: string | null
+  ctaText?: string | null
+  ctaHref?: string | null
+}
+
+interface Props {
+  offerBar?: OfferBarFields | null
+}
+
+const { offerBar } = Astro.props
+const discount = asStr(offerBar?.discountLabel).trim()
+const cta = asStr(offerBar?.ctaText).trim()
+const href = asStr(offerBar?.ctaHref) || '#contact'
+---
+
+{asStr(offerBar?.textBeforeDiscount)}
+{discount ? <strong>{discount}</strong> : null}{asStr(offerBar?.textAfterDiscount)}
+{
+  cta ? (
+    <>
+      {' '}
+      <a href={href} class="offer-link">
+        <strong>{cta}</strong>
+      </a>
+    </>
+  ) : null
+}

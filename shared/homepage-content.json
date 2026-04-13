@@ -102,11 +102,11 @@
   },
   "header": {
     "offerBar": {
-      "textBeforeDiscount": "Enjoy ",
-      "discountLabel": "10% Off",
-      "textAfterDiscount": " All Gutter Services This Spring — ",
-      "ctaText": "Get a Quote Now!",
-      "ctaHref": "#contact"
+      "textBeforeDiscount": "Spring special — Get discounts on your gutter services! Schedule your estimate today.",
+      "discountLabel": "",
+      "textAfterDiscount": "",
+      "ctaText": "",
+      "ctaHref": ""
     },
     "navItems": [
       {

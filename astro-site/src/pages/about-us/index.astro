@@ -4,6 +4,7 @@ import FooterSocialIcon from '../../components/FooterSocialIcon.astro'
 import FooterHoursRow from '../../components/FooterHoursRow.astro'
 import FooterContactInfo from '../../components/FooterContactInfo.astro'
 import LeadFormSmsConsent from '../../components/LeadFormSmsConsent.astro'
+import OfferBarMessage from '../../components/OfferBarMessage.astro'
 import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../../lib/footer-contact-heading.js'
 import { GROQ_HOME_PAGE, sanity } from '../../lib/sanity.js'
 import { getSiteSettings, mergeHeaderFromSettings } from '../../lib/site-settings.js'
@@ -67,7 +68,7 @@ const universalRequiredIndicator = asStr(formsCfg?.requiredIndicator) || '*'
 
 <BaseLayout title={pageTitle} description={pageDescription} theme={settings?.theme} forms={{ submitPath: asStr(settings?.forms?.submitPath) || '/api/lead' }}>
   <header class="header">
-    <div class="offer-bar"><div class="offer-bar-inner"><p class="offer-message">{asStr(header?.offerBar?.textBeforeDiscount)}<strong>{asStr(header?.offerBar?.discountLabel)}</strong>{asStr(header?.offerBar?.textAfterDiscount)} <a href={asStr(header?.offerBar?.ctaHref) || '#contact'} class="offer-link"><strong>{asStr(header?.offerBar?.ctaText) || 'Get a Quote Now!'}</strong></a></p></div></div>
+    <div class="offer-bar"><div class="offer-bar-inner"><p class="offer-message"><OfferBarMessage offerBar={header?.offerBar} /></p></div></div>
     <div class="header-nav">
       <div class="header-inner">
         <a href="/" class="logo" aria-label={logoAriaLabel}>
