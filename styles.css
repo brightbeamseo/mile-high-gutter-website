@@ -4131,3 +4131,9 @@ form[data-lead-form] button[type="submit"].is-busy {
   }
 }
 
+/* Google reCAPTCHA v3 badge (injected) — default is bottom-right; keep bottom-left for layout/chat balance */
+.grecaptcha-badge {
+  right: auto !important;
+  left: max(10px, env(safe-area-inset-left, 0px)) !important;
+}
+
