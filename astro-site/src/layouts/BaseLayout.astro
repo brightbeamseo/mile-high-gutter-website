@@ -30,33 +30,13 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Google Tag Manager (deferred to avoid competing with LCP) -->
+    <!-- Google Tag Manager -->
     <script is:inline>
-      (function (w, d, s, l, i) {
-        var loaded = false;
-        function loadGtm() {
-          if (loaded) return;
-          loaded = true;
-          w[l] = w[l] || [];
-          w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-          var f = d.getElementsByTagName(s)[0];
-          var j = d.createElement(s);
-          var dl = l != 'dataLayer' ? '&l=' + l : '';
-          j.async = true;
-          j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-          if (f && f.parentNode) f.parentNode.insertBefore(j, f);
-        }
-        var trigger = function () {
-          loadGtm();
-          w.removeEventListener('pointerdown', trigger, { passive: true });
-          w.removeEventListener('keydown', trigger, { passive: true });
-          w.removeEventListener('scroll', trigger, { passive: true });
-        };
-        w.addEventListener('pointerdown', trigger, { once: true, passive: true });
-        w.addEventListener('keydown', trigger, { once: true, passive: true });
-        w.addEventListener('scroll', trigger, { once: true, passive: true });
-        w.setTimeout(loadGtm, 5000);
-      })(window, document, 'script', 'dataLayer', 'GTM-MVS522LX');
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-MVS522LX');
     </script>
     <!-- End Google Tag Manager -->
     <meta charset="UTF-8" />
