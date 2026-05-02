@@ -730,6 +730,7 @@ def render_footer(home: dict[str, Any], ctx: dict[str, str]) -> str:
     sup_nav = "\n        ".join(sup_links)
 
     copyright_href = esc(b["copyrightSiteUrl"], quote=True)
+    license_display = esc(str(fs.get("licenseNumber") or "016436"))
 
     return f"""  <!-- Estimate / schedule CTAs site-wide: link to #contact (copy this footer on every page). -->
   <footer class="footer">
@@ -823,7 +824,10 @@ def render_footer(home: dict[str, Any], ctx: dict[str, str]) -> str:
 
   <div class="footer-support">
     <div class="container footer-support-inner">
-      <p><a href="{copyright_href}">© <span id="year"></span> — {esc(ctx["companyName"])}</a></p>
+      <div class="footer-support-lead">
+        <p><a href="{copyright_href}">© <span id="year"></span> — {esc(ctx["companyName"])}</a></p>
+        <p class="footer-license">License Number — {license_display}</p>
+      </div>
       <nav aria-label="{esc(fs["ariaLabel"], quote=True)}">
         {sup_nav}
       </nav>
