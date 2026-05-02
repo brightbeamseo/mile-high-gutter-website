@@ -6,6 +6,7 @@ import FooterContactInfo from '../components/FooterContactInfo.astro'
 import FooterHoursRow from '../components/FooterHoursRow.astro'
 import LeadFormSmsConsent from '../components/LeadFormSmsConsent.astro'
 import OfferBarMessage from '../components/OfferBarMessage.astro'
+import FooterSupportBar from '../components/FooterSupportBar.astro'
 import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../lib/footer-contact-heading.js'
 import { GROQ_HOME_PAGE, sanity } from '../lib/sanity.js'
 import { getSiteSettings, mergeHeaderFromSettings } from '../lib/site-settings.js'
@@ -911,24 +912,12 @@ function responsiveSrc(src, width = 800) {
     </div>
   </footer>
 
-  <div class="footer-support">
-    <div class="container footer-support-inner">
-      <p>
-        <a href={copyrightHref} set:html={copyrightInnerHtml}></a>
-      </p>
-      <nav aria-label={asStr(footerSupport?.ariaLabel)}>
-        {footerSupport?.links?.map((link) => (
-          <a
-            href={asStr(link.href)}
-            target={asStr(link.target) || undefined}
-            rel={asStr(link.rel) || undefined}
-          >
-            {asStr(link.label)}
-          </a>
-        ))}
-      </nav>
-    </div>
-  </div>
+  <FooterSupportBar
+    footerSupport={footerSupport}
+    copyrightHref={copyrightHref}
+    companyName={companyName}
+    copyrightInnerHtml={copyrightInnerHtml}
+  />
   <script
     type="application/json"
     id="homepage-typed-phrases"

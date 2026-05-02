@@ -5,6 +5,7 @@ import FooterHoursRow from '../../components/FooterHoursRow.astro'
 import FooterContactInfo from '../../components/FooterContactInfo.astro'
 import LeadFormSmsConsent from '../../components/LeadFormSmsConsent.astro'
 import OfferBarMessage from '../../components/OfferBarMessage.astro'
+import FooterSupportBar from '../../components/FooterSupportBar.astro'
 import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../../lib/footer-contact-heading.js'
 import { GROQ_HOME_PAGE, sanity } from '../../lib/sanity.js'
 import { getSiteSettings, mergeHeaderFromSettings } from '../../lib/site-settings.js'
@@ -250,5 +251,5 @@ const universalRequiredIndicator = asStr(formsCfg?.requiredIndicator) || '*'
     <div class="container"><div class="footer-inner"><div class="footer-brand-block footer-col">{logoWhite ? <img src={mediaUrl(logoWhite)} alt={companyName} class="footer-logo" /> : null}<p class="footer-address">{descriptionShort}</p><div class="footer-social" aria-label={asStr(footerBrand?.socialAriaLabel)}>{footerBrand?.socialLinks?.map((s) => (<a href={asStr(s.href)} aria-label={asStr(s.ariaLabel)}><FooterSocialIcon platform={asStr(s.platform)} /></a>))}</div></div>{footerColumns?.map((col) => (<div class="footer-col"><p class="footer-heading">{asStr(col.heading)}</p>{col.links?.length ? (<nav class="footer-links" aria-label={asStr(col.ariaLabel)}>{col.links.map((link) => (<a href={asStr(link.href)}>{asStr(link.label)}</a>))}</nav>) : null}{isContactFooterColumnHeading(col.heading) ? <FooterContactInfo variant="footer-column" phoneTel={phoneTel} phoneDisplay={phoneDisplay} email={email} address={address} addressHref={addressHref} /> : null}{col.hoursHeading ? <p class="footer-heading footer-hours-heading">{asStr(col.hoursHeading)}</p> : null}{col.hoursText ? <FooterHoursRow hoursText={col.hoursText} /> : null}</div>))}</div></div>
   </footer>
 
-  <div class="footer-support"><div class="container footer-support-inner"><p>© <span id="year"></span> — <a href={copyrightHref}>{companyName}</a></p><nav aria-label={asStr(footerSupport?.ariaLabel)}>{footerSupport?.links?.map((link) => (<a href={asStr(link.href)} target={asStr(link.target) || undefined} rel={asStr(link.rel) || undefined}>{asStr(link.label)}</a>))}</nav></div></div>
+  <FooterSupportBar footerSupport={footerSupport} copyrightHref={copyrightHref} companyName={companyName} />
 </BaseLayout>

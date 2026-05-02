@@ -4,6 +4,7 @@ import FooterSocialIcon from '../../components/FooterSocialIcon.astro'
 import FooterContactInfo from '../../components/FooterContactInfo.astro'
 import LeadFormSmsConsent from '../../components/LeadFormSmsConsent.astro'
 import OfferBarMessage from '../../components/OfferBarMessage.astro'
+import FooterSupportBar from '../../components/FooterSupportBar.astro'
 import FooterHoursRow from '../../components/FooterHoursRow.astro'
 import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../../lib/footer-contact-heading.js'
 import { GROQ_HOME_PAGE, sanity } from '../../lib/sanity.js'
@@ -402,16 +403,5 @@ const faqItems = Array.isArray(faqData?.items)
     </div>
   </footer>
 
-  <div class="footer-support">
-    <div class="container footer-support-inner">
-      <p>© <span id="year"></span> — <a href={copyrightHref}>{companyName}</a></p>
-      <nav aria-label={asStr(footerSupport?.ariaLabel)}>
-        {footerSupport?.links?.map((link) => (
-          <a href={asStr(link.href)} target={asStr(link.target) || undefined} rel={asStr(link.rel) || undefined}>
-            {asStr(link.label)}
-          </a>
-        ))}
-      </nav>
-    </div>
-  </div>
+  <FooterSupportBar footerSupport={footerSupport} copyrightHref={copyrightHref} companyName={companyName} />
 </BaseLayout>

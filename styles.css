@@ -3595,6 +3595,18 @@ form[data-lead-form] button[type="submit"].is-busy {
   padding: 0.8rem 0;
 }
 
+.footer-support-lead {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.footer-license {
+  margin: 0;
+  font-size: 0.85em;
+  opacity: 0.92;
+}
+
 .footer-support p {
   margin: 0;
 }

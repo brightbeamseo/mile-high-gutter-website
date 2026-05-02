@@ -823,6 +823,12 @@ export const footerSupport = defineType({
   fields: [
     defineField({ name: 'ariaLabel', type: 'string' }),
     defineField({ name: 'copyrightTemplate', type: 'string' }),
+    defineField({
+      name: 'licenseNumber',
+      type: 'string',
+      title: 'License number',
+      description: 'Shown in the footer bar as “License Number — …” (e.g. contractor registration). Default on site: 016436.',
+    }),
     defineField({ name: 'links', type: 'array', of: [{ type: 'footerSupportLink' }] }),
   ],
 })

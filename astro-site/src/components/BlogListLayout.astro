@@ -8,6 +8,7 @@ import FooterContactInfo from './FooterContactInfo.astro'
 import LeadFormSmsConsent from './LeadFormSmsConsent.astro'
 import OfferBarMessage from './OfferBarMessage.astro'
 import FooterHoursRow from './FooterHoursRow.astro'
+import FooterSupportBar from './FooterSupportBar.astro'
 import { googleBusinessProfileUrl, isContactFooterColumnHeading } from '../lib/footer-contact-heading.js'
 import { asStr, mediaUrl } from '../lib/sanity-strings.js'
 
@@ -313,18 +314,5 @@ const {
     </div>
   </footer>
 
-  <div class="footer-support">
-    <div class="container footer-support-inner">
-      <p>
-        © <span id="year" /> — <a href={copyrightHref}>{companyName}</a>
-      </p>
-      <nav aria-label={asStr(footerSupport?.ariaLabel)}>
-        {footerSupport?.links?.map((link) => (
-          <a href={asStr(link.href)} target={asStr(link.target) || undefined} rel={asStr(link.rel) || undefined}>
-            {asStr(link.label)}
-          </a>
-        ))}
-      </nav>
-    </div>
-  </div>
+  <FooterSupportBar footerSupport={footerSupport} copyrightHref={copyrightHref} companyName={companyName} />
 </BaseLayout>

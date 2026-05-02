@@ -586,6 +586,7 @@
   ],
   "footerSupport": {
     "ariaLabel": "Footer Support Links",
+    "licenseNumber": "016436",
     "copyrightTemplate": "© {{year}} — {{companyName}}",
     "links": [
       { "label": "Privacy Policy", "href": "#" },

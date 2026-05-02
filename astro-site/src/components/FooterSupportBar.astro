@@ -1,0 +1,46 @@
+---
+import { asStr } from '../lib/sanity-strings.js'
+
+/**
+ * Bottom bar: copyright, optional license (from Sanity `footerSupport.licenseNumber`, default 016436), support links.
+ * @param {object} props
+ * @param {object} [props.footerSupport] — from site settings / home page
+ * @param {string} props.copyrightHref
+ * @param {string} props.companyName
+ * @param {string} [props.copyrightInnerHtml] — sanitized HTML for homepage (uses copyrightTemplate); omit for standard © line
+ */
+const { footerSupport = {}, copyrightHref, companyName, copyrightInnerHtml } = Astro.props
+
+const links = Array.isArray(footerSupport?.links) ? footerSupport.links : []
+const aria = asStr(footerSupport?.ariaLabel)
+const license = asStr(footerSupport?.licenseNumber).trim() || '016436'
+const useTemplate = typeof copyrightInnerHtml === 'string' && copyrightInnerHtml.length > 0
+---
+
+<div class="footer-support">
+  <div class="container footer-support-inner">
+    <div class="footer-support-lead">
+      {
+        useTemplate ? (
+          <p>
+            <a href={copyrightHref} set:html={copyrightInnerHtml} />
+          </p>
+        ) : (
+          <p>
+            © <span id="year"></span> — <a href={copyrightHref}>{companyName}</a>
+          </p>
+        )
+      }
+      <p class="footer-license">License Number — {license}</p>
+    </div>
+    <nav aria-label={aria}>
+      {
+        links.map((link) => (
+          <a href={asStr(link.href)} target={asStr(link.target) || undefined} rel={asStr(link.rel) || undefined}>
+            {asStr(link.label)}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</div>
