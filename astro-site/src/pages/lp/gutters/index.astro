@@ -206,7 +206,9 @@ function responsiveSrc(src, width = 800) {
   return `/Media%20(MHG)/Images%20(Mile%20High)/responsive/${base}-${width}.webp`
 }
 
-const lpHeroHeadline = 'Save money with our spring special on gutters'
+const lpKeyword = 'gutters'
+const lpHeroHeadline = `Save money with our spring special on ${lpKeyword}`
+const lpProjectsHeadline = `Our ${lpKeyword} Projects`
 ---
 
 <BaseLayout
@@ -400,9 +402,9 @@ const lpHeroHeadline = 'Save money with our spring special on gutters'
       </section>
     </section>
 
-    <section id="projects" class="image-scroller" aria-label={asStr(projects?.sectionAriaLabel)}>
+    <section id="projects" class="image-scroller" aria-label={lpProjectsHeadline}>
       <div class="container projects-head">
-        <h2 class="section-title">{asStr(projects?.headline)}</h2>
+        <h2 class="section-title">{lpProjectsHeadline}</h2>
       </div>
       <div class="projects-carousel" id="projects-carousel">
         {projects?.slides?.map((slide) => {
