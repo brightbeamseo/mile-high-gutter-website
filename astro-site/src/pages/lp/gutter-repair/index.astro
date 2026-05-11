@@ -208,6 +208,24 @@ const lpHeroHeadline = capitalizeHeaderWords(
   `Spring Special! Save Money Today On ${lpKeyword}.`,
 )
 const lpHeroLead = `Fast scheduling, careful workmanship, and clean job sites—we focus on ${lpKeyword}: stopping leaks, restoring proper slope, and protecting your home or business.`
+const lpWhyRepairLead =
+  'From seam leaks and loose hangers to storm damage—we deliver dependable gutter repair, clear communication, and fast scheduling across the Denver metro.'
+const lpWhyRepairBullets = [
+  {
+    title: 'Denver Weather Savvy:',
+    text: 'We repair what Colorado throws at gutters—expansion, ice, hail, and wind—so fixes hold up through freeze-thaw and storm seasons.',
+  },
+  {
+    title: 'Repair-First Approach:',
+    text: 'We fix seams, slope, hangers, corners, and downspouts with targeted work—full replacement only when repair will not cut it.',
+  },
+  {
+    title: 'Straightforward Service:',
+    text: 'Written estimates, realistic timelines, on-time arrivals, and clean job sites after every repair visit.',
+  },
+]
+const lpWhyRepairNote =
+  'Trusted gutter repairs for Colorado homes—stop leaks early and keep water moving away from your roof and foundation.'
 const lpProjectsHeadline = capitalizeHeaderWords(`Our ${lpKeyword} Projects`)
 const lpWhyChooseHeadline = capitalizeHeaderWords(
   `You're #1 choice for ${lpKeyword} in Denver`,
@@ -475,15 +493,15 @@ const universalFormIntro = `Tell us about your ${lpKeyword} project and we will 
         <div class="why-choose-content">
           <div class="why-eyebrow">{asStr(whyChoose?.eyebrow)}</div>
           <h2 class="section-title section-title-secondary">{lpWhyChooseHeadline}</h2>
-          <p class="section-lead">{asStr(whyChoose?.lead)}</p>
+          <p class="section-lead">{lpWhyRepairLead}</p>
           <ul class="why-choose-list">
-            {whyChoose?.bullets?.map((b) => (
+            {lpWhyRepairBullets.map((b) => (
               <li>
-                <strong>{asStr(b.title)}</strong> {asStr(b.text)}
+                <strong>{b.title}</strong> {b.text}
               </li>
             ))}
           </ul>
-          <p class="why-choose-note">{asStr(whyChoose?.note)}</p>
+          <p class="why-choose-note">{lpWhyRepairNote}</p>
           <div class="why-choose-actions">
             <a href={telLink} class="btn btn-primary btn-lg">{whyCallLabel}</a>
             <a href={asStr(whyCtas?.estimateHref)} class="btn btn-outline btn-lg request-estimate">
