@@ -154,7 +154,6 @@ const universalFormAction = asStr(formsCfg?.submitPath) || asStr(footerEstimate?
 const universalFormMethod = asStr(footerEstimate?.formMethod)
 const universalFormIntro = asStr(footerEstimate?.intro)
 const universalSubmitLabel = asStr(universalFormFields?.submitButton)
-const universalFormKicker = asStr(formsCfg?.formKicker) || 'Free Estimate'
 const universalFormAriaLabel = asStr(formsCfg?.formAriaLabel) || 'Lead form'
 const universalRequiredIndicator = asStr(formsCfg?.requiredIndicator) || '*'
 
@@ -218,7 +217,7 @@ const lpEstimateCtaLabel = capitalizeHeaderWords(`Start your Free ${lpKeyword} e
 const lpFaqHeadingId = 'lp-faq-heading'
 const lpFaqHeadline = capitalizeHeaderWords(`Frequently asked questions about ${lpKeyword}`)
 const lpFaqItems = buildLpFaqItems(lpKeyword)
-const universalFormHeading = capitalizeHeaderWords(`Get your Free ${lpKeyword} estimate`)
+const universalFormHeading = capitalizeHeaderWords(`Get Your Free ${lpKeyword} Estimate`)
 ---
 
 <BaseLayout
@@ -328,7 +327,6 @@ const universalFormHeading = capitalizeHeaderWords(`Get your Free ${lpKeyword} e
           aria-label={universalFormAriaLabel}
         >
           <div class="hero-form-heading">
-            <div class="hero-form-kicker">{universalFormKicker}</div>
             <h2>{universalFormHeading}</h2>
           </div>
           <p class="hero-form-sub">{universalFormIntro}</p>
