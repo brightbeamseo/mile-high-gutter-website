@@ -209,6 +209,7 @@ function responsiveSrc(src, width = 800) {
 const lpKeyword = 'gutter repair'
 const lpHeroHeadline = `Save money with our spring special on ${lpKeyword}`
 const lpProjectsHeadline = `Our ${lpKeyword} Projects`
+const lpWhyChooseHeadline = `Dependable ${lpKeyword} in Denver`
 ---
 
 <BaseLayout
@@ -465,7 +466,7 @@ const lpProjectsHeadline = `Our ${lpKeyword} Projects`
         </div>
         <div class="why-choose-content">
           <div class="why-eyebrow">{asStr(whyChoose?.eyebrow)}</div>
-          <h2 class="section-title section-title-secondary">{asStr(whyChoose?.headline)}</h2>
+          <h2 class="section-title section-title-secondary">{lpWhyChooseHeadline}</h2>
           <p class="section-lead">{asStr(whyChoose?.lead)}</p>
           <ul class="why-choose-list">
             {whyChoose?.bullets?.map((b) => (
