@@ -87,9 +87,7 @@ const reviewsCtaHref = asStr(reviewsSummary?.ctaHref) || '/reviews/'
 const callLabelNav = applyTemplate(asStr(header?.callCtaTemplate), {
   phoneDisplay,
 })
-const callLabelHero = applyTemplate(asStr(hero?.callCtaTemplate), {
-  phoneDisplay,
-})
+const callLabelHero = 'Call Now.'
 const logoAriaLabel = applyTemplate(asStr(header?.logoAriaLabelTemplate), {
   companyName,
 })
@@ -207,18 +205,19 @@ const lpKeyword = 'Denver Gutter Services'
 const lpHeroHeadline = capitalizeHeaderWords(
   `Spring Special! Save Money Today On ${lpKeyword}.`,
 )
-const lpHeroLead = `Fast scheduling, careful workmanship, and clean job sites—we deliver ${lpKeyword} focused on stopping leaks, restoring proper slope, and protecting your home or business.`
-const lpProjectsHeadline = capitalizeHeaderWords(`Our ${lpKeyword} Projects`)
+const lpHeroLead = `Fast scheduling, careful workmanship, and clean job sites—we focus on Denver gutters: installation, repair, cleaning, and guards that keep water moving away from your roofline and foundation.`
+const lpProjectsHeadline = capitalizeHeaderWords('Our Denver gutter projects')
 const lpWhyChooseHeadline = capitalizeHeaderWords(
   `You're #1 choice for ${lpKeyword}`,
 )
-const lpServicesHeadline = capitalizeHeaderWords(`A better ${lpKeyword} experience`)
-const lpEstimateCtaLabel = capitalizeHeaderWords(`Start your Free ${lpKeyword} estimate`)
+const lpServicesHeadline = capitalizeHeaderWords('A better Denver gutter experience')
+const lpEstimateCtaLabel = capitalizeHeaderWords('Start your free estimate')
 const lpFaqHeadingId = 'lp-faq-heading'
 const lpFaqHeadline = capitalizeHeaderWords(`Frequently asked questions about ${lpKeyword}`)
 const lpFaqItems = buildLpFaqItems(lpKeyword)
-const universalFormHeading = capitalizeHeaderWords(`Start your Free ${lpKeyword} estimate`)
-const universalFormIntro = `Tell us about your ${lpKeyword} project and we will respond quickly.`
+const universalFormHeading = capitalizeHeaderWords('Start your free estimate')
+const universalFormIntro =
+  'Call or use the form—we will reply quickly to schedule your Denver gutter estimate.'
 ---
 
 <BaseLayout
