@@ -20,6 +20,7 @@ import {
 } from '../../../lib/sanity-strings.js'
 import { assertSanityHomepage } from '../../../lib/assert-sanity-homepage.js'
 import { sanitizeCmsHtml } from '../../../lib/sanitize-cms-html.js'
+import { buildLpFaqItems } from '../../../lib/lp-faq-items.js'
 
 const [settings, homePage] = await Promise.all([
   getSiteSettings(),
@@ -70,7 +71,6 @@ const reviews = settings?.reviews ?? hp.reviews
 const reviewsSummary = reviews?.summary
 const reviewValues = reviews?.reviewValues
 const serviceArea = hp.serviceArea
-const faq = hp.faq
 const footerEstimate = settings?.footerEstimate ?? hp.footerEstimate
 const footerEstimateFields = footerEstimate?.formFields
 const footerBrand = settings?.footerBrand ?? hp.footerBrand
@@ -211,6 +211,9 @@ const lpProjectsHeadline = `Our ${lpKeyword} Projects`
 const lpWhyChooseHeadline = `You're #1 choice for ${lpKeyword} in Denver`
 const lpServicesHeadline = `A better ${lpKeyword} experience`
 const lpEstimateCtaLabel = `Start your Free ${lpKeyword} estimate`
+const lpFaqHeadingId = 'lp-faq-heading'
+const lpFaqHeadline = `Frequently asked questions about ${lpKeyword}`
+const lpFaqItems = buildLpFaqItems(lpKeyword)
 ---
 
 <BaseLayout
@@ -714,14 +717,14 @@ const lpEstimateCtaLabel = `Start your Free ${lpKeyword} estimate`
       </div>
     </section>
 
-    <section id="faq" class="section faq-section" aria-labelledby={asStr(faq?.headingId)}>
+    <section id="faq" class="section faq-section" aria-labelledby={lpFaqHeadingId}>
       <div class="container">
         <div class="faq-panel">
-          <h2 class="section-title section-title-secondary" id={asStr(faq?.headingId)}>
-            {asStr(faq?.headline)}
+          <h2 class="section-title section-title-secondary" id={lpFaqHeadingId}>
+            {lpFaqHeadline}
           </h2>
           <div class="faq-list" data-faq-accordion>
-            {faq?.items?.map((item, idx) => {
+            {lpFaqItems.map((item, idx) => {
               const n = idx + 1
               const btnId = `faq-btn-${n}`
               const panelId = `faq-panel-${n}`
@@ -734,7 +737,7 @@ const lpEstimateCtaLabel = `Start your Free ${lpKeyword} estimate`
                     aria-expanded="false"
                     aria-controls={panelId}
                   >
-                    <span class="faq-question">{asStr(item.question)}</span>
+                    <span class="faq-question">{item.question}</span>
                     <span class="faq-chevron" aria-hidden="true"></span>
                   </button>
                   <div
@@ -744,7 +747,7 @@ const lpEstimateCtaLabel = `Start your Free ${lpKeyword} estimate`
                     aria-labelledby={btnId}
                     aria-hidden="true"
                   >
-                    <div class="faq-answer" set:html={sanitizeCmsHtml(asStr(item.answerHtml))} />
+                    <div class="faq-answer" set:html={sanitizeCmsHtml(item.answerHtml)} />
                   </div>
                 </div>
               )
