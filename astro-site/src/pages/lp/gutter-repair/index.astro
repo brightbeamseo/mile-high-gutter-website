@@ -210,6 +210,7 @@ const lpKeyword = 'gutter repair'
 const lpHeroHeadline = `Save money with our spring special on ${lpKeyword}`
 const lpProjectsHeadline = `Our ${lpKeyword} Projects`
 const lpWhyChooseHeadline = `You're #1 choice for ${lpKeyword} in Denver`
+const lpServicesHeadline = `A better ${lpKeyword} experience`
 ---
 
 <BaseLayout
@@ -488,7 +489,7 @@ const lpWhyChooseHeadline = `You're #1 choice for ${lpKeyword} in Denver`
 
     <section id="services" class="section services" style={servicesBgStyle}>
       <div class="container">
-        <h2 class="section-title">{asStr(services?.headline)}</h2>
+        <h2 class="section-title">{lpServicesHeadline}</h2>
         <div class="services-grid">
           {services?.items?.map((svc) => (
             <article class="service-card">
