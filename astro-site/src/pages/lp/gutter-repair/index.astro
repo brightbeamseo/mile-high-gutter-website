@@ -151,7 +151,6 @@ const copyrightInnerHtml = sanitizeCmsHtml(
 const universalFormFields = footerEstimateFields
 const universalFormAction = asStr(formsCfg?.submitPath) || asStr(footerEstimate?.formAction)
 const universalFormMethod = asStr(footerEstimate?.formMethod)
-const universalFormHeading = asStr(footerEstimate?.headline)
 const universalFormIntro = asStr(footerEstimate?.intro)
 const universalSubmitLabel = asStr(universalFormFields?.submitButton)
 const universalFormKicker = asStr(formsCfg?.formKicker) || 'Free Estimate'
@@ -214,6 +213,7 @@ const lpEstimateCtaLabel = `Start your Free ${lpKeyword} estimate`
 const lpFaqHeadingId = 'lp-faq-heading'
 const lpFaqHeadline = `Frequently asked questions about ${lpKeyword}`
 const lpFaqItems = buildLpFaqItems(lpKeyword)
+const universalFormHeading = `Get your Free ${lpKeyword} estimate`
 ---
 
 <BaseLayout
@@ -763,7 +763,7 @@ const lpFaqItems = buildLpFaqItems(lpKeyword)
       <div class="container">
         <div class="contact-wrapper">
           <div class="contact-info">
-            <h2 class="section-title" id="footer-estimate-heading">{asStr(footerEstimate?.headline)}</h2>
+            <h2 class="section-title" id="footer-estimate-heading">{universalFormHeading}</h2>
             <p>{asStr(footerEstimate?.intro)}</p>
             <FooterContactInfo
               variant="estimate"
