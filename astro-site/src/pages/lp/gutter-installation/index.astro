@@ -21,6 +21,7 @@ import {
 import { assertSanityHomepage } from '../../../lib/assert-sanity-homepage.js'
 import { sanitizeCmsHtml } from '../../../lib/sanitize-cms-html.js'
 import { buildLpFaqItems } from '../../../lib/lp-faq-items.js'
+import { capitalizeHeaderWords } from '../../../lib/capitalize-header-words.js'
 
 const [settings, homePage] = await Promise.all([
   getSiteSettings(),
@@ -205,15 +206,19 @@ function responsiveSrc(src, width = 800) {
 }
 
 const lpKeyword = 'gutter installation'
-const lpHeroHeadline = `Save money with our spring special on ${lpKeyword}`
-const lpProjectsHeadline = `Our ${lpKeyword} Projects`
-const lpWhyChooseHeadline = `You're #1 choice for ${lpKeyword} in Denver`
-const lpServicesHeadline = `A better ${lpKeyword} experience`
-const lpEstimateCtaLabel = `Start your Free ${lpKeyword} estimate`
+const lpHeroHeadline = capitalizeHeaderWords(
+  `Save money with our spring special on ${lpKeyword}`,
+)
+const lpProjectsHeadline = capitalizeHeaderWords(`Our ${lpKeyword} Projects`)
+const lpWhyChooseHeadline = capitalizeHeaderWords(
+  `You're #1 choice for ${lpKeyword} in Denver`,
+)
+const lpServicesHeadline = capitalizeHeaderWords(`A better ${lpKeyword} experience`)
+const lpEstimateCtaLabel = capitalizeHeaderWords(`Start your Free ${lpKeyword} estimate`)
 const lpFaqHeadingId = 'lp-faq-heading'
-const lpFaqHeadline = `Frequently asked questions about ${lpKeyword}`
+const lpFaqHeadline = capitalizeHeaderWords(`Frequently asked questions about ${lpKeyword}`)
 const lpFaqItems = buildLpFaqItems(lpKeyword)
-const universalFormHeading = `Get your Free ${lpKeyword} estimate`
+const universalFormHeading = capitalizeHeaderWords(`Get your Free ${lpKeyword} estimate`)
 ---
 
 <BaseLayout
