@@ -70,7 +70,6 @@ const reviews = settings?.reviews ?? hp.reviews
 const reviewsSummary = reviews?.summary
 const reviewValues = reviews?.reviewValues
 const serviceArea = hp.serviceArea
-const team = hp.team
 const faq = hp.faq
 const footerEstimate = settings?.footerEstimate ?? hp.footerEstimate
 const footerEstimateFields = footerEstimate?.formFields
@@ -711,27 +710,6 @@ const lpEstimateCtaLabel = `Start your Free ${lpKeyword} estimate`
               ))}
             </nav>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="team" class="section our-team">
-      <div class="container">
-        <h2 class="section-title">{asStr(team?.headline)}</h2>
-        <div class="team-grid">
-          {team?.members?.map((m) => {
-            const imgSrc = asStr(m.imageSrc)
-            const base = imgSrc.split('/').pop()?.replace('.webp', '')
-            const srcset = responsiveSet(imgSrc)
-            const src = base && srcset ? `/Media%20(MHG)/Images%20(Mile%20High)/responsive/${base}-800.webp` : mediaUrl(imgSrc)
-            return (
-            <article class="team-card">
-              <img src={src} srcset={srcset} sizes="(max-width: 900px) 100vw, 362px" alt={asStr(m.imageAlt)} width="800" height="600" loading="lazy" decoding="async" />
-              <h3>{asStr(m.name)}</h3>
-              <p>{asStr(m.bio)}</p>
-            </article>
-            )
-          })}
         </div>
       </div>
     </section>
