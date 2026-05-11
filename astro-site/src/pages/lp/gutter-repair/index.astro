@@ -237,6 +237,44 @@ const lpFaqHeadline = capitalizeHeaderWords(`Frequently asked questions about ${
 const lpFaqItems = buildLpFaqItems(lpKeyword)
 const universalFormHeading = capitalizeHeaderWords(`Get Your Free ${lpKeyword} Estimate`)
 const universalFormIntro = `Tell us about your ${lpKeyword} project and we will respond quickly.`
+
+const lpRepairAboutHeadline =
+  'Gutter repair first—backed by full-service install, cleaning, and guards, all built for Denver weather.'
+const lpRepairAboutLead =
+  'From separated seams and loose hangers to hail and wind damage, we fix failures at the source so water stays in the system—not against your siding or foundation.'
+const lpRepairAboutBullets = [
+  'Licensed & insured crews trained for gutter repair and safe roofline work.',
+  'Clear communication and fast scheduling when leaks, overflow, or storm damage cannot wait.',
+  'Clean job sites and workmanship you can walk through—proper slope, sealed joints, and secure fasteners.',
+]
+
+const lpRepairUniqueEyebrow = 'Why repair with us'
+const lpRepairUniqueHeadline = 'Licensed crews, clear scheduling, clean repairs—built for Colorado homes'
+const lpRepairUniqueItems = [
+  {
+    iconId: 'shield-check',
+    title: 'Licensed & insured crews',
+    description:
+      'Proper coverage and technicians who know gutter repair at height—so fixes are done safely and to code where it matters.',
+  },
+  {
+    iconId: 'message',
+    title: 'Clear communication & fast scheduling',
+    description:
+      'We tell you what broke, how we will fix it, and when we can be on site—fast response when water is threatening your home or business.',
+  },
+  {
+    iconId: 'sparkle',
+    title: 'Clean job sites & quality workmanship',
+    description:
+      'Controlled tear-out of bad sections, quality fasteners and sealants, and a tidy property—repair work you can see and trust.',
+  },
+]
+
+const lpRepairContactHeadline = 'Ready to schedule gutter repair?'
+const lpRepairContactP1 =
+  'Licensed & insured crews, honest assessments, and scheduling that respects Denver weather—and your timeline.'
+const lpRepairContactP2 = `Call: ${phoneDisplay}`
 ---
 
 <BaseLayout
@@ -533,10 +571,10 @@ const universalFormIntro = `Tell us about your ${lpKeyword} project and we will 
       <div class="container about-grid">
         <div class="about-content">
           <div class="about-eyebrow">{asStr(about?.eyebrow)}</div>
-          <h2 class="section-title">{asStr(about?.headline)}</h2>
-          <p class="about-lead">{asStr(about?.lead)}</p>
+          <h2 class="section-title">{lpRepairAboutHeadline}</h2>
+          <p class="about-lead">{lpRepairAboutLead}</p>
           <ul class="about-list">
-            {asStrArray(about?.bullets).map((line) => (
+            {lpRepairAboutBullets.map((line) => (
               <li>{line}</li>
             ))}
           </ul>
@@ -583,18 +621,18 @@ const universalFormIntro = `Tell us about your ${lpKeyword} project and we will 
 
     <section class="section unique-points" style={uniquePointsBgStyle}>
       <div class="container">
-        <div class="why-eyebrow">{asStr(uniquePoints?.eyebrow)}</div>
-        <h2 class="section-title section-title-secondary">{asStr(uniquePoints?.headline)}</h2>
+        <div class="why-eyebrow">{lpRepairUniqueEyebrow}</div>
+        <h2 class="section-title section-title-secondary">{lpRepairUniqueHeadline}</h2>
         <div class="unique-grid">
-          {uniquePoints?.items?.map((pt) => (
+          {lpRepairUniqueItems.map((pt) => (
             <article class="result-item">
               <span class="result-value">
                 <span class="result-icon" aria-hidden="true">
-                  <UniquePointIcon iconId={asStr(pt.iconId)} />
+                  <UniquePointIcon iconId={pt.iconId} />
                 </span>
-                {asStr(pt.title)}
+                {pt.title}
               </span>
-              <p>{asStr(pt.description)}</p>
+              <p>{pt.description}</p>
             </article>
           ))}
         </div>
@@ -615,9 +653,9 @@ const universalFormIntro = `Tell us about your ${lpKeyword} project and we will 
     <section class="section contact-banner-split">
       <div class="container contact-banner-grid">
         <div class="contact-banner-copy">
-          <h2 class="section-title">{asStr(contactBanner?.headline)}</h2>
-          <p class="section-lead">{asStr(contactBanner?.paragraph1)}</p>
-          <p class="section-lead">{asStr(contactBanner?.paragraph2)}</p>
+          <h2 class="section-title">{lpRepairContactHeadline}</h2>
+          <p class="section-lead">{lpRepairContactP1}</p>
+          <p class="section-lead">{lpRepairContactP2}</p>
           <div class="contact-banner-actions">
             <a href={telLink} class="contact-banner-phone">
               <img
