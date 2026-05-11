@@ -211,6 +211,7 @@ const lpHeroHeadline = `Save money with our spring special on ${lpKeyword}`
 const lpProjectsHeadline = `Our ${lpKeyword} Projects`
 const lpWhyChooseHeadline = `You're #1 choice for ${lpKeyword} in Denver`
 const lpServicesHeadline = `A better ${lpKeyword} experience`
+const lpEstimateCtaLabel = `Start your Free ${lpKeyword} estimate`
 ---
 
 <BaseLayout
@@ -480,7 +481,7 @@ const lpServicesHeadline = `A better ${lpKeyword} experience`
           <div class="why-choose-actions">
             <a href={telLink} class="btn btn-primary btn-lg">{whyCallLabel}</a>
             <a href={asStr(whyCtas?.estimateHref)} class="btn btn-outline btn-lg request-estimate">
-              {asStr(whyCtas?.estimate)}
+              {lpEstimateCtaLabel}
             </a>
           </div>
         </div>
@@ -518,7 +519,7 @@ const lpServicesHeadline = `A better ${lpKeyword} experience`
           <div class="about-video-actions">
             <a href={telLink} class="btn btn-primary btn-lg">{aboutCallLabel}</a>
             <a href={asStr(about?.ctas?.estimateHref)} class="btn btn-outline btn-lg request-estimate">
-              {asStr(about?.ctas?.estimate)}
+              {lpEstimateCtaLabel}
             </a>
           </div>
         </div>
