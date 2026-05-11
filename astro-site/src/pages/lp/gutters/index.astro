@@ -205,6 +205,8 @@ function responsiveSrc(src, width = 800) {
   if (!base) return mediaUrl(raw)
   return `/Media%20(MHG)/Images%20(Mile%20High)/responsive/${base}-${width}.webp`
 }
+
+const lpHeroHeadline = 'Save money with our spring special on gutters'
 ---
 
 <BaseLayout
@@ -297,7 +299,7 @@ function responsiveSrc(src, width = 800) {
       <div class="container hero-split-inner">
         <div class="hero-copy">
           <div class="hero-eyebrow">{asStr(hero?.eyebrow)}</div>
-          <h1>{asStr(hero?.headline)}</h1>
+          <h1>{lpHeroHeadline}</h1>
           <p class="hero-typed" aria-live="polite">
             <span id="hero-typed-text"></span><span class="hero-caret" aria-hidden="true">|</span>
           </p>
