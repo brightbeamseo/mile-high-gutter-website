@@ -207,6 +207,7 @@ const lpKeyword = 'gutter replacement'
 const lpHeroHeadline = capitalizeHeaderWords(
   `Spring Special! Save Money Today On ${lpKeyword}.`,
 )
+const lpHeroLead = `Fast scheduling, careful workmanship, and clean job sites—we focus on ${lpKeyword}: stopping leaks, restoring proper slope, and protecting your home or business.`
 const lpProjectsHeadline = capitalizeHeaderWords(`Our ${lpKeyword} Projects`)
 const lpWhyChooseHeadline = capitalizeHeaderWords(
   `You're #1 choice for ${lpKeyword} in Denver`,
@@ -314,7 +315,7 @@ const universalFormIntro = `Tell us about your ${lpKeyword} project and we will 
           <p class="hero-typed" aria-live="polite">
             <span id="hero-typed-text"></span><span class="hero-caret" aria-hidden="true">|</span>
           </p>
-          <p class="hero-lead">{asStr(hero?.lead)}</p>
+          <p class="hero-lead">{lpHeroLead}</p>
           <div class="hero-actions">
             <a href={telLink} class="btn btn-primary btn-lg cta1-primary-call">{callLabelHero}</a>
           </div>
