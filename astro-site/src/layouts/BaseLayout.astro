@@ -14,6 +14,7 @@ const {
   homeRevealAnimations = false,
   lcpImageSrc = '',
   noIndex = false,
+  showChatWidget = true,
 } = Astro.props
 
 const settings = await getSiteSettings()
@@ -121,11 +122,15 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
     <Analytics />
     <SpeedInsights />
     <script src="/script.js" defer></script>
-    <!-- GoHighLevel / LeadConnector chat widget -->
-    <script
-      is:inline
-      src="https://widgets.leadconnectorhq.com/loader.js"
-      data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js"
-      data-widget-id="69ce8d738cea9df43402e96e"></script>
+    {
+      showChatWidget ? (
+        <script
+          is:inline
+          src="https://widgets.leadconnectorhq.com/loader.js"
+          data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js"
+          data-widget-id="69ce8d738cea9df43402e96e"
+        />
+      ) : null
+    }
   </body>
 </html>
