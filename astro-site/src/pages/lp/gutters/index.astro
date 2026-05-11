@@ -21,6 +21,7 @@ import {
 import { assertSanityHomepage } from '../../../lib/assert-sanity-homepage.js'
 import { sanitizeCmsHtml } from '../../../lib/sanitize-cms-html.js'
 import { buildLpFaqItems } from '../../../lib/lp-faq-items.js'
+import { getLpHeroTypedPhrases } from '../../../lib/lp-hero-typed-phrases.js'
 import { capitalizeHeaderWords } from '../../../lib/capitalize-header-words.js'
 
 const [settings, homePage] = await Promise.all([
@@ -138,7 +139,7 @@ const servicesBgStyle = `background-color: #143980; background-image: linear-gra
 
 const uniquePointsBgStyle = `background: var(--color-surface); background-image: url("${mediaUrl(uniquePointsBgSrc)}"); background-size: cover; background-position: center;`
 
-const typedPhrases = asStrArray(hero?.typedPhrases)
+const typedPhrases = getLpHeroTypedPhrases('gutters')
 
 const copyrightTemplate = asStr(footerSupport?.copyrightTemplate)
 const copyrightInnerHtml = sanitizeCmsHtml(
@@ -914,7 +915,7 @@ const universalFormIntro =
   <script
     type="application/json"
     id="homepage-typed-phrases"
-    data-fallback-phrase={asStr(hero?.typedFallbackPhrase)}
+    data-fallback-phrase={typedPhrases[0] ? typedPhrases[0] : asStr(hero?.typedFallbackPhrase)}
     set:html={JSON.stringify(typedPhrases)}
   />
 </BaseLayout>
