@@ -14,7 +14,6 @@ const {
   homeRevealAnimations = false,
   lcpImageSrc = '',
   noIndex = false,
-  showChatWidget = true,
 } = Astro.props
 
 const settings = await getSiteSettings()
@@ -40,6 +39,20 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
 <html lang="en">
   <head>
     <script is:inline src="https://t.contentsquare.net/uxa/df176fa84f7a9.js"></script>
+    <script is:inline type="text/javascript">
+      (function (c, l, a, r, i, t, y) {
+        c[a] =
+          c[a] ||
+          function () {
+            ;(c[a].q = c[a].q || []).push(arguments)
+          }
+        t = l.createElement(r)
+        t.async = 1
+        t.src = 'https://www.clarity.ms/tag/' + i
+        y = l.getElementsByTagName(r)[0]
+        y.parentNode.insertBefore(t, y)
+      })(window, document, 'clarity', 'script', 'wqok120hk7')
+    </script>
     <!-- Google Tag Manager -->
     <script is:inline>
       (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -64,7 +77,6 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://services.leadconnectorhq.com" crossorigin />
     <link rel="preconnect" href="https://backend.leadconnectorhq.com" crossorigin />
-    <link rel="preconnect" href="https://widgets.leadconnectorhq.com" crossorigin />
     <link rel="preconnect" href="https://cdn.callrail.com" />
     {lcpImageSrc ? <link rel="preload" as="image" href={lcpImageSrc} fetchpriority="high" /> : null}
     <link
@@ -123,15 +135,5 @@ const formsJson = JSON.stringify(formsForClient).replace(/</g, '\\u003c')
     <Analytics />
     <SpeedInsights />
     <script src="/script.js" defer></script>
-    {
-      showChatWidget ? (
-        <script
-          is:inline
-          src="https://widgets.leadconnectorhq.com/loader.js"
-          data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js"
-          data-widget-id="69ce8d738cea9df43402e96e"
-        />
-      ) : null
-    }
   </body>
 </html>

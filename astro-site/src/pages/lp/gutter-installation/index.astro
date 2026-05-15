@@ -213,7 +213,10 @@ const lpProjectsHeadline = capitalizeHeaderWords(`Our ${lpKeyword} Projects`)
 const lpWhyChooseHeadline = capitalizeHeaderWords(
   `You're #1 choice for ${lpKeyword} in Denver`,
 )
-const lpServicesHeadline = capitalizeHeaderWords(`A better ${lpKeyword} experience`)
+const lpServicesHeadline = capitalizeHeaderWords(`Our ${lpKeyword} services`)
+const lpUniquePointsHeadline = capitalizeHeaderWords(`A better ${lpKeyword} experience`)
+const lpFreeEstimateHeadline = capitalizeHeaderWords(`Start your free ${lpKeyword} estimate`)
+const lpContactBannerParagraph1 = `Call or use the form—we will reply quickly to schedule your ${lpKeyword} estimate.`
 const universalFormHeading = capitalizeHeaderWords(`Get special pricing on ${lpKeyword}`)
 const lpEstimateCtaLabel = universalFormHeading
 const lpFaqHeadingId = 'lp-faq-heading'
@@ -231,7 +234,6 @@ const universalFormIntro =
   lcpImageSrc={heroBgUrl}
   homeRevealAnimations
   noIndex
-  showChatWidget={false}
 >
   <header class="header">
     <div class="offer-bar">
@@ -312,7 +314,7 @@ const universalFormIntro =
       </div>
       <div class="container hero-split-inner">
         <div class="hero-copy">
-          <div class="hero-eyebrow">{asStr(hero?.eyebrow)}</div>
+          <div class="hero-eyebrow">{lpFreeEstimateHeadline}</div>
           <h1>{lpHeroHeadline}</h1>
           <p class="hero-typed" aria-live="polite">
             <span id="hero-typed-text"></span><span class="hero-caret" aria-hidden="true">|</span>
@@ -568,7 +570,7 @@ const universalFormIntro =
     <section class="section unique-points" style={uniquePointsBgStyle}>
       <div class="container">
         <div class="why-eyebrow">{asStr(uniquePoints?.eyebrow)}</div>
-        <h2 class="section-title section-title-secondary">{asStr(uniquePoints?.headline)}</h2>
+        <h2 class="section-title section-title-secondary">{lpUniquePointsHeadline}</h2>
         <div class="unique-grid">
           {uniquePoints?.items?.map((pt) => (
             <article class="result-item">
@@ -599,8 +601,8 @@ const universalFormIntro =
     <section class="section contact-banner-split">
       <div class="container contact-banner-grid">
         <div class="contact-banner-copy">
-          <h2 class="section-title">{asStr(contactBanner?.headline)}</h2>
-          <p class="section-lead">{asStr(contactBanner?.paragraph1)}</p>
+          <h2 class="section-title">{lpFreeEstimateHeadline}</h2>
+          <p class="section-lead">{lpContactBannerParagraph1}</p>
           <p class="section-lead">{asStr(contactBanner?.paragraph2)}</p>
           <div class="contact-banner-actions">
             <a href={telLink} class="contact-banner-phone">
