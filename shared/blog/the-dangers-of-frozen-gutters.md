@@ -151,6 +151,6 @@ Don't let frozen gutters damage your home this winter.
 
 For professional gutter cleaning, durable gutter guard installation, or heat tape systems designed for Colorado weather, contact Mile High Gutter.
 
-📞 Call (303) 762-9841📝 Or schedule an appointment through our online form today.
+📞 Call (720) 807-8043📝 Or schedule an appointment through our online form today.
 
 Stay ahead of Denver's winter challenges—and protect your home before the next freeze hits.
