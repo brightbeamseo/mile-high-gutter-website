@@ -102,11 +102,11 @@
   },
   "header": {
     "offerBar": {
-      "textBeforeDiscount": "Spring special — Get discounts on your gutter services! ",
+      "textBeforeDiscount": "Fast, friendly service you can count on. ",
       "discountLabel": "",
       "textAfterDiscount": "",
-      "ctaText": "Schedule your estimate today.",
-      "ctaHref": "#contact"
+      "ctaText": "Get your free estimate today.",
+      "ctaHref": "https://www.milehighgutter.com/contact-us/"
     },
     "navItems": [
       {
